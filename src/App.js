@@ -10,39 +10,65 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      restaurants: [],
+      restaurants: {
+        coffee:[],
+        bar:[]
+      },
+      midPointCoordinates: {
+        lat: null,
+        lng: null
+      }, 
       userLocation: null,
       secondLocation: null
     }
   }
-  componentDidMount() {
+  omponentDidMount() {
+    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
+    //API CALL FOR GEOCODE DATA
+    axios({
+      method: "GET",
+      url: urlGeoCode,
+      dataResponse: "json",
+      params: {
+        key: geocodeKey,
+        address: "1600 Amphitheatre Parkway, Mountain View"
+      }
+    }).then(response => {
+      console.log("I worked", response.data.results[0].geometry.location);
+    });
+  }
+
+  restaurantResults = (lat, lng) => {
     const urlYelp = "https://api.yelp.com/v3/businesses/search";
-    const yelpKey = "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-    
-
-
+    const yelpKey =
+      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
     //API CALL FOR YELP DATA
     axios({
-      method: 'GET',
-      url: 'http://proxy.hackeryou.com',
-      dataResponse: 'json',
+      method: "GET",
+      url: "http://proxy.hackeryou.com",
+      dataResponse: "json",
       paramsSerializer: function (params) {
-        return Qs.stringify(params, { arrayFormat: 'brackets' })
+        return Qs.stringify(params, { arrayFormat: "brackets" });
       },
       params: {
         reqUrl: urlYelp,
         params: {
-          location: 'toronto'
+          // location: "toronto",
+          radius: 1000,
+          categories: "coffee,bar",
+          latitude: lat,
+          longitude: lng
+
         },
         proxyHeaders: {
-          'Authorization': yelpKey,
+          Authorization: yelpKey
         },
         xmlToJSON: false
       }
-    }).then((res) => {
+    }).then(res => {
       console.log(res);
     });
-
     this.getCoordinates()
   }
   
