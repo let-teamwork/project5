@@ -5,6 +5,9 @@ import axios from 'axios';
 import Qs from 'qs';
 
 
+const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+
 
 class App extends Component {
   constructor() {
@@ -18,8 +21,10 @@ class App extends Component {
         lat: null,
         lng: null
       }, 
-      userLocation: null,
-      secondLocation: null
+      userLocation: "278 King St W.",
+      secondLocation: "438 King St W.",
+      userCoordinates: {},
+      secondCoordinates: {}
     }
   }
   omponentDidMount() {
@@ -37,6 +42,7 @@ class App extends Component {
     }).then(response => {
       console.log("I worked", response.data.results[0].geometry.location);
     });
+    
   }
 
   restaurantResults = (lat, lng) => {
@@ -69,41 +75,79 @@ class App extends Component {
     }).then(res => {
       console.log(res);
     });
-    this.getCoordinates()
+
+    
   }
   
+
+  setUserCoordinates = (coordinates) => {
+    if (!this.state.userCoordinates.lat) {
+      const newObject = {};
+      newObject.lat = coordinates.lat;
+      newObject.lng = coordinates.lng;
+      console.log('new', newObject);
+      this.setState({
+        userCoordinates: newObject
+      });
+      console.log('state', this.state.userCoordinates);
+    }
+  }
+
+  setSecondCoordinates = (coordinates) => {
+    if (!this.state.secondCoordinates.lat) {
+      const newObject = {};
+      newObject.lat = coordinates.lat;
+      newObject.lng = coordinates.lng;
+      console.log('new', newObject);
+      this.setState({
+        secondCoordinates: newObject
+      });
+      console.log('state', this.state.secondCoordinates);
+    };
+  }
+
+
+  // setSecondCoordinates = (coordinates, state) => {
+  //   const newObject = {};
+  //   newObject.lat = coordinates.lat;
+  //   newObject.lng = coordinates.lng;
+  //   console.log('new', newObject);
+  //   this.setState({
+  //     state: userLocation
+  //   });
+  // }
+
+  // console.log('state', this.state.userCoordinates);
+
+
   //API CALL FOR GEOCODE DATA
-  getCoordinates(address){
-    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+  getCoordinates(addressInput, callback){
     axios({
       method: "GET",
       url: urlGeoCode,
       dataResponse: "json",
       params: {
         key: geocodeKey,
-        address: address
+        address: addressInput
       }
     }).then(
       (response) => {
+        console.log('res', response.data.results[0].geometry.location);
         const coordinates = response.data.results[0].geometry.location;
-        if (this.state.userLocation === null){
-          this.setState({
-            userLocation: coordinates
-          })
-        }else{
-          this.setState({
-            secondLocation: coordinates
-          })
-        }
+        callback(coordinates);
       }
     )
+  }
+
+  handleClick = () => {
+    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+    this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
   }
 
   render() {
     return (
       <div className="App">
-        
+        <button onClick={this.handleClick}>Get User and Second Coordinates</button>
       </div>
     );
   }
