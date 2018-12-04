@@ -5,6 +5,9 @@ import axios from 'axios';
 import Qs from 'qs';
 
 
+const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+
 
 class App extends Component {
   constructor() {
@@ -43,13 +46,17 @@ class App extends Component {
       console.log(res);
     });
 
-    this.getCoordinates()
+    // this.getCoordinates()
   }
   
+
+  
+
+
   //API CALL FOR GEOCODE DATA
-  getCoordinates(address){
-    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+  getCoordinates(addressInput){
+    // const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+    // const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
     axios({
       method: "GET",
       url: urlGeoCode,
