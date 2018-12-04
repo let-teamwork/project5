@@ -14,8 +14,13 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    const url = "https://api.yelp.com/v3/businesses/search";
-    const apiKey = "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+    const urlYelp = "https://api.yelp.com/v3/businesses/search";
+    const yelpKey = "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+
+
+    //API CALL FOR YELP DATA
     axios({
       method: 'GET',
       url: 'http://proxy.hackeryou.com',
@@ -24,18 +29,33 @@ class App extends Component {
         return Qs.stringify(params, { arrayFormat: 'brackets' })
       },
       params: {
-        reqUrl: url,
+        reqUrl: urlYelp,
         params: {
           location: 'toronto'
         },
         proxyHeaders: {
-          'Authorization': apiKey,
+          'Authorization': yelpKey,
         },
         xmlToJSON: false
       }
     }).then((res) => {
       console.log(res);
     });
+
+    //API CALL FOR GEOCODE DATA
+    axios({
+      method: "GET",
+      url: urlGeoCode,
+      dataResponse: "json",
+      params: {
+        key: geocodeKey,
+        address: "1600 Amphitheatre Parkway, Mountain View"
+      }
+    }).then(
+      (response) => {
+        console.log("I worked", response.data.results[0].geometry.location);
+      }
+    )
   }
 
   render() {
