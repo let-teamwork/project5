@@ -80,8 +80,8 @@ class App extends Component {
   }
   
 
-  setUserCoordinants = (coordinates) => {
-    // if (this.state.userCoordinates === {}) {
+  setUserCoordinates = (coordinates) => {
+    if (!this.state.userCoordinates.lat) {
       const newObject = {};
       newObject.lat = coordinates.lat;
       newObject.lng = coordinates.lng;
@@ -89,25 +89,25 @@ class App extends Component {
       this.setState({
         userCoordinates: newObject
       });
-      console.log('state', this.state.userCoordintates);
-    // }
+      console.log('state', this.state.userCoordinates);
+    }
   }
 
-  setSecondCoordinants = (coordinates) => {
-    // if (this.state.secondCoordinates === {}) {
+  setSecondCoordinates = (coordinates) => {
+    if (!this.state.secondCoordinates.lat) {
       const newObject = {};
       newObject.lat = coordinates.lat;
       newObject.lng = coordinates.lng;
       console.log('new', newObject);
       this.setState({
-        secondCoordinats: newObject
+        secondCoordinates: newObject
       });
-      console.log('state', this.state.secondCoordintates);
-    // };
+      console.log('state', this.state.secondCoordinates);
+    };
   }
 
 
-  // setSecondCoordinants = (coordinates, state) => {
+  // setSecondCoordinates = (coordinates, state) => {
   //   const newObject = {};
   //   newObject.lat = coordinates.lat;
   //   newObject.lng = coordinates.lng;
@@ -135,29 +135,19 @@ class App extends Component {
         console.log('res', response.data.results[0].geometry.location);
         const coordinates = response.data.results[0].geometry.location;
         callback(coordinates);
-        // this.setStateCoordinants(coordinates, "secondCoordinates");
-        // if (this.state.userLocation === null){
-        //   this.setState({
-        //     userLocation: coordinates
-        //   })
-        // }else{
-        //   this.setState({
-        //     secondLocation: coordinates
-        //   })
-        // }
       }
     )
   }
 
   handleClick = () => {
-    this.getCoordinates(this.state.userLocation, this.setUserCoordinants);
-    this.getCoordinates(this.state.secondLocation, this.setSecondCoordinants);
+    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+    this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
   }
 
   render() {
     return (
       <div className="App">
-        <button onClick={this.handleClick}>Fetch</button>
+        <button onClick={this.handleClick}>Get User and Second Coordinates</button>
       </div>
     );
   }
