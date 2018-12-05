@@ -6,6 +6,7 @@ import Qs from 'qs';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Login from "./Login";
 import CreateAccount from './CreateAccount'
+import Main from './Main'
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -200,8 +201,7 @@ class App extends Component {
       <Router>
         <div className="App">
         <Route 
-          path="/" 
-          render={(props) => (
+          exact render={(props) => (
           <Login {...props} 
           user={this.state.user}
           logOut={this.logOut}
@@ -213,6 +213,16 @@ class App extends Component {
         )}/>
         <Route 
           path="/CreateAccount" 
+          render={(props) => (
+          <CreateAccount {...props} 
+          user={this.state.user}
+          userLocation={this.state.userLocation}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          />
+        )}/>
+        <Route 
+          path="/Main" 
           render={(props) => (
           <CreateAccount {...props} 
           user={this.state.user}
