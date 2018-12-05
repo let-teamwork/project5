@@ -4,12 +4,14 @@ import firebase from './firebase'
 import axios from 'axios';
 import Qs from 'qs';
 
-
+const provider = new firebase.auth.GoogleAuthProvider();
+const auth = firebase.auth();
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
+      user: null,
       restaurants: {
         coffee:[],
         bar:[]
@@ -22,88 +24,104 @@ class App extends Component {
       secondLocation: null
     }
   }
-  omponentDidMount() {
-    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
-    //API CALL FOR GEOCODE DATA
-    axios({
-      method: "GET",
-      url: urlGeoCode,
-      dataResponse: "json",
-      params: {
-        key: geocodeKey,
-        address: "1600 Amphitheatre Parkway, Mountain View"
+
+  componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState(
+          {
+            user: user
+          },() => {
+            this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+            }
+        )
       }
-    }).then(response => {
-      console.log("I worked", response.data.results[0].geometry.location);
-    });
+    })
+
   }
 
-  restaurantResults = (lat, lng) => {
-    const urlYelp = "https://api.yelp.com/v3/businesses/search";
-    const yelpKey =
-      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-    //API CALL FOR YELP DATA
-    axios({
-      method: "GET",
-      url: "http://proxy.hackeryou.com",
-      dataResponse: "json",
-      paramsSerializer: function (params) {
-        return Qs.stringify(params, { arrayFormat: "brackets" });
-      },
-      params: {
-        reqUrl: urlYelp,
-        params: {
-          // location: "toronto",
-          radius: 1000,
-          categories: "coffee,bar",
-          latitude: lat,
-          longitude: lng
+  componentWillUnmount() {
+    if(this.dbRef){
+      this.dbRef.off();
+    }
+  }
 
-        },
-        proxyHeaders: {
-          Authorization: yelpKey
-        },
-        xmlToJSON: false
-      }
-    }).then(res => {
-      console.log(res);
+  logIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      this.setState({
+        user: result.user
+      });
     });
-    this.getCoordinates()
+  };
+
+  logOut = () => {
+    auth.signOut().then(() => {
+      this.setState({
+        user: null
+      })
+    })
   }
-  
-  //API CALL FOR GEOCODE DATA
-  getCoordinates(address){
-    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
-    axios({
-      method: "GET",
-      url: urlGeoCode,
-      dataResponse: "json",
-      params: {
-        key: geocodeKey,
-        address: address
+
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+    console.log("dbRef", dbRef)
+    if (dbRef === null) {
+      const userAddress = {
+        address: this.state.userLocation
       }
-    }).then(
-      (response) => {
-        const coordinates = response.data.results[0].geometry.location;
-        if (this.state.userLocation === null){
-          this.setState({
-            userLocation: coordinates
-          })
-        }else{
-          this.setState({
-            secondLocation: coordinates
-          })
-        }
-      }
-    )
+      dbRef.push(userAddress);
+    }
   }
+
+  handleChange = e => {
+    this.setState({
+      [e.target.id]: e.target.value
+    })
+  }
+
+  //What's happening right now? Well, when you log in, it's not bringing back old info. and when you type in something new, it's making a new entry. We want to replace it. Not make it new.
 
   render() {
+    console.log("user", this.state.user);
     return (
       <div className="App">
-        
+      <h1>Meet Me Halfway</h1>
+        {(this.state.user) ?
+          <button onClick={this.logOut}>Logout</button>
+        :(
+        <div>
+          <button onClick={this.logIn}>Sign In</button>
+          <button>Sign In as Guest</button>
+        </div>
+        )}
+        {(this.state.user) ? (
+          <main>
+            <div>
+              {(this.state.userLocation) ? (
+                <p>Your current address is {this.state.userLocation}</p>
+              ) : (
+                <p>Please type in your address. This will be your default address.</p>
+              )}
+            </div>
+            <form onSubmit={this.handleSubmit}>
+              <input 
+                type="text"
+                id="userLocation"
+                onChange={this.handleChange}
+              />
+              <input 
+                type="submit" 
+                value="Submit Address"
+              />
+            </form>
+          </main>
+          ) : (
+          <main>
+            <p>You must be logged in to see the form</p>
+          </main>
+        )}
       </div>
     );
   }
