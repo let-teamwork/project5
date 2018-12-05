@@ -27,7 +27,7 @@ class App extends Component {
       secondCoordinates: {}
     }
   }
-  omponentDidMount() {
+  componentDidMount() {
     const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
     const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
     //API CALL FOR GEOCODE DATA
@@ -62,10 +62,9 @@ class App extends Component {
         params: {
           // location: "toronto",
           radius: 1000,
-          categories: "coffee,bar",
+          categories: "coffee,bars",
           latitude: lat,
           longitude: lng
-
         },
         proxyHeaders: {
           Authorization: yelpKey
@@ -73,10 +72,20 @@ class App extends Component {
         xmlToJSON: false
       }
     }).then(res => {
-      console.log(res);
-    });
+      const shopInfo = res.data.businesses
 
-    
+      shopInfo.map((business) => {
+        business.categories.map((alias) => {
+          console.log(alias)
+          if (alias.alias === "coffee" || alias.title === "Coffee & Tea") {
+            this.state.restaurants.coffee.push(business)
+          } else if (alias.alias === "bars" || alias.alias === "pubs") {
+            this.state.restaurants.bar.push(business)
+          }
+        })
+      })
+    });
+    // this.getCoordinates()
   }
   
 
