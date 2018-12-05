@@ -7,6 +7,10 @@ import Qs from 'qs';
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
+const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+
+
 class App extends Component {
   constructor() {
     super()
@@ -20,8 +24,10 @@ class App extends Component {
         lat: null,
         lng: null
       }, 
-      userLocation: null,
-      secondLocation: null
+      userLocation: "278 King St W.",
+      secondLocation: "438 King St W.",
+      userCoordinates: {},
+      secondCoordinates: {}
     }
   }
 
@@ -37,7 +43,6 @@ class App extends Component {
         )
       }
     })
-
   }
 
   componentWillUnmount() {
@@ -64,15 +69,103 @@ class App extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
-    console.log("dbRef", dbRef)
-    if (dbRef === null) {
-      const userAddress = {
-        address: this.state.userLocation
-      }
-      dbRef.push(userAddress);
+    
+    const userAddress = {
+      address: this.state.userLocation
     }
+    const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+    dbRef.push(userAddress);
+
+    this.setState ({
+      userLocation: userAddress
+    })
+  }
+
+  restaurantResults = (lat, lng) => {
+    const urlYelp = "https://api.yelp.com/v3/businesses/search";
+    const yelpKey =
+      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+    //API CALL FOR YELP DATA
+    axios({
+      method: "GET",
+      url: "http://proxy.hackeryou.com",
+      dataResponse: "json",
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, { arrayFormat: "brackets" });
+      },
+      params: {
+        reqUrl: urlYelp,
+        params: {
+          // location: "toronto",
+          radius: 1000,
+          categories: "coffee,bars",
+          latitude: lat,
+          longitude: lng
+        },
+        proxyHeaders: {
+          Authorization: yelpKey
+        },
+        xmlToJSON: false
+      }
+    }).then(res => {
+      const shopInfo = res.data.businesses
+
+      shopInfo.map((business) => {
+        business.categories.map((alias) => {
+          console.log(alias)
+          if (alias.alias === "coffee" || alias.title === "Coffee & Tea") {
+            this.state.restaurants.coffee.push(business)
+          } else if (alias.alias === "bars" || alias.alias === "pubs") {
+            this.state.restaurants.bar.push(business)
+          }
+        })
+      })
+    });
+  }
+  
+
+  setUserCoordinates = (coordinates) => {
+    if (!this.state.userCoordinates.lat) {
+      const newObject = {};
+      newObject.lat = coordinates.lat;
+      newObject.lng = coordinates.lng;
+      console.log('new', newObject);
+      this.setState({
+        userCoordinates: newObject
+      });
+      console.log('state', this.state.userCoordinates);
+    }
+  }
+
+  setSecondCoordinates = (coordinates) => {
+    if (!this.state.secondCoordinates.lat) {
+      const newObject = {};
+      newObject.lat = coordinates.lat;
+      newObject.lng = coordinates.lng;
+      console.log('new', newObject);
+      this.setState({
+        secondCoordinates: newObject
+      });
+      console.log('state', this.state.secondCoordinates);
+    };
+  }
+
+  //API CALL FOR GEOCODE DATA
+  getCoordinates(addressInput, callback){
+    axios({
+      method: "GET",
+      url: urlGeoCode,
+      dataResponse: "json",
+      params: {
+        key: geocodeKey,
+        address: addressInput
+      }
+    }).then(
+      (response) => {
+        console.log('res', response.data.results[0].geometry.location);
+        const coordinates = response.data.results[0].geometry.location;
+        callback(coordinates);
+      })
   }
 
   handleChange = e => {
@@ -81,7 +174,10 @@ class App extends Component {
     })
   }
 
-  //What's happening right now? Well, when you log in, it's not bringing back old info. and when you type in something new, it's making a new entry. We want to replace it. Not make it new.
+  handleClick = () => {
+    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+    this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+  }
 
   render() {
     console.log("user", this.state.user);
@@ -122,6 +218,7 @@ class App extends Component {
             <p>You must be logged in to see the form</p>
           </main>
         )}
+        <button onClick={this.handleClick}>Get User and Second Coordinates</button>
       </div>
     );
   }
