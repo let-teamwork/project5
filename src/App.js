@@ -16,10 +16,8 @@ class App extends Component {
     super()
     this.state = {
       user: null,
-      restaurants: {
-        coffee:[],
-        bar:[]
-      },
+      coffee:[],
+      bar:[],
       midPointCoordinates: {
         lat: null,
         lng: null
@@ -108,19 +106,23 @@ class App extends Component {
       }
     }).then(res => {
       const shopInfo = res.data.businesses
-
-      shopInfo.map((business) => {
-        business.categories.map((alias) => {
-          console.log(alias)
+      const coffeeArray = []
+      const barArray = []
+      shopInfo.forEach((business) => {
+        business.categories.forEach((alias) => {
           if (alias.alias === "coffee" || alias.title === "Coffee & Tea") {
-            this.state.restaurants.coffee.push(business)
+            coffeeArray.push(business)
           } else if (alias.alias === "bars" || alias.alias === "pubs") {
-            this.state.restaurants.bar.push(business)
+            barArray.push(business)
           }
         })
       })
+      this.setState({
+        coffee: coffeeArray,
+        bar: barArray
+      })
     });
-  }
+  };
   
 
   setUserCoordinates = (coordinates) => {
@@ -145,7 +147,8 @@ class App extends Component {
       this.setState({
         secondCoordinates: newObject
       });
-      console.log('state', this.state.secondCoordinates);
+      this.midPoint();
+      this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng);
     };
   }
 
@@ -177,6 +180,17 @@ class App extends Component {
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
     this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
   }
+  midPoint = () => {
+    const midY = (this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2;
+    const midX = (this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2;
+    const midObj = {};
+    midObj.lat = midY
+    midObj.lng = midX
+    this.setState({
+      midPointCoordinates: midObj
+    });
+  }
+
 
   render() {
     console.log("user", this.state.user);
