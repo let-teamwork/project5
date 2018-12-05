@@ -4,6 +4,8 @@ import firebase from './firebase'
 import axios from 'axios';
 import Qs from 'qs';
 
+const provider = new firebase.auth.GoogleAuthProvider();
+const auth = firebase.auth();
 
 const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
 const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
@@ -13,6 +15,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
+      user: null,
       restaurants: {
         coffee:[],
         bar:[]
@@ -27,22 +30,55 @@ class App extends Component {
       secondCoordinates: {}
     }
   }
+
   componentDidMount() {
-    const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-    const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
-    //API CALL FOR GEOCODE DATA
-    axios({
-      method: "GET",
-      url: urlGeoCode,
-      dataResponse: "json",
-      params: {
-        key: geocodeKey,
-        address: "1600 Amphitheatre Parkway, Mountain View"
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState(
+          {
+            user: user
+          },() => {
+            this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+            }
+        )
       }
-    }).then(response => {
-      console.log("I worked", response.data.results[0].geometry.location);
+    })
+  }
+
+  componentWillUnmount() {
+    if(this.dbRef){
+      this.dbRef.off();
+    }
+  }
+
+  logIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      this.setState({
+        user: result.user
+      });
     });
+  };
+
+  logOut = () => {
+    auth.signOut().then(() => {
+      this.setState({
+        user: null
+      })
+    })
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
     
+    const userAddress = {
+      address: this.state.userLocation
+    }
+    const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+    dbRef.push(userAddress);
+
+    this.setState ({
+      userLocation: userAddress
+    })
   }
 
   restaurantResults = (lat, lng) => {
@@ -85,7 +121,6 @@ class App extends Component {
         })
       })
     });
-    // this.getCoordinates()
   }
   
 
@@ -115,20 +150,6 @@ class App extends Component {
     };
   }
 
-
-  // setSecondCoordinates = (coordinates, state) => {
-  //   const newObject = {};
-  //   newObject.lat = coordinates.lat;
-  //   newObject.lng = coordinates.lng;
-  //   console.log('new', newObject);
-  //   this.setState({
-  //     state: userLocation
-  //   });
-  // }
-
-  // console.log('state', this.state.userCoordinates);
-
-
   //API CALL FOR GEOCODE DATA
   getCoordinates(addressInput, callback){
     axios({
@@ -144,8 +165,13 @@ class App extends Component {
         console.log('res', response.data.results[0].geometry.location);
         const coordinates = response.data.results[0].geometry.location;
         callback(coordinates);
-      }
-    )
+      })
+  }
+
+  handleChange = e => {
+    this.setState({
+      [e.target.id]: e.target.value
+    })
   }
 
   handleClick = () => {
@@ -154,8 +180,44 @@ class App extends Component {
   }
 
   render() {
+    console.log("user", this.state.user);
     return (
       <div className="App">
+      <h1>Meet Me Halfway</h1>
+        {(this.state.user) ?
+          <button onClick={this.logOut}>Logout</button>
+        :(
+        <div>
+          <button onClick={this.logIn}>Sign In</button>
+          <button>Sign In as Guest</button>
+        </div>
+        )}
+        {(this.state.user) ? (
+          <main>
+            <div>
+              {(this.state.userLocation) ? (
+                <p>Your current address is {this.state.userLocation}</p>
+              ) : (
+                <p>Please type in your address. This will be your default address.</p>
+              )}
+            </div>
+            <form onSubmit={this.handleSubmit}>
+              <input 
+                type="text"
+                id="userLocation"
+                onChange={this.handleChange}
+              />
+              <input 
+                type="submit" 
+                value="Submit Address"
+              />
+            </form>
+          </main>
+          ) : (
+          <main>
+            <p>You must be logged in to see the form</p>
+          </main>
+        )}
         <button onClick={this.handleClick}>Get User and Second Coordinates</button>
       </div>
     );
