@@ -69,10 +69,9 @@ class App extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    console.log("Handle submit works", this.state.userLocation)
+    const userAddress = this.state.userLocation
     
-    const userAddress = {
-      address: this.state.userLocation
-    }
     const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
     dbRef.push(userAddress);
 
