@@ -3,6 +3,9 @@ import './styles/App.css';
 import firebase from './firebase'
 import axios from 'axios';
 import Qs from 'qs';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Login from "./Login";
+import CreateAccount from './CreateAccount'
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -193,46 +196,34 @@ class App extends Component {
 
 
   render() {
-    console.log("user", this.state.user);
     return (
-      <div className="App">
-      <h1>Meet Me Halfway</h1>
-        {(this.state.user) ?
-          <button onClick={this.logOut}>Logout</button>
-        :(
-        <div>
-          <button onClick={this.logIn}>Sign In</button>
-          <button>Sign In as Guest</button>
+      <Router>
+        <div className="App">
+        <Route 
+          path="/" 
+          render={(props) => (
+          <Login {...props} 
+          user={this.state.user}
+          logOut={this.logOut}
+          logIn={this.logIn}
+          userLocation={this.state.userLocation}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          />
+        )}/>
+        <Route 
+          path="/CreateAccount" 
+          render={(props) => (
+          <CreateAccount {...props} 
+          user={this.state.user}
+          userLocation={this.state.userLocation}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          />
+        )}/>
+          <button onClick={this.handleClick}>Get User and Second Coordinates</button>
         </div>
-        )}
-        {(this.state.user) ? (
-          <main>
-            <div>
-              {(this.state.userLocation) ? (
-                <p>Your current address is {this.state.userLocation}</p>
-              ) : (
-                <p>Please type in your address. This will be your default address.</p>
-              )}
-            </div>
-            <form onSubmit={this.handleSubmit}>
-              <input 
-                type="text"
-                id="userLocation"
-                onChange={this.handleChange}
-              />
-              <input 
-                type="submit" 
-                value="Submit Address"
-              />
-            </form>
-          </main>
-          ) : (
-          <main>
-            <p>You must be logged in to see the form</p>
-          </main>
-        )}
-        <button onClick={this.handleClick}>Get User and Second Coordinates</button>
-      </div>
+      </Router>
     );
   }
 }
