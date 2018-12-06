@@ -19,7 +19,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      user: null,
+      user: {},
       coffee:[],
       bar:[],
       midPointCoordinates: {
@@ -43,7 +43,7 @@ class App extends Component {
         this.setState(
           {
             user: user,
-            newUser: false
+            // newUser: false
           },() => {
             this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
             }
@@ -60,21 +60,45 @@ class App extends Component {
 
   logIn = () => {
     auth.signInWithPopup(provider).then((result) => {
-
+      
+      const userObject = Object.assign({}, result.user);
+      console.log(userObject);
       this.setState({
-        user: result.user
-      });
-      if (this.state.newUser){
-        this.setState({
-          toCreateAccount: true
-        })
-      } else {
-        this.setState({
-          toMain: true
-        })
+        user: userObject
       }
-    });
-  };
+      // ,
+      // console.log(this.state.user)
+      );
+      firebase.database().ref(`${userObject.uid}`).once('value').then((snapshot) => {
+        console.log(snapshot.val());
+        if(snapshot.exists()) {
+          this.setState({
+            newUser: false
+          }, () => {
+            this.redirectAfterLogin();
+          }
+          )
+        } else {
+          this.redirectAfterLogin();
+        }
+      });
+
+      
+      // console.log(this.state.user);
+    })
+  }  
+
+  redirectAfterLogin = () => {
+    if (this.state.newUser) {
+      this.setState({
+        toCreateAccount: true
+      })
+    } else {
+      this.setState({
+        toMain: true
+      })
+    }
+  }
 
   logOut = () => {
     auth.signOut().then(() => {
@@ -224,7 +248,7 @@ class App extends Component {
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
-          toCreateAccount={this.toCreateAccount}
+          toCreateAccount={this.state.toCreateAccount}
           toMain={this.state.toMain}
           />
         )}/>
@@ -241,7 +265,7 @@ class App extends Component {
         <Route 
           path="/Main" 
           render={(props) => (
-          <CreateAccount {...props} 
+          <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
