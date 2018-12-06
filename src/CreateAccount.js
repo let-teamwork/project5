@@ -19,15 +19,40 @@ class CreateAccount extends Component{
             )}
           </div>
           <form onSubmit={this.props.handleSubmit}>
+            <input 
+              type="text"
+              id="userNameForm"
+              onChange={this.props.handleChange}
+              value={this.props.userNameForm}
+            />
             <input
               type="text"
-              id="userLocation"
+              id="userLocationForm"
               onChange={this.props.handleChange}
+              value={this.props.userLocationForm}
             />
-            <input
-              type="submit"
-              value="Submit Address"
-            />
+            <div>
+              <input 
+                type="radio"
+                name="modeOfTransportation"
+              />
+              <input
+                type="radio"
+                name="modeOfTransportation"
+              />
+              <input
+                type="radio"
+                name="modeOfTransportation"
+              />
+              <input
+                type="radio"
+                name="modeOfTransportation"
+              />
+            </div>
+              <input
+                type="submit"
+                value="Submit Address"
+              />
           </form>
         </main>
       </div>
