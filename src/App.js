@@ -43,7 +43,6 @@ class App extends Component {
         this.setState(
           {
             user: user,
-            // newUser: false
           },() => {
             this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
             }
@@ -66,8 +65,6 @@ class App extends Component {
       this.setState({
         user: userObject
       }
-      // ,
-      // console.log(this.state.user)
       );
       firebase.database().ref(`${userObject.uid}`).once('value').then((snapshot) => {
         console.log(snapshot.val());
