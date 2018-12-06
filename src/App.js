@@ -27,13 +27,15 @@ class App extends Component {
         lng: null
       }, 
       userLocation: "278 King St W.",
-      secondLocation: "438 King St W.",
+      secondLocation: "",
       userCoordinates: {},
       secondCoordinates: {},
       isGuest: false,
       newUser: true,
       toMain: false,
-      toCreateAccount: false 
+      toCreateAccount: false ,
+      showingCoffee: true,
+      showingBar: true
     }
   }
   componentDidMount() {
@@ -98,6 +100,7 @@ class App extends Component {
   }
 
   restaurantResults = (lat, lng) => {
+    console.log(lat, lng)
     const urlYelp = "https://api.yelp.com/v3/businesses/search";
     const yelpKey =
       "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
@@ -124,6 +127,7 @@ class App extends Component {
         xmlToJSON: false
       }
     }).then(res => {
+      console.log("I work", res)
       const shopInfo = res.data.businesses
       const coffeeArray = []
       const barArray = []
@@ -145,30 +149,25 @@ class App extends Component {
   
 
   setUserCoordinates = (coordinates) => {
-    if (!this.state.userCoordinates.lat) {
-      const newObject = {};
-      newObject.lat = coordinates.lat;
-      newObject.lng = coordinates.lng;
-      console.log('new', newObject);
-      this.setState({
-        userCoordinates: newObject
-      });
-      console.log('state', this.state.userCoordinates);
-    }
+    const newObject = {};
+    newObject.lat = coordinates.lat;
+    newObject.lng = coordinates.lng;
+    console.log('new', newObject);
+    this.setState({
+      userCoordinates: newObject
+    });
+    console.log('state', this.state.userCoordinates);
   }
 
   setSecondCoordinates = (coordinates) => {
-    if (!this.state.secondCoordinates.lat) {
-      const newObject = {};
-      newObject.lat = coordinates.lat;
-      newObject.lng = coordinates.lng;
-      console.log('new', newObject);
-      this.setState({
-        secondCoordinates: newObject
-      });
-      this.midPoint();
-      this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng);
-    };
+    const newObject = {};
+    newObject.lat = coordinates.lat;
+    newObject.lng = coordinates.lng;
+    console.log('new', newObject);
+    this.setState({
+      secondCoordinates: newObject
+    });
+    this.midPoint();
   }
 
   //API CALL FOR GEOCODE DATA
@@ -195,8 +194,10 @@ class App extends Component {
     })
   }
 
-  handleClick = () => {
+  handleClick = (e) => {
+    e.preventDefault();
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+    //The secondCoordinates are not changing here.
     this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
   }
   midPoint = () => {
@@ -208,6 +209,28 @@ class App extends Component {
     this.setState({
       midPointCoordinates: midObj
     });
+    this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
+   
+  }
+
+  toggleCoffee = () => {
+    this.setState({
+      showingCoffee: !this.state.showingCoffee
+    })
+  }
+
+  toggleBar = () => {
+    this.setState({
+      showingBar: !this.state.showingBar
+    })
+  }
+
+  handleAddressChange = (e) => {
+    if (e.target.value) {
+      this.setState({
+        [e.target.id]: e.target.value
+      })
+    }
   }
 
 
@@ -216,7 +239,8 @@ class App extends Component {
       <Router>
         <div className="App">
         <Route 
-          exact render={(props) => (
+          exact path="/"
+          render={(props) => (
           <Login {...props} 
           user={this.state.user}
           logOut={this.logOut}
@@ -229,7 +253,7 @@ class App extends Component {
           />
         )}/>
         <Route 
-          path="/CreateAccount" 
+          exact path="/CreateAccount" 
           render={(props) => (
           <CreateAccount {...props} 
           user={this.state.user}
@@ -239,16 +263,27 @@ class App extends Component {
           />
         )}/>
         <Route 
-          path="/Main" 
+          exact path="/Main" 
           render={(props) => (
-          <CreateAccount {...props} 
+          <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
+          userCoordinates={this.state.userCoordinates}
+          secondCoordinates={this.state.secondCoordinates}
+          midPoint={this.state.midPointCoordinates}
+          bar={this.state.bar}
+          coffee={this.state.coffee}
+          showingCoffee={this.state.showingCoffee}
+          showingBar={this.state.showingBar}
+          toggleCoffee={this.toggleCoffee}
+          toggleBar={this.toggleBar}
+          handleAddressChange={this.handleAddressChange}
+          handleClick={this.handleClick}
+          midPointCoordinates={this.state.midPointCoordinates}
           />
         )}/>
-          <button onClick={this.handleClick}>Get User and Second Coordinates</button>
         </div>
       </Router>
     );
