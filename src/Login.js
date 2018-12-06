@@ -23,6 +23,7 @@ class Login extends Component{
     return(
       <div className="Login">
         <h1>Meet Me Halfway</h1>
+        <h2>Im the login page</h2>
         {(this.props.user) ?
           <button onClick={this.props.logOut}>Logout</button>
           : (
@@ -36,7 +37,6 @@ class Login extends Component{
   }
 }
 
-//add a link that on click sends the user to create account if new user is true && guest is false 
 
 
 export default Login

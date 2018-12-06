@@ -11,7 +11,7 @@ class Main extends Component {
     render() {
         return (
             <div className="Main">
-
+                <h2>Im the main</h2>
             </div>
         )
     }
