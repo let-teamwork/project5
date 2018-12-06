@@ -26,7 +26,8 @@ class App extends Component {
         lat: null,
         lng: null
       }, 
-      userLocation: "278 King St W.",
+      userLocation: "",
+      userLocationForm: "",
       secondLocation: "",
       userCoordinates: {},
       secondCoordinates: {},
@@ -35,7 +36,9 @@ class App extends Component {
       toMain: false,
       toCreateAccount: false ,
       showingCoffee: true,
-      showingBar: true
+      showingBar: true,
+      userNameForm: "",
+      userName: ""
     }
   }
   componentDidMount() {
@@ -69,10 +72,12 @@ class App extends Component {
       }
       );
       firebase.database().ref(`${userObject.uid}`).once('value').then((snapshot) => {
-        console.log(snapshot.val());
+        console.log("on login", snapshot.val());
         if(snapshot.exists()) {
           this.setState({
-            newUser: false
+            newUser: false,
+            userLocation: (snapshot.val().userAddress),
+            userName: (snapshot.val().userName)
           }, () => {
             this.redirectAfterLogin();
           }
@@ -110,14 +115,29 @@ class App extends Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log("Handle submit works", this.state.userLocation)
-    const userAddress = this.state.userLocation
+    // const userAddress = this.state.userLocation
+    // const userInfo = {}
+    const userInfo = {
+      userName: this.state.userNameForm,
+      userAddress: this.state.userLocationForm
+    }
+
+    // const userAddress = {}
+    // const userName = {}
     
     const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
-    dbRef.push(userAddress);
+    dbRef.set(userInfo);
+    console.log(dbRef);
+    console.log(firebase.database);
+    
+    dbRef.once('value').then((snapshot) => {
+      this.setState ({
+        userLocation: (snapshot.val().userAddress),
+        userName: (snapshot.val().userName)
+      })
+    });
 
-    this.setState ({
-      userLocation: userAddress
-    })
+
   }
 
   restaurantResults = (lat, lng) => {
@@ -280,6 +300,7 @@ class App extends Component {
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
+          userName={this.state.userName}
           />
         )}/>
         <Route 
