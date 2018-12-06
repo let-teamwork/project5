@@ -29,16 +29,20 @@ class App extends Component {
       userLocation: "278 King St W.",
       secondLocation: "438 King St W.",
       userCoordinates: {},
-      secondCoordinates: {}
+      secondCoordinates: {},
+      isGuest: false,
+      newUser: true,
+      toMain: false,
+      toCreateAccount: false 
     }
   }
-
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState(
           {
-            user: user
+            user: user,
+            newUser: false
           },() => {
             this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
             }
@@ -58,6 +62,15 @@ class App extends Component {
       this.setState({
         user: result.user
       });
+      if (this.state.newUser){
+        this.setState({
+          toCreateAccount: true
+        })
+      } else {
+        this.setState({
+          toMain: true
+        })
+      }
     });
   };
 
@@ -209,6 +222,8 @@ class App extends Component {
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
+          toCreateAccount={this.toCreateAccount}
+          toMain={this.state.toMain}
           />
         )}/>
         <Route 
