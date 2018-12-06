@@ -212,7 +212,7 @@ class App extends Component {
           />
         )}/>
         <Route 
-          path="/CreateAccount" 
+          path="/CreateAccount/" 
           render={(props) => (
           <CreateAccount {...props} 
           user={this.state.user}
