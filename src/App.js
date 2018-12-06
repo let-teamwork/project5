@@ -38,6 +38,7 @@ class App extends Component {
   }
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
+      console.log('firing');
       if (user) {
         this.setState(
           {
@@ -59,6 +60,7 @@ class App extends Component {
 
   logIn = () => {
     auth.signInWithPopup(provider).then((result) => {
+
       this.setState({
         user: result.user
       });

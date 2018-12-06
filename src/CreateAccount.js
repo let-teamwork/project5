@@ -10,6 +10,7 @@ class CreateAccount extends Component{
   render(){
     return(
       <div>
+        <h2>I'm create account</h2>
         <main>
           <div>
             {(this.props.userLocation) ? (<p>Your current address is {this.props.userLocation}</p> 

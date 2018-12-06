@@ -32,6 +32,7 @@ class Main extends Component {
     render() {
         return (
             <div className="Main">
+<<<<<<< HEAD
                 <iframe width = "600"
                 height = "450"
                 frameborder = "0"
@@ -39,6 +40,9 @@ class Main extends Component {
                 src = "https://www.google.com/maps/embed/v1/search?q=1985%20danforth%20ave&key=AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
                 allowfullscreen />
                 <p>i'm the main page</p>
+=======
+                <h2>Im the main</h2>
+>>>>>>> af6e4b918b773249d9b094102225ddc04d2ebdd6
             </div>
         )
     }
