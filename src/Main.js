@@ -2,47 +2,42 @@ import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import firebase from './firebase'
 import axios from 'axios';
-import Iframe from 'react-iframe'
+import { compose, withProps } from "recompose"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
-
-const googleMapApiKey = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
-const googleMapurl = "https://www.google.com/maps/embed/v1/place "
+import MyMapComponent from './MyMapComponent';
 
 
 class Main extends Component {
     constructor() {
-        super()
+        super();
+        this.setState={
+            isMarkerShown: false,
+        }
     }
     componentDidMount(){
-        axios({
-            method: "GET",
-            url: googleMapurl,
-            dataResponse: "json",
-            params: {
-                key: googleMapApiKey,
-                q: "City+Hall,Toronto",
-            }
-        }).then(
-            (response) => {
-                console.log(response)
-            })
+        this.delayedShowMarker()
     }
 
-
+    delayedShowMarker = ()=>{
+        setTimeout(()=>{
+            this.setState({isMarkerShown:true})
+        }, 3000)
+    }
+    handleMarkerClick = () => {
+        this.setState({
+            isMarkerShown: false
+        })
+        this.delayedShowMarker()
+    }
     render() {
         return (
             <div className="Main">
-<<<<<<< HEAD
-                <iframe width = "600"
-                height = "450"
-                frameborder = "0"
-                style = "border:0"
-                src = "https://www.google.com/maps/embed/v1/search?q=1985%20danforth%20ave&key=AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
-                allowfullscreen />
-                <p>i'm the main page</p>
-=======
-                <h2>Im the main</h2>
->>>>>>> af6e4b918b773249d9b094102225ddc04d2ebdd6
+                <MyMapComponent
+                    isMarkerShown={this.state.isMarkerShown}
+                    onMarkerClick={this.handleMarkerClick}
+                />
+            
             </div>
         )
     }

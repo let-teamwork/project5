@@ -241,7 +241,7 @@ class App extends Component {
         <Route 
           path="/Main" 
           render={(props) => (
-          <CreateAccount {...props} 
+          <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
           handleSubmit={this.handleSubmit}
