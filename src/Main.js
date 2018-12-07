@@ -40,9 +40,9 @@ class Main extends Component {
                 {this.props.secondLocationBelongsToUser
                 ? (
                     <div>
-                        <form action="">
+                        <form onSubmit={this.props.handleSendMessage}action="">
                                 <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
-                            <button onSubmit={this.props.handleSendMessage} >Send Message</button>
+                            <button>Send Message</button>
                         </form>
                     </div>
                 ) : (

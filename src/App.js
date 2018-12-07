@@ -74,6 +74,7 @@ class App extends Component {
         )
       }
     })
+    this.searchFirebase(`${this.state.userName}`, 'messages', this.deliverMessagesToUser);
   }
 
   // componentDidMount(){
@@ -150,9 +151,11 @@ class App extends Component {
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm,
+      userUID: this.state.user.uid
       // userCoordinates: this.state.userCoordinates
     }
-    const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+    // const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+    const dbRef = firebase.database().ref(`/users/${this.state.userNameForm}`);
     dbRef.set(userInfo);
 
     dbRef.once('value').then((snapshot) => {
@@ -270,9 +273,7 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.checkForMatchingUsers();
-
-    
+    this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
   }
   midPoint = () => {
     const midY = (this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2;
@@ -307,71 +308,69 @@ class App extends Component {
     }
   }
   
-  searchByUserName = (searchUserName) => {
-    const dbRef = firebase.database().ref("/users/");
+  searchFirebase = (search, node, callback) => {
+    console.log('searchingFB');
+    const dbRef = firebase.database().ref(`/${node}/`);
     dbRef.once('value').then((snapshot) => {
       const newArray = Object.values(snapshot.val());
-      newArray.forEach((user) => {
-        console.log('username', user.userName);
-        console.log('user', user);
-        // if (user.userName === searchUserName) {
-        //   console.log('searchbyuser', user)
-        //   // return user
-        //   }
+      // const newArray = Object.values(snapshot.val());
+      newArray.forEach((item) => {
+        console.log(item);
+        if (item.userName === search) {
+          console.log('user', item)
+          console.log('search', search)
+          callback(search, item);
+          } else {
+            console.log('running');
+            callback(search);
+          }
         }
       )}
     )  
   }
-  
-  checkForMatchingUsers = () => {
-    this.searchByUserName();
-    const dbRef = firebase.database().ref("/users/");
-    console.log(firebase.database().ref());
-    
-    dbRef.once('value').then((snapshot) => {
-      console.log('this is firebase!!~!!')
-      console.log('snapshot', snapshot.val());
-      const newArray = Object.values(snapshot.val());
-      console.log(newArray);
-      newArray.forEach((user) => {
-        // console.log('user', user.userName);
-        if(user.userName === this.state.search){
-          this.setState({
-            secondLocation: user.userAddress,
-            secondUserName: user.userName, 
-            secondLocationBelongsToUser: true
 
-          }, () => {
-            console.log(this.state.secondLocation);
-            this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
-          });
-        } else {
-          console.log('else');
-          this.setState({
-            secondLocation: this.state.search
-          }, () => {
-            this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
-          })
-        }
+  deliverMessagesToUser = (search, item) => {
+    console.log('messages');
+    console.log(search);
+    console.log(item);
+  }
+  
+  searchForCoordinates = (search, user) => {
+    if(user){
+      this.setState({
+        secondLocation: user.userAddress,
+        secondUserName: user.userName, 
+        secondLocationBelongsToUser: true
+      }, () => {
+        console.log(this.state.secondLocation);
+        this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+      });
+      } else {
+      console.log('running2')
+      this.setState({
+        secondLocation: search
+      }, () => {
+        this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       })
-    })
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+    }
   }
 
-  // handleSendMessage = () => {
-  //   const dbRef = firebase.database().ref("/users/");
-  //   const newMessageObject = {
-  //     from: this.state.userName,
-  //     sendingUID: this.state.user.uid,
-  //     message: this.state.newMessageContent
-  //     //should also add yelp ID
-  //   }
-  //   dbRef.once
+  handleSendMessage = (e) => {
+    e.preventDefault();
+    const dbRef = firebase.database().ref(`/messages/${this.state.secondUserName}`);
+    const newMessageObject = {
+        from: this.state.userName,
+        sendingUID: this.state.user.uid,
+        message: this.state.newMessageContent
+        //should also add yelp ID
+    }
+    dbRef.push(newMessageObject);
+  }
 
 
 
 
-  // }
 
   
 
