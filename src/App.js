@@ -38,7 +38,10 @@ class App extends Component {
       showingCoffee: true,
       showingBar: true,
       userNameForm: "",
-      userName: ""
+      userName: "",
+      search: "",
+      searchedUser: ""
+
     }
   }
   componentDidMount() {
@@ -50,11 +53,31 @@ class App extends Component {
             user: user,
           },() => {
             this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
-            }
+            this.dbRef.on('value', (snapshot) => {
+              console.log('here', snapshot.val());
+              if (snapshot.val() !== null){
+                this.setState({
+                  userLocation: (snapshot.val().userAddress),
+                  userName: (snapshot.val().userName)
+                })
+              }
+            })
+          }
         )
       }
     })
   }
+
+  // componentDidMount(){
+  //   firebase.database().ref(`${this.state.user.uid}`).on('value', (snapshot) => {
+  //      console.log('here', snapshot.val()); 
+  //       this.setState({
+  //         userLocation: (snapshot.val().userAddress) || "",
+  //         userName: (snapshot.val().userName) || ""
+  //       })
+  //   })
+  // }
+
 
   componentWillUnmount() {
     if(this.dbRef){
@@ -75,9 +98,9 @@ class App extends Component {
         console.log("on login", snapshot.val());
         if(snapshot.exists()) {
           this.setState({
-            newUser: false,
-            userLocation: (snapshot.val().userAddress),
-            userName: (snapshot.val().userName)
+            newUser: false
+            // userLocation: (snapshot.val().userAddress),
+            // userName: (snapshot.val().userName)
           }, () => {
             this.redirectAfterLogin();
           }
@@ -115,21 +138,14 @@ class App extends Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log("Handle submit works", this.state.userLocation)
-    // const userAddress = this.state.userLocation
-    // const userInfo = {}
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm
     }
-
-    // const userAddress = {}
-    // const userName = {}
-    
     const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
     dbRef.set(userInfo);
     console.log(dbRef);
     console.log(firebase.database);
-    
     dbRef.once('value').then((snapshot) => {
       this.setState ({
         userLocation: (snapshot.val().userAddress),
@@ -156,7 +172,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 500,
+          radius: 5000,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -236,9 +252,9 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
-    //The secondCoordinates are not changing here.
-    this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+    this.checkForMatchingUsers();
+
+    
   }
   midPoint = () => {
     const midY = (this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2;
@@ -273,6 +289,40 @@ class App extends Component {
     }
   }
 
+  checkForMatchingUsers = () => {
+    console.log(this.state.search)
+    const dbRef = firebase.database().ref();
+    console.log(firebase.database);
+    
+    dbRef.once('value').then((snapshot) => {
+      console.log('this is firebase!!~!!')
+      console.log(snapshot.val().userName);
+      const newArray = Object.values(snapshot.val());
+      console.log(newArray);
+      newArray.forEach((user) => {
+        if(user.userName === this.state.search){
+          this.setState({
+            secondLocation: user.userAddress
+          }, () => {
+            console.log(this.state.secondLocation);
+            this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+          });
+        } else {
+          this.setState({
+            secondLocation: this.state.search
+          }, () => {
+            this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+          })
+        }
+      })
+    })
+    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
+  }
+
+  
+
+    
+  
 
   render() {
     return (
