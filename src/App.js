@@ -54,7 +54,7 @@ class App extends Component {
           {
             user: user,
           },() => {
-            this.dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+            this.dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
             this.dbRef.on('value', (snapshot) => {
               console.log('here', snapshot.val());
               if (snapshot.val() !== null){
@@ -96,7 +96,7 @@ class App extends Component {
         user: userObject
       }
       );
-      firebase.database().ref(`${userObject.uid}`).once('value').then((snapshot) => {
+      firebase.database().ref(`/users/${userObject.uid}`).once('value').then((snapshot) => {
         console.log("on login", snapshot.val());
         if(snapshot.exists()) {
           this.setState({
@@ -144,7 +144,7 @@ class App extends Component {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm
     }
-    const dbRef = firebase.database().ref(`/${this.state.user.uid}`);
+    const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     dbRef.set(userInfo);
     console.log(dbRef);
     console.log(firebase.database);
@@ -307,15 +307,16 @@ class App extends Component {
   
   checkForMatchingUsers = () => {
     console.log(this.state.search)
-    const dbRef = firebase.database().ref();
-    console.log(firebase.database);
+    const dbRef = firebase.database();
+    console.log(firebase.database().ref());
     
-    dbRef.once('value').then((snapshot) => {
+    dbRef.ref("/users/").once('value').then((snapshot) => {
       console.log('this is firebase!!~!!')
-      console.log(snapshot.val().userName);
+      console.log('snapshot', snapshot.val());
       const newArray = Object.values(snapshot.val());
       console.log(newArray);
       newArray.forEach((user) => {
+        console.log('user', user.userName);
         if(user.userName === this.state.search){
           this.setState({
             secondLocation: user.userAddress
@@ -324,6 +325,7 @@ class App extends Component {
             this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
           });
         } else {
+          console.log('else');
           this.setState({
             secondLocation: this.state.search
           }, () => {
