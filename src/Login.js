@@ -21,15 +21,15 @@ class Login extends Component{
       )
     }
     return(
-      <div className="Login">
-        <h1>Meet Me Halfway</h1>
-        <h2>Im the login page</h2>
+      <div className="login">
+        <h1 className="login__title">Middl.</h1>
+        <h2 className="login__subtitle">Im the login page</h2>
         {(this.props.user) ?
-          <button onClick={this.props.logOut}>Logout</button>
+          <button className="login__logout" onClick={this.props.logOut}>Logout</button>
           : (
             <div>
-              <button onClick={this.props.logIn}>Sign In</button>
-              <button>Sign In as Guest</button>
+              <button onClick={this.props.logIn} className="login__signIn">Sign In</button>
+              <button className="login__signInAsGuest">Sign In as Guest</button>
             </div>
           )}
       </div>

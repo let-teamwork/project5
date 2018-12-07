@@ -1,0 +1,21 @@
+$mainColor:#0d6978;
+$secondaryColor:#b6d2cf;
+$thirdColor:#e898e9;
+$grey:#cccece;
+
+
+@mixin headingFont($fontsize){
+    font-size:$fontsize;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight:700;
+    text-transform: uppercase;
+}
+
+@mixin bodyFont($color){
+    line-height:1.8rem;
+    font-family:'Work Sans', sans-serif;
+    font-size:1.6rem;
+    color:$color;
+
+}
+

@@ -54,30 +54,4 @@ withHandlers({
     </GoogleMap>
 );
 
-// const MyMapComponent = compose(
-//     withProps({
-//     googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&key=${googleApiKeyJS}&libraries=geometry,drawing,places`,
-//     loadingElement: <div style={{ height: `100%` }} />,
-//     containerElement: <div style={{ height: `400px` }} />,
-//     mapElement: <div style={{ height: `100%` }} />,
-// }),
-//     withScriptjs,
-//     withGoogleMap
-// )
-// ((props) =>
-//     <GoogleMap
-//     defaultZoom={8}
-//     defaultCenter={torontoCoordinates}
-//     >
-//     {props.isMarkerShown &&
-//     // <Marker 
-//     //     position={{ 
-//     //     lat: 43.6572841, lng: -79.41402435 }} 
-//     //     /> 
-//         // && 
-//         <Marker position={{lat:43.75113, lng:-79.7741 }} />
-//     }
-//     </GoogleMap>
-// )
-
 export default MapWithMarkerClusterer;
