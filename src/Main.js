@@ -35,6 +35,20 @@ class Main extends Component {
                 <p>{`Midpoint: ${this.props.midPoint.lat},${this.props.midPoint.lng}`}</p>
                 <button onClick={this.props.toggleCoffee}value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
                 <button onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
+
+
+                {this.props.secondLocationBelongsToUser
+                ? (
+                    <div>
+                        <form action="">
+                                <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
+                            <button onSubmit={this.props.handleSendMessage} >Send Message</button>
+                        </form>
+                    </div>
+                ) : (
+                    ""
+                )}
+
                 {this.props.showingCoffee ? (this.props.coffee.map(coffeeShop => {
                     return (<div>
                         <p>{coffeeShop.alias}</p>
@@ -51,6 +65,7 @@ class Main extends Component {
                     </div>
                     )
                 })) : (null)}
+                
             </div>
         )
     }
