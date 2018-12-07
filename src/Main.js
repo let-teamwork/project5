@@ -29,7 +29,7 @@ class Main extends Component {
                 <p>{`Date Coordinates: ${this.props.secondCoordinates.lat},${this.props.secondCoordinates.lng}`}</p>
                 <form>
                     <input type="text" value={this.props.userLocation} id="userLocation" onChange={this.props.handleAddressChange} />
-                    <input type="text" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="secondLocation" />
+                    <input type="text" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
                     <button onClick={this.props.handleClick}>Get User and Second Coordinates</button>
                 </form>
                 <p>{`Midpoint: ${this.props.midPoint.lat},${this.props.midPoint.lng}`}</p>
