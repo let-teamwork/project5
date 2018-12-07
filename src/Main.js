@@ -5,38 +5,21 @@ import axios from 'axios';
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
-import MyMapComponent from './MyMapComponent';
+import MapWithMarkerClusterer from './MyMapComponent';
 
 
 class Main extends Component {
     constructor() {
         super();
-        this.State={
-            isMarkerShown: false,
+        this.state={
         }
-    }
-    componentDidMount(){
-        this.delayedShowMarker()
-    }
-
-    delayedShowMarker = ()=>{
-        setTimeout(()=>{
-            this.setState({isMarkerShown:true})
-        }, 3000)
-    }
-    handleMarkerClick = () => {
-        this.setState({
-            isMarkerShown: false
-        })
-        this.delayedShowMarker()
     }
     render() {
         
         return (
             <div className="Main">
-                <MyMapComponent
-                    isMarkerShown={this.state.isMarkerShown}
-                    onMarkerClick={this.handleMarkerClick}
+                <MapWithMarkerClusterer
+                    markers={this.props.markers}
                 />
             
                 
