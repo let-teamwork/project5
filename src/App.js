@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
+import MapWithMarkerClusterer from './MyMapComponent'
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -22,6 +23,7 @@ class App extends Component {
       user: {},
       coffee:[],
       bar:[],
+      markers:[],
       midPointCoordinates: {
         lat: null,
         lng: null
@@ -203,6 +205,18 @@ class App extends Component {
     });
   };
   
+  pushCoffeeAndBarToMarker= ()=>{
+    console.log(this.state.bar,this.state.coffee)
+    const newMarkersArray = [];
+    const coffee = this.state.coffee
+    const bar = this.state.bar
+    const joinCoffeeToBar = bar.concat(coffee)
+    
+    this.setState({
+      markers:joinCoffeeToBar
+    })
+    console.log(this.state.markers)
+  }
 
   setUserCoordinates = (coordinates) => {
     const newObject = {};
@@ -266,7 +280,7 @@ class App extends Component {
       midPointCoordinates: midObj
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
-   
+    setTimeout(this.pushCoffeeAndBarToMarker, 1000);
   }
 
   toggleCoffee = () => {
@@ -288,7 +302,9 @@ class App extends Component {
       })
     }
   }
+  
 
+  
   checkForMatchingUsers = () => {
     console.log(this.state.search)
     const dbRef = firebase.database().ref();
@@ -373,7 +389,9 @@ class App extends Component {
           handleAddressChange={this.handleAddressChange}
           handleClick={this.handleClick}
           midPointCoordinates={this.state.midPointCoordinates}
+          markers={this.state.markers}
           />
+          
         )}/>
         </div>
       </Router>

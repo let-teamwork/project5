@@ -2,24 +2,26 @@ import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import firebase from './firebase'
 import axios from 'axios';
+import { compose, withProps } from "recompose"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+
+import MapWithMarkerClusterer from './MyMapComponent';
+
 
 class Main extends Component {
     constructor() {
-        super()
+        super();
+        this.state={
+        }
     }
-    
-    //-------------------------------------------
-    //Create inputs to change the addresses: 
-        //Change address of user (change the state of user location and thus user coordinates)
-        //Change address of second coordinates.
-    //You need basically like two input fields that will help you run this situation
-
-    //-------------------------------------------
-
     render() {
         
         return (
             <div className="Main">
+                <MapWithMarkerClusterer
+                    markers={this.props.markers}
+                />
+            
                 
                 <h2>Im the main</h2>
                 
