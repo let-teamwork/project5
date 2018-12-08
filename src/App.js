@@ -409,9 +409,9 @@ class App extends Component {
 
     // })
     
-    console.log('messages');
-    console.log(search);
-    console.log(item);
+    // console.log('messages');
+    // console.log(search);
+    // console.log(item);
   }
   
   searchForCoordinates = (search, user) => {
