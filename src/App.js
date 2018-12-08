@@ -49,8 +49,10 @@ class App extends Component {
       secondUserName: "",
       pendingMessages: 0,
       messages: [],
-      newMessageContent: ""
-
+      newMessageContent: "",
+      userMOT: "",
+      secondMOT: "",
+      item: {}
     }
   }
   componentDidMount() {
@@ -76,17 +78,6 @@ class App extends Component {
     })
     this.searchFirebase(`${this.state.userName}`, 'messages', this.deliverMessagesToUser);
   }
-
-  // componentDidMount(){
-  //   firebase.database().ref(`${this.state.user.uid}`).on('value', (snapshot) => {
-  //      console.log('here', snapshot.val()); 
-  //       this.setState({
-  //         userLocation: (snapshot.val().userAddress) || "",
-  //         userName: (snapshot.val().userName) || ""
-  //       })
-  //   })
-  // }
-
 
   componentWillUnmount() {
     if(this.dbRef){
@@ -275,17 +266,77 @@ class App extends Component {
     e.preventDefault();
     this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
   }
+
+  midPointBasedOnMOT = () => {
+    if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
+      //Car-Walk
+      this.midY = (this.state.secondCoordinates.lat * 5 / 6) + (this.state.userCoordinates.lat / 6);
+      this.midX = (this.state.secondCoordinates.lng * 5 / 6) + (this.state.userCoordinates.lng / 6);
+    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "car") {
+      //Car-Walk
+      this.midY = (this.state.secondCoordinates.lat / 6) + (this.state.userCoordinates.lat * 5 / 6);
+      this.midX = (this.state.secondCoordinates.lng / 6) + (this.state.userCoordinates.lng * 5 / 6);
+    } else if (this.state.userMOT === "car" && this.state.secondMOT === "public") {
+      //Car-Public
+      this.midY = (this.state.secondCoordinates.lat * 5 / 8) + (this.state.userCoordinates.lat * 3 / 8);
+      this.midX = (this.state.secondCoordinates.lng * 5 / 8) + (this.state.userCoordinates.lng * 3 / 8);
+    } else if (this.state.userMOT === "public" && this.state.secondMOT === "car") {
+      //Car-Public
+      this.midY = (this.state.secondCoordinates.lat * 3 / 8) + (this.state.userCoordinates.lat * 5 / 8);
+      this.midX = (this.state.secondCoordinates.lng * 3 / 8) + (this.state.userCoordinates.lng * 5 / 8);
+    } else if (this.state.userMOT === "car" && this.state.secondMOT === "bike") {
+      //Car-Bike
+      this.midY = (this.state.secondCoordinates.lat * 5 / 7) + (this.state.userCoordinates.lat * 2 / 7);
+      this.midX = (this.state.secondCoordinates.lng * 5 / 7) + (this.state.userCoordinates.lng * 2 / 7);
+    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "car") {
+      //Car-Bike
+      this.midY = (this.state.secondCoordinates.lat * 2 / 7) + (this.state.userCoordinates.lat * 5 / 7);
+      this.midX = (this.state.secondCoordinates.lng * 2 / 7) + (this.state.userCoordinates.lng * 5 / 7);
+    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "public") {
+      //Walk-Public
+      this.midY = (this.state.secondCoordinates.lat / 4) + (this.state.userCoordinates.lat * 3 / 4);
+      this.midX = (this.state.secondCoordinates.lng / 4) + (this.state.userCoordinates.lng * 3 / 4);
+    } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
+      //Walk-Public
+      this.midY = (this.state.secondCoordinates.lat * 3 / 4) + (this.state.userCoordinates.lat / 4);
+      this.midX = (this.state.secondCoordinates.lng * 3 / 4) + (this.state.userCoordinates.lng / 4);
+    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "bike") {
+      //Walk-Bike
+      this.midY = (this.state.secondCoordinates.lat / 3) + (this.state.userCoordinates.lat * 2 / 3);
+      this.midX = (this.state.secondCoordinates.lng / 3) + (this.state.userCoordinates.lng * 2 / 3);
+    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "walk") {
+      //Walk-Bike
+      this.midY = (this.state.secondCoordinates.lat * 2 / 3) + (this.state.userCoordinates.lat / 3);
+      this.midX = (this.state.secondCoordinates.lng * 2 / 3) + (this.state.userCoordinates.lng / 3);
+    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "public") {
+      //Bike-Public
+      this.midX = (this.state.secondCoordinates.lng * 2 / 5) + (this.state.userCoordinates.lng * 3 / 5);
+    } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
+      //Bike-Public
+      this.midY = (this.state.secondCoordinates.lat * 3 / 5) + (this.state.userCoordinates.lat * 2 / 5);
+      this.midX = (this.state.secondCoordinates.lng * 3 / 5) + (this.state.userCoordinates.lng * 2 / 5);
+    } else {
+      //Car-Car Bike-Bike Walk-Walk Public-Public OR just no MOT specified
+      this.midY = ((this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2);
+      this.midX = ((this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2);
+    }
+    console.log("midPointBasedOnMOT:", this.midX, this.midY)
+  }
+
   midPoint = () => {
-    const midY = (this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2;
-    const midX = (this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2;
+    this.midPointBasedOnMOT();
+
     const midObj = {};
-    midObj.lat = midY
-    midObj.lng = midX
+    midObj.lat = this.midY
+    midObj.lng = this.midX
+
     this.setState({
       midPointCoordinates: midObj
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
+    console.log("midObj returns:", midObj)
+    console.log("")
   }
 
   toggleCoffee = () => {
@@ -319,13 +370,19 @@ class App extends Component {
         if (item.userName === search) {
           console.log('user', item)
           console.log('search', search)
-          callback(search, item);
-          } else {
-            console.log('running');
-            callback(search);
-          }
+          this.setState({
+            secondLocationBelongsToUser: true,
+            item:item
+          })
         }
-      )}
+      }
+      )
+      if (this.state.secondLocationBelongsToUser){
+        callback(this.state.search, this.state.item)
+      } else {
+        callback(this.state.search)
+      }
+      }
     )  
   }
 
@@ -340,7 +397,7 @@ class App extends Component {
       this.setState({
         secondLocation: user.userAddress,
         secondUserName: user.userName, 
-        secondLocationBelongsToUser: true
+        // secondLocationBelongsToUser: true
       }, () => {
         console.log(this.state.secondLocation);
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
@@ -368,13 +425,11 @@ class App extends Component {
     dbRef.push(newMessageObject);
   }
 
-
-
-
-
-  
-
-    
+  handleMOTChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
   
 
   render() {
@@ -430,6 +485,7 @@ class App extends Component {
           secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}
+          handleMOTChange={this.handleMOTChange}
           />
           
         )}/>
