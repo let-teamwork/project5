@@ -77,7 +77,7 @@ class App extends Component {
         )
       }
     })
-    // this.searchFirebase(`${this.state.userName}`, 'messages', this.deliverMessagesToUser);
+    this.searchFirebase(`${this.state.userName}`, 'messages', this.deliverMessagesToUser);
   }
 
   componentWillUnmount() {
@@ -266,7 +266,7 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
+    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
   }
 
   midPointBasedOnMOT = () => {
@@ -378,37 +378,42 @@ class App extends Component {
         }
       })
     })
-    dbRefNode.once('value').then((snapshot) => {
+    callback(search, dbRefNode)
+  }  
+
+
+
+  getCoordinatesRelatedToSearch = (search, dbRefNode) => {
+    this.setState({
+      secondLocationBelongsToUser: false,
+    });
+    dbRefNode.once('value').then((snapshot) => {  
+      console.log(snapshot);
       const newArrayOfArrays = Object.entries(snapshot.val());
-      console.log('node Array', newArrayOfArrays);
-      // const newArray = Object.values(snapshot.val());
       newArrayOfArrays.forEach((item) => {
-        // console.log(item);
-        console.log('user', item[0])
-        console.log('search', this.state.searchedUID)
         if (this.state.searchedUID === item[0]) {
           this.setState({
             secondLocationBelongsToUser: true,
             item:item
           })
         }
-      }
-      )
+      })
       if (this.state.secondLocationBelongsToUser){
-        callback(this.state.search, this.state.item)
-        console.log(this.state.item);
+        this.searchForCoordinates(this.state.search, this.state.item)
       } else {
-        callback(this.state.search)
+        this.searchForCoordinates(this.state.search)
       }
-      }
-    )  
-    this.setState({
-      secondLocationBelongsToUser: false,
-      searchedUID: ""
-    })
+    })  
+    // this.setState({
+    //   searchedUID: ""
+    // })
   }
 
-  deliverMessagesToUser = (search, item) => {
+  deliverMessagesToUser = (search, dbRefNode) => {
+    // dbRefNode.once('value').then((snapshot) => {
+
+    // })
+    
     console.log('messages');
     console.log(search);
     console.log(item);
