@@ -90,7 +90,6 @@ class App extends Component {
     auth.signInWithPopup(provider).then((result) => {
       
       const userObject = Object.assign({}, result.user);
-      console.log(userObject);
       this.setState({
         user: userObject
       }
@@ -100,8 +99,6 @@ class App extends Component {
         if(snapshot.exists()) {
           this.setState({
             newUser: false
-            // userLocation: (snapshot.val().userAddress),
-            // userName: (snapshot.val().userName)
           }, () => {
             this.redirectAfterLogin();
           }
@@ -110,9 +107,6 @@ class App extends Component {
           this.redirectAfterLogin();
         }
       });
-
-      
-      // console.log(this.state.user);
     })
   }  
 
@@ -139,14 +133,11 @@ class App extends Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log("Handle submit works", this.state.userLocation)
-    // this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm,
       userUID: this.state.user.uid
-      // userCoordinates: this.state.userCoordinates
     }
-    // const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     const dbRef = firebase.database().ref(`/users/${this.state.userNameForm}`);
     dbRef.set(userInfo);
 
@@ -161,7 +152,6 @@ class App extends Component {
   }
 
   restaurantResults = (lat, lng) => {
-    console.log(lat, lng)
     const urlYelp = "https://api.yelp.com/v3/businesses/search";
     const yelpKey =
       "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
@@ -187,7 +177,7 @@ class App extends Component {
         xmlToJSON: false
       }
     }).then(res => {
-      console.log("I work", res)
+      console.log("calling Yelp API & retrieving all restaurants:", res)
       const shopInfo = res.data.businesses
       const coffeeArray = []
       const barArray = []
@@ -208,7 +198,8 @@ class App extends Component {
   };
   
   pushCoffeeAndBarToMarker= ()=>{
-    console.log(this.state.bar,this.state.coffee)
+    console.log("Pushing bars to Bar Array:", this.state.bar) 
+    console.log("Pushing coffee shops to Coffee Array:", this.state.coffee)
     const newMarkersArray = [];
     const coffee = this.state.coffee
     const bar = this.state.bar
@@ -217,7 +208,7 @@ class App extends Component {
     this.setState({
       markers:joinCoffeeToBar
     })
-    console.log(this.state.markers)
+    console.log("Turning Locations into Markers:", this.state.markers)
   }
 
   setUserCoordinates = (coordinates) => {
@@ -227,7 +218,6 @@ class App extends Component {
     this.setState({
       userCoordinates: newObject
     });
-    console.log('state', this.state.userCoordinates);
   }
 
   setSecondCoordinates = (coordinates) => {
@@ -266,15 +256,17 @@ class App extends Component {
   handleClick = (e) => {
     e.preventDefault();
     this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
+    console.log("Submit clicked and calling search firebase function")
   }
 
   midPointBasedOnMOT = () => {
+    console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
     if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
       //Car-Walk
       this.midY = (this.state.secondCoordinates.lat * 5 / 6) + (this.state.userCoordinates.lat / 6);
       this.midX = (this.state.secondCoordinates.lng * 5 / 6) + (this.state.userCoordinates.lng / 6);
     } else if (this.state.userMOT === "walk" && this.state.secondMOT === "car") {
-      //Car-Walk
+      //Walk-Car
       this.midY = (this.state.secondCoordinates.lat / 6) + (this.state.userCoordinates.lat * 5 / 6);
       this.midX = (this.state.secondCoordinates.lng / 6) + (this.state.userCoordinates.lng * 5 / 6);
     } else if (this.state.userMOT === "car" && this.state.secondMOT === "public") {
@@ -282,7 +274,7 @@ class App extends Component {
       this.midY = (this.state.secondCoordinates.lat * 5 / 8) + (this.state.userCoordinates.lat * 3 / 8);
       this.midX = (this.state.secondCoordinates.lng * 5 / 8) + (this.state.userCoordinates.lng * 3 / 8);
     } else if (this.state.userMOT === "public" && this.state.secondMOT === "car") {
-      //Car-Public
+      //Public-Car
       this.midY = (this.state.secondCoordinates.lat * 3 / 8) + (this.state.userCoordinates.lat * 5 / 8);
       this.midX = (this.state.secondCoordinates.lng * 3 / 8) + (this.state.userCoordinates.lng * 5 / 8);
     } else if (this.state.userMOT === "car" && this.state.secondMOT === "bike") {
@@ -290,7 +282,7 @@ class App extends Component {
       this.midY = (this.state.secondCoordinates.lat * 5 / 7) + (this.state.userCoordinates.lat * 2 / 7);
       this.midX = (this.state.secondCoordinates.lng * 5 / 7) + (this.state.userCoordinates.lng * 2 / 7);
     } else if (this.state.userMOT === "bike" && this.state.secondMOT === "car") {
-      //Car-Bike
+      //Bike-Car
       this.midY = (this.state.secondCoordinates.lat * 2 / 7) + (this.state.userCoordinates.lat * 5 / 7);
       this.midX = (this.state.secondCoordinates.lng * 2 / 7) + (this.state.userCoordinates.lng * 5 / 7);
     } else if (this.state.userMOT === "walk" && this.state.secondMOT === "public") {
@@ -298,7 +290,7 @@ class App extends Component {
       this.midY = (this.state.secondCoordinates.lat / 4) + (this.state.userCoordinates.lat * 3 / 4);
       this.midX = (this.state.secondCoordinates.lng / 4) + (this.state.userCoordinates.lng * 3 / 4);
     } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
-      //Walk-Public
+      //Public-Walk
       this.midY = (this.state.secondCoordinates.lat * 3 / 4) + (this.state.userCoordinates.lat / 4);
       this.midX = (this.state.secondCoordinates.lng * 3 / 4) + (this.state.userCoordinates.lng / 4);
     } else if (this.state.userMOT === "walk" && this.state.secondMOT === "bike") {
@@ -306,14 +298,15 @@ class App extends Component {
       this.midY = (this.state.secondCoordinates.lat / 3) + (this.state.userCoordinates.lat * 2 / 3);
       this.midX = (this.state.secondCoordinates.lng / 3) + (this.state.userCoordinates.lng * 2 / 3);
     } else if (this.state.userMOT === "bike" && this.state.secondMOT === "walk") {
-      //Walk-Bike
+      //Bike-Walk
       this.midY = (this.state.secondCoordinates.lat * 2 / 3) + (this.state.userCoordinates.lat / 3);
       this.midX = (this.state.secondCoordinates.lng * 2 / 3) + (this.state.userCoordinates.lng / 3);
     } else if (this.state.userMOT === "bike" && this.state.secondMOT === "public") {
       //Bike-Public
+      this.midY = (this.state.secondCoordinates.lat * 2 / 5) + (this.state.userCoordinates.lat * 3 / 5);
       this.midX = (this.state.secondCoordinates.lng * 2 / 5) + (this.state.userCoordinates.lng * 3 / 5);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
-      //Bike-Public
+    } else if (this.state.userMOT === "public" && this.state.secondMOT === "bike") {
+      //Public-Bike
       this.midY = (this.state.secondCoordinates.lat * 3 / 5) + (this.state.userCoordinates.lat * 2 / 5);
       this.midX = (this.state.secondCoordinates.lng * 3 / 5) + (this.state.userCoordinates.lng * 2 / 5);
     } else {
@@ -321,7 +314,7 @@ class App extends Component {
       this.midY = ((this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2);
       this.midX = ((this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2);
     }
-    console.log("midPointBasedOnMOT:", this.midX, this.midY)
+    console.log("Getting midpoints based on MOT:", this.midX, this.midY)
   }
 
   midPoint = () => {
@@ -336,8 +329,6 @@ class App extends Component {
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
-    console.log("midObj returns:", midObj)
-    console.log("")
   }
 
   toggleCoffee = () => {
@@ -365,12 +356,8 @@ class App extends Component {
     const dbRef = firebase.database().ref(`/${node}/`);
     dbRef.once('value').then((snapshot) => {
       const newArray = Object.values(snapshot.val());
-      // const newArray = Object.values(snapshot.val());
       newArray.forEach((item) => {
-        console.log(item);
         if (item.userName === search) {
-          console.log('user', item)
-          console.log('search', search)
           this.setState({
             secondLocationBelongsToUser: true,
             item:item
@@ -397,14 +384,13 @@ class App extends Component {
     if(user){
       this.setState({
         secondLocation: user.userAddress,
-        secondUserName: user.userName, 
-        // secondLocationBelongsToUser: true
+        secondUserName: user.userName
       }, () => {
-        console.log(this.state.secondLocation);
+        console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       });
       } else {
-      console.log('running2')
+      console.log('not a user: getting coordinates')
       this.setState({
         secondLocation: search
       }, () => {
@@ -431,7 +417,6 @@ class App extends Component {
       [e.target.name]: e.target.value
     })
   }
-  
 
   render() {
     return (
