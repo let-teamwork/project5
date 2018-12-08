@@ -17,7 +17,7 @@ class Main extends Component {
     render() {
         
         return (
-            <div className="Main">
+            <div key="main" className="Main">
                 <MapWithMarkerClusterer
                     markers={this.props.markers}
                 />
