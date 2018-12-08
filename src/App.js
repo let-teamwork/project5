@@ -313,6 +313,7 @@ class App extends Component {
     const dbRef = firebase.database().ref(`/${node}/`);
     dbRef.once('value').then((snapshot) => {
       const newArray = Object.values(snapshot.val());
+      console.log(newArray);
       // const newArray = Object.values(snapshot.val());
       newArray.forEach((item) => {
         console.log(item);
