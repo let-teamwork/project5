@@ -10,6 +10,7 @@ import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
 import messages from './messages'
 
+//Newest version of the code as of Saturday December 8 2:34 pm
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
