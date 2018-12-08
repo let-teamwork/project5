@@ -46,6 +46,7 @@ class App extends Component {
       userName: "",
       search: "",
       searchedUser: "",
+      searchedUID: "",
       secondLocationBelongsToUser: false,
       secondUserName: "",
       pendingMessages: 0,
@@ -135,16 +136,20 @@ class App extends Component {
     console.log("Handle submit works", this.state.userLocation)
     const userInfo = {
       userName: this.state.userNameForm,
-      userAddress: this.state.userLocationForm,
-      userUID: this.state.user.uid
+      userAddress: this.state.userLocationForm
+      // userCoordinates: this.state.userCoordinates
     }
-    const dbRef = firebase.database().ref(`/users/${this.state.userNameForm}`);
+    // const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+    const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+    const dbRefUserList = firebase.database().ref(`/userNames/${this.state.userName}`);
     dbRef.set(userInfo);
 
     dbRef.once('value').then((snapshot) => {
       this.setState ({
         userLocation: (snapshot.val().userAddress),
         userName: (snapshot.val().userName)
+      }, () => {
+        dbRefUserList.set(this.state.user.uid);
       })
     });
 
@@ -255,7 +260,7 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
+    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
     console.log("Submit clicked and calling search firebase function")
   }
 
@@ -351,41 +356,73 @@ class App extends Component {
     }
   }
   
+  // this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
+
+
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
-    const dbRef = firebase.database().ref(`/${node}/`);
-    dbRef.once('value').then((snapshot) => {
-      const newArray = Object.values(snapshot.val());
-      newArray.forEach((item) => {
-        if (item.userName === search) {
+    const dbRefName = firebase.database().ref(`/userNames/`);
+    const dbRefNode = firebase.database().ref(`/${node}/`);
+    dbRefName.once('value').then((snapshot) => {
+      const newArrayOfArrays = Object.entries(snapshot.val())
+      newArrayOfArrays.forEach((array) => {
+        if (search === array[0]) {
+          this.setState({
+            searchedUID: array[1]
+          });
+        }
+      })
+    })
+    callback(search, dbRefNode)
+  }  
+
+
+
+  getCoordinatesRelatedToSearch = (search, dbRefNode) => {
+    this.setState({
+      secondLocationBelongsToUser: false,
+    });
+    dbRefNode.once('value').then((snapshot) => {  
+      console.log(snapshot);
+      const newArrayOfArrays = Object.entries(snapshot.val());
+      newArrayOfArrays.forEach((item) => {
+        if (this.state.searchedUID === item[0]) {
           this.setState({
             secondLocationBelongsToUser: true,
             item:item
           })
         }
-      }
-      )
+      })
       if (this.state.secondLocationBelongsToUser){
-        callback(this.state.search, this.state.item)
+        this.searchForCoordinates(this.state.search, this.state.item)
       } else {
-        callback(this.state.search)
+        this.searchForCoordinates(this.state.search)
       }
-      }
-    )  
+    })  
+    // this.setState({
+    //   searchedUID: ""
+    // })
   }
 
-  deliverMessagesToUser = (search, item) => {
+  deliverMessagesToUser = (search, dbRefNode) => {
+    // dbRefNode.once('value').then((snapshot) => {
+
+    // })
+    
     console.log('messages');
     console.log(search);
     console.log(item);
   }
   
   searchForCoordinates = (search, user) => {
+    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
     if(user){
       this.setState({
-        secondLocation: user.userAddress,
-        secondUserName: user.userName
+        secondLocation: user[1].userAddress,
+        secondUserName: user[1].userName, 
+        // secondLocationBelongsToUser: true
       }, () => {
+        console.log('setting second location', this.state.secondLocation);
         console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       });
@@ -396,8 +433,11 @@ class App extends Component {
       }, () => {
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       })
-    this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
     }
+    this.setState({
+      item: {},
+      search: ""
+    })
   }
 
   handleSendMessage = (e) => {
