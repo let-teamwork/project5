@@ -125,6 +125,10 @@ class App extends Component {
     }
   }
 
+  signInAsGuest = () => {
+    auth.signInAnonymously();
+  }
+
   logOut = () => {
     auth.signOut().then(() => {
       this.setState({
@@ -132,6 +136,8 @@ class App extends Component {
       })
     })
   }
+
+
 
   handleSubmit = e => {
     e.preventDefault();
@@ -260,14 +266,14 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    if (this.state.userName){
-      this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-      console.log("Submit clicked as user")
-    }else{
-      console.log("Submit clicked as guest")
-      this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
-      this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates)
-    }
+    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
+    console.log("Submit clicked as user")
+    // if (this.state.userName){
+    // }else{
+    //   console.log("Submit clicked as guest")
+    //   this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
+    //   this.getCoordinates(this.state.search, this.setSecondCoordinates)
+    // }
   }
 
   midPointBasedOnMOT = () => {
@@ -370,7 +376,6 @@ class App extends Component {
       console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
         console.log(array)
-        // console.log(search)
         if (search === array[0]) {
           this.setState({
             searchedUID: array[1]
@@ -505,6 +510,7 @@ class App extends Component {
           handleChange={this.handleChange}
           toCreateAccount={this.state.toCreateAccount}
           toMain={this.state.toMain}
+          signInAsGuest={this.signInAsGuest}
           />
         )}/>
         <Route 
