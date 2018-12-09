@@ -1,7 +1,7 @@
-$mainColor:#0d6978;
+$primaryColor:#0d6978;
 $secondaryColor:#b6d2cf;
 $thirdColor:#e898e9;
-$grey:#cccece;
+$grey:#adaeae;
 
 
 @mixin headingFont($fontsize){
@@ -19,3 +19,55 @@ $grey:#cccece;
 
 }
 
+@mixin button($fontSize) {
+    @include bodyFont($thirdColor);
+    text-transform: uppercase;
+    display: block;
+    font-size:$fontSize;
+    padding: 20px 20px;
+    width:250px;
+    cursor: pointer;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom:10px;
+    border-radius:50px;
+    margin:20px auto;
+    &:active {
+        outline: none;
+        -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+        -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+        box-shadow: inset 0px 0px 5px #c1c1c1;
+    }
+
+}
+
+@mixin input($width){
+    // @include bodyFont(black);
+    width:$width;
+    padding:10px 10px;
+    margin:10px auto;
+    cursor: pointer;
+}
+
+@mixin linkStyle($underline) {
+    text-decoration: $underline;
+    color: black;
+    transition: color .3s;
+    &:hover {
+        color: white;
+    }
+}
+
+.wrapper {
+    max-width:320px;
+    margin: 0 auto;
+}
+// add this class to implement button styles to all buttons on the app. 
+.app__button{
+    @include button(1.8rem);
+    font-weight:bold;
+}
+
+// add this class to implement input styles to all buttons
+.app__input {
+    @include input(300px);
+}

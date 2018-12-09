@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
-import MapWithMarkerClusterer from './MyMapComponent'
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -42,7 +41,9 @@ class App extends Component {
       userNameForm: "",
       userName: "",
       search: "",
-      searchedUser: ""
+      searchedUser: "",
+      directions: "",
+      showDirections: false,
 
     }
   }
@@ -174,7 +175,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 5000,
+          radius: 100,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -267,6 +268,12 @@ class App extends Component {
   handleClick = (e) => {
     e.preventDefault();
     this.checkForMatchingUsers();
+
+    setTimeout(()=>{
+      this.setState({
+      showDirections: true
+    })}, 3000)
+    
 
     
   }
@@ -391,7 +398,28 @@ class App extends Component {
           handleAddressChange={this.handleAddressChange}
           handleClick={this.handleClick}
           midPointCoordinates={this.state.midPointCoordinates}
+
+
           markers={this.state.markers}
+
+          userCoordinatesLat = {
+            this.state.userCoordinates.lat
+          }
+          userCoordinatesLng = {
+            this.state.userCoordinates.lng
+          }
+
+          showDirections = {
+            this.state.showDirections
+          }
+
+
+          midPointCoordinatesLat = {
+            this.state.secondCoordinates.lat
+          }
+          midPointCoordinatesLng = {
+            this.state.secondCoordinates.lng
+          }
           />
           
         )}/>

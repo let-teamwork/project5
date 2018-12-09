@@ -1,7 +1,7 @@
 import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import firebase from './firebase'
-import axios from 'axios';
+
+
 
 class CreateAccount extends Component{
   constructor(){
@@ -9,52 +9,77 @@ class CreateAccount extends Component{
   }
   render(){
     return(
-      <div>
-        <h2>I'm create account</h2>
-        <main>
-          <div>
-            {(this.props.userLocation) ? (<p>Your current address is {this.props.userLocation}</p> 
-            ) : (
-            <p>Please type in your address. This will be your default address.</p>
-            )}
+      <div className="createAccount">
+        <div className="header__background">
+          <header className="createAccount__header wrapper">
+            <p className="header__userName">{`Hey
+                ${
+                  this.props.user.displayName
+                }
+              `}</p>
+          </header>
           </div>
-          <form onSubmit={this.props.handleSubmit}>
-            <input 
-              type="text"
-              id="userNameForm"
-              onChange={this.props.handleChange}
-              value={this.props.userNameForm}
-            />
-            <input
-              type="text"
-              id="userLocationForm"
-              onChange={this.props.handleChange}
-              value={this.props.userLocationForm}
-            />
-            <div>
-              <input 
-                type="radio"
-                name="modeOfTransportation"
-              />
-              <input
-                type="radio"
-                name="modeOfTransportation"
-              />
-              <input
-                type="radio"
-                name="modeOfTransportation"
-              />
-              <input
-                type="radio"
-                name="modeOfTransportation"
-              />
-            </div>
-              <input
-                type="submit"
-                value="Submit Address"
-              />
-          </form>
-        </main>
+          <div className="createAccount__background wrapper">
+            <h2 className="createAccount__subtitle">Middl.</h2>
+              <p className="createAccount__text">
+                Welcome! You're only a few steps away before finding a perfect destination for your date. This app will find the exact <strong>Middl</strong> point between you and your date! It will then populate several destinations for your upcoming date!
+              </p>
+            <main>
+              <form onSubmit={this.props.handleSubmit}
+                  className="createAccount__form"
+              >
+                  <label htmlFor="userNameForm" 
+                    className="createAccount__label"
+                  >User name </label>
+                <input 
+                
+                  className="app__input"
+                  type="text"
+                  id="userNameForm"
+                  onChange={this.props.handleChange}
+                  value={this.props.userNameForm}
+                />
+                <label 
+                  className = "createAccount__label"
+                htmlFor="userLocationForm">Address
+                   
+                </label>
+                <p className="createAccount__text createAccount__text--address"> Please type in your address.This will be your
+                default address. </p>
+                <input
+                  className="app__input"
+                  type="text"
+                  id="userLocationForm"
+                  onChange={this.props.handleChange}
+                  value={this.props.userLocationForm}
+                />
+                <div>
+                  <input 
+                    type="radio"
+                    name="modeOfTransportation"
+                  />
+                  <input
+                    type="radio"
+                    name="modeOfTransportation"
+                  />
+                  <input
+                    type="radio"
+                    name="modeOfTransportation"
+                  />
+                  <input
+                    type="radio"
+                    name="modeOfTransportation"
+                  />
+                </div>
+                <label htmlFor ="createAccount__submit" className="visuallyhidden"> submit address </label>
+                  <input
+                    className="createAccount__submit app__button"
+                    type="submit"
+                    value="Submit Address"
+                  />
+              </form>
+            </main>
+          </div>
       </div>
     )
   }

@@ -22,16 +22,18 @@ class Login extends Component{
     }
     return(
       <div className="login">
-        <h1 className="login__title">Middl.</h1>
-        <h2 className="login__subtitle">Im the login page</h2>
-        {(this.props.user) ?
-          <button className="login__logout" onClick={this.props.logOut}>Logout</button>
-          : (
-            <div>
-              <button onClick={this.props.logIn} className="login__signIn">Sign In</button>
-              <button className="login__signInAsGuest">Sign In as Guest</button>
-            </div>
-          )}
+        <div className="wrapper"> 
+          <h1 className="login__title">Middl.</h1>
+          <h2 className="login__subtitle">I'll meet you in the middle!</h2>
+          {(this.props.user) ?
+            <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
+            : (
+              <div>
+                <button onClick={this.props.logIn} className="login__signIn app__button">Sign In</button>
+                <button className="login__signInAsGuest app__button">Sign In as Guest</button>
+              </div>
+            )}
+        </div>
       </div>
     )
   }
