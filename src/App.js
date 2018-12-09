@@ -58,7 +58,7 @@ class App extends Component {
   componentDidMount() {
 
     auth.onAuthStateChanged((user) => {
-      console.log('firing');
+      // console.log('firing');
       if (user) {
         this.setState(
           {
@@ -79,8 +79,8 @@ class App extends Component {
         )
       }
     })
-    // this.fetchMessages();
-    console.log(this.state.messages);
+    this.fetchMessages();
+    // console.log(this.state.messages);
   }
 
   componentWillUnmount() {
@@ -98,7 +98,7 @@ class App extends Component {
       }
       );
       firebase.database().ref(`/users/${userObject.uid}`).once('value').then((snapshot) => {
-        console.log("on login", snapshot.val());
+        // console.log("on login", snapshot.val());
         if(snapshot.exists()) {
           this.setState({
             newUser: false
@@ -135,7 +135,7 @@ class App extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log("Handle submit works", this.state.userLocation)
+    // console.log("Handle submit works", this.state.userLocation)
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm
@@ -180,7 +180,7 @@ class App extends Component {
         xmlToJSON: false
       }
     }).then(res => {
-      console.log("calling Yelp API & retrieving all restaurants:", res)
+      // console.log("calling Yelp API & retrieving all restaurants:", res)
       const shopInfo = res.data.businesses
       const coffeeArray = []
       const barArray = []
@@ -201,8 +201,8 @@ class App extends Component {
   };
   
   pushCoffeeAndBarToMarker= ()=>{
-    console.log("Pushing bars to Bar Array:", this.state.bar) 
-    console.log("Pushing coffee shops to Coffee Array:", this.state.coffee)
+    // console.log("Pushing bars to Bar Array:", this.state.bar) 
+    // console.log("Pushing coffee shops to Coffee Array:", this.state.coffee)
     const newMarkersArray = [];
     const coffee = this.state.coffee
     const bar = this.state.bar
@@ -211,9 +211,9 @@ class App extends Component {
     this.setState({
       markers:joinCoffeeToBar
     })
-    console.log("Turning Locations into Markers:", this.state.markers)
-    console.log("Complete")
-    console.log("")
+    // console.log("Turning Locations into Markers:", this.state.markers)
+    // console.log("Complete")
+    // console.log("")
   }
 
   setUserCoordinates = (coordinates) => {
@@ -262,16 +262,16 @@ class App extends Component {
     e.preventDefault();
     if (this.state.userName){
       this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-      console.log("Submit clicked as user")
+      // console.log("Submit clicked as user")
     }else{
-      console.log("Submit clicked as guest")
+      // console.log("Submit clicked as guest")
       this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
       this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates)
     }
   }
 
   midPointBasedOnMOT = () => {
-    console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
+    // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
     if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
       //Car-Walk
       this.midY = (this.state.secondCoordinates.lat * 5 / 6) + (this.state.userCoordinates.lat / 6);
@@ -325,7 +325,7 @@ class App extends Component {
       this.midY = ((this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2);
       this.midX = ((this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2);
     }
-    console.log("Getting midpoints based on MOT:", this.midX, this.midY)
+    // console.log("Getting midpoints based on MOT:", this.midX, this.midY)
   }
 
   midPoint = () => {
@@ -362,14 +362,14 @@ class App extends Component {
 
 
   searchFirebase = (search, node, callback) => {
-    console.log('searchingFB');
+    // console.log('searchingFB');
     const dbRefName = firebase.database().ref(`/userNames/`);
     console.log(dbRefName);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
-      console.log(snapshot.val());
+      // console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
-        console.log(array)
+        // console.log(array)
         // console.log(search)
         if (search === array[0]) {
           this.setState({
@@ -378,25 +378,25 @@ class App extends Component {
         }
       })
     })
-    console.log('node1', node);
+    // console.log('node1', node);
     callback(search, node)
   }  
 
 
 
   getCoordinatesRelatedToSearch = (search, node) => {
-    console.log('node2',node);
+    // console.log('node2',node);
     this.setState({
       secondLocationBelongsToUser: false,
       searchedUID: ""
     });
     const dbRefNode = firebase.database().ref(`/${node}/`);
     dbRefNode.once('value').then((snapshot) => {  
-      console.log(snapshot);
+      // console.log(snapshot);
       const newArrayOfArrays = Object.entries(snapshot.val());
       newArrayOfArrays.forEach((item) => {
-        console.log('all entries', item);
-        console.log(this.state.searchedUID);
+        // console.log('all entries', item);
+        // console.log(this.state.searchedUID);
         if (this.state.searchedUID === item[0]) {
           this.setState({
             secondLocationBelongsToUser: true,
@@ -416,28 +416,30 @@ class App extends Component {
   }
 
   fetchMessages = () => {
-    console.log('fetching');
+    // console.log('fetching');
     const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-    dbRef.on('value', (snapshot) => {
-      console.log(snapshot.val());
+    dbRef.once('value').then((snapshot) => {
+      if (snapshot.val() === null){
+        return
+      }
+      // console.log('snapshot', snapshot.val());
       const newArray = [];
-      snapshot.val().forEach((entry) => {
-        let newEntry = Object.entries(entry);
-        console.log(newEntry);
-        newArray.push(newEntry);
-        console.log('not in state', newArray)
+      Object.entries(snapshot.val()).forEach((entry) => {
+        // console.log(entry);
+        newArray.push(entry[1]);
+        // console.log('not in state', newArray)
       });
       this.setState({
         messages: newArray
       }, () => {
-        console.log('state', this.state.messages);
+        this.displayMessages();
       });
-    })
+    });
   }
 
-  // displayMessages = () => {
-    
-  // }
+  displayMessages = () => {
+    console.log(this.state.messages);
+  }
   
   searchForCoordinates = (search, user) => {
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
@@ -447,12 +449,12 @@ class App extends Component {
         secondUserName: user[1].userName, 
         // secondLocationBelongsToUser: true
       }, () => {
-        console.log('setting second location', this.state.secondLocation);
-        console.log("is a user: getting coordinates");
+        // console.log('setting second location', this.state.secondLocation);
+        // console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       });
       } else {
-      console.log('not a user: getting coordinates')
+      // console.log('not a user: getting coordinates')
       this.setState({
         secondLocation: search
       }, () => {
@@ -475,7 +477,9 @@ class App extends Component {
     const newMessageObject = {
       from: this.state.userName,
       sendingUID: this.state.user.uid,
-      message: this.state.newMessageContent
+      message: this.state.newMessageContent,
+      displayDate: new Date().toDateString(),
+      currentDate: Date()
       //should also add yelp ID
     }
     dbRefNode.push(newMessageObject);
