@@ -79,7 +79,7 @@ class App extends Component {
         )
       }
     })
-    this.fetchMessages();
+    // this.fetchMessages();
     console.log(this.state.messages);
   }
 
@@ -418,11 +418,13 @@ class App extends Component {
   fetchMessages = () => {
     console.log('fetching');
     const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-    dbRef.once('value').then((snapshot) => {
+    dbRef.on('value', (snapshot) => {
       console.log(snapshot.val());
       const newArray = [];
-      Object.entries(snapshot.val()).forEach((entry) => {
-        newArray.push(entry[1]);
+      snapshot.val().forEach((entry) => {
+        let newEntry = Object.entries(entry);
+        console.log(newEntry);
+        newArray.push(newEntry);
         console.log('not in state', newArray)
       });
       this.setState({
@@ -433,9 +435,9 @@ class App extends Component {
     })
   }
 
-  displayMessages = () => {
+  // displayMessages = () => {
     
-  }
+  // }
   
   searchForCoordinates = (search, user) => {
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
