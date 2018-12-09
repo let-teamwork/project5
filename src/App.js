@@ -14,7 +14,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
 const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
-const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
+const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
 
 class App extends Component {
   constructor() {
@@ -56,6 +56,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+
     auth.onAuthStateChanged((user) => {
       console.log('firing');
       if (user) {
@@ -151,8 +152,6 @@ class App extends Component {
         dbRefUserList.set(this.state.user.uid);
       })
     });
-
-
   }
 
   restaurantResults = (lat, lng) => {
@@ -356,16 +355,11 @@ class App extends Component {
   }
 
   handleAddressChange = (e) => {
-    if(this.state.newUser !== true){
-      this.setState({
-        [e.target.id]: e.target.value
-      })
-    }else{
-      this.setState({
-        secondLocation: e.target.value
-      })
+    this.setState({
+      [e.target.id]: e.target.value
+    })
     }
-  }
+
 
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
