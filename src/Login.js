@@ -27,7 +27,7 @@ class Login extends Component{
           : (
             <div>
               <button onClick={this.props.logIn}>Sign In</button>
-              <Link to="/Main">Sign In as Guest</Link>
+              <Link to="/Main" onClick={this.props.signInAsGuest}>Sign In as Guest</Link>
             </div>
           )}
       </div>
