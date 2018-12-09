@@ -8,7 +8,7 @@ import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
-import messages from './messages'
+
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -51,7 +51,8 @@ class App extends Component {
       newMessageContent: "",
       userMOT: "",
       secondMOT: "",
-      item: {}
+      item: {},
+      messagesdisplayed: false
     }
   }
 
@@ -433,20 +434,42 @@ class App extends Component {
       const newArray = [];
       Object.entries(snapshot.val()).forEach((entry) => {
         // console.log(entry);
-        newArray.push(entry[1]);
+        const newObject = entry[1];
+        newObject.key = entry[0];
+        newArray.push(newObject);
+        
         // console.log('not in state', newArray)
       });
       this.setState({
         messages: newArray
       }, () => {
-        this.displayMessages();
+        this.sortMessages();
       });
     });
   }
 
-  displayMessages = () => {
+  sortMessages = () => {
     console.log(this.state.messages);
+    const newMessagesArray = this.state.messages.sort((a, b) => {
+      // console.log('a',a,'b',b);
+      return a.currentDate - b.currentDate;
+    })
+    // console.log(newMessagesArray);
   }
+
+  handleClickDisplayMessages = () => {
+    if (this.state.messagesdisplayed) {
+      this.setState({
+        messagesdisplayed: false
+      });
+    } else {
+      this.setState({
+        messagesdisplayed: true
+      });
+    }
+  }
+
+
   
   searchForCoordinates = (search, user) => {
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
@@ -553,6 +576,9 @@ class App extends Component {
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}
           handleMOTChange={this.handleMOTChange}
+          messages={this.state.messages}
+          handleClickDisplayMessages={this.handleClickDisplayMessages}
+          messagesdisplayed={this.state.messagesdisplayed}
           />
           
         )}/>
