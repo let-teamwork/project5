@@ -6,6 +6,7 @@ import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
 import MapWithMarkerClusterer from './MyMapComponent';
+import Messages from './Messages';  
 
 
 class Main extends Component {
@@ -24,7 +25,15 @@ class Main extends Component {
             
                 
                 <h2 key="main-h2" >Im the main</h2>
+                <button onClick={this.props.handleClickDisplayMessages}>Display Messages</button>
+                {this.props.messagesdisplayed 
+                ? (
+                <Messages 
+                messages={this.props.messages}
+                />   
+                ) : ""
                 
+                }
                 <p key="main-p1" >{`User Coordinates: ${this.props.userCoordinates.lat},${this.props.userCoordinates.lng}`}</p>
                 <p key="main-p2" >{`Date Coordinates: ${this.props.secondCoordinates.lat},${this.props.secondCoordinates.lng}`}</p>
                 <form key="main-form" >
