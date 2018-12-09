@@ -419,9 +419,13 @@ class App extends Component {
     console.log('fetching');
     const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
     dbRef.once('value').then((snapshot) => {
-      console.log(snapshot.val());
+      if (snapshot.val() === null){
+        return
+      }
+      console.log('snapshot', snapshot.val());
       const newArray = [];
       Object.entries(snapshot.val()).forEach((entry) => {
+        console.log(entry);
         newArray.push(entry[1]);
         console.log('not in state', newArray)
       });
