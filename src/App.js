@@ -15,7 +15,7 @@ import messages from './messages'
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
-const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+const geocodeKey = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo";
 const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
 
 
@@ -60,31 +60,31 @@ class App extends Component {
       item: {}
     }
   }
-  componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      console.log('firing');
-      if (user) {
-        this.setState(
-          {
-            user: user,
-          },() => {
-            this.dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
-            this.dbRef.on('value', (snapshot) => {
-              if (snapshot.val() !== null){
-                this.setState({
-                  userLocation: (snapshot.val().userAddress),
-                  userName: (snapshot.val().userName)
-                }, () => {
-                  this.fetchMessages(); 
-                })
-              }
-            })
-          }
-        )
-      }
-    })
-    this.fetchMessages();
-  }
+  // componentDidMount() {
+  //   auth.onAuthStateChanged((user) => {
+  //     console.log('firing');
+  //     if (user) {
+  //       this.setState(
+  //         {
+  //           user: user,
+  //         },() => {
+  //           this.dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+  //           this.dbRef.on('value', (snapshot) => {
+  //             if (snapshot.val() !== null){
+  //               this.setState({
+  //                 userLocation: (snapshot.val().userAddress),
+  //                 userName: (snapshot.val().userName)
+  //               }, () => {
+  //                 this.fetchMessages(); 
+  //               })
+  //             }
+  //           })
+  //         }
+  //       )
+  //     }
+  //   })
+  //   this.fetchMessages();
+  // }
 
   componentWillUnmount() {
     if(this.dbRef){
@@ -218,7 +218,7 @@ class App extends Component {
     this.setState({
       markers:joinCoffeeToBar
     })
-    console.log("Turning Locations into Markers:", this.state.markers)
+    
   }
 
   setUserCoordinates = (coordinates) => {
@@ -420,28 +420,28 @@ class App extends Component {
         this.searchForCoordinates(this.state.search)
       }
     })  
-    // this.setState({
-    //   searchedUID: ""
-    // })
-  }
-
-  fetchMessages = () => {
-    console.log('fetching');
-    const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-    dbRef.once('value').then((snapshot) => {
-      console.log(snapshot.val());
-      const newArray = [];
-      Object.entries(snapshot.val()).forEach((entry) => {
-        newArray.push(entry[1]);
-        console.log('not in state', newArray)
-      });
-      this.setState({
-        messages: newArray
-      }, () => {
-        console.log('state', this.state.messages);
-      });
+    this.setState({
+      searchedUID: ""
     })
   }
+
+  // fetchMessages = () => {
+  //   console.log('fetching');
+  //   const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
+  //   dbRef.once('value').then((snapshot) => {
+  //     console.log(snapshot.val());
+  //     const newArray = [];
+  //     Object.entries(snapshot.val()).forEach((entry) => {
+  //       newArray.push(entry[1]);
+  //       console.log('not in state', newArray)
+  //     });
+  //     this.setState({
+  //       messages: newArray
+  //     }, () => {
+  //       console.log('state', this.state.messages);
+  //     });
+  //   })
+  // }
 
   displayMessages = () => {
     

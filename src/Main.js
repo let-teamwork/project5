@@ -2,9 +2,9 @@ import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import firebase from './firebase'
 import axios from 'axios';
+import MapWithMarkerClusterer from './MyMapComponent'
+// import MapComponent from './MapComponent';
 
-import MapComponent from './MapComponent';
-// import MapWithAMarker from './MapWithAMarker';
 
 
 class Main extends Component {
@@ -13,33 +13,32 @@ class Main extends Component {
         this.state={
         }
     }
-
-  
     render() {
         
         return (
             <div className="Main" key="main">
                 {
-                    this.props.showDirections === true ?
-                <MapComponent
-                userCoordinatesLat={this.props.userCoordinatesLat}
-                userCoordinatesLng = {
-                    this.props.userCoordinatesLng
-                }
-                midPointCoordinatesLat ={this.props.midPointCoordinatesLat}
-                midPointCoordinatesLng = {
-                    this.props.midPointCoordinatesLng
-                }
-                markers = {
-                    this.props.markers
-                }
+                //     this.props.showDirections === true ?
+                // <MapComponent
+                // userCoordinatesLat={this.props.userCoordinatesLat}
+                // userCoordinatesLng = {
+                //     this.props.userCoordinatesLng
+                // }
+                // midPointCoordinatesLat ={this.props.midPointCoordinatesLat}
+                // midPointCoordinatesLng = {
+                //     this.props.midPointCoordinatesLng
+                // }
+                // markers = {
+                //     this.props.markers
+                // }
         
-                />
-                :
-                <MapWithMarkerClusterer
-                    markers={this.props.markers} />
+                // />
+                // :
+                // null
             
             }
+            <MapWithMarkerClusterer
+                    markers={this.props.markers} />
                 <h2>Im the main</h2>
                 
                 <p>{`User Coordinates: ${this.props.userCoordinates.lat},${this.props.userCoordinates.lng}`}</p>
