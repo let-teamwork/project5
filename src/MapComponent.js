@@ -19,10 +19,8 @@ const MapComponent = compose(
     mapElement: <div style={{ height: `100%` }} />,
     }), withHandlers({
         onMarkerClick: () => (marker) => {
-            // const clickedMarkers = marker.getPosition()
             console.log(this)
             console.log(marker.latLng.lat(), marker.latLng.lng())
-
         },
     }),
     withScriptjs,
@@ -58,7 +56,6 @@ const MapComponent = compose(
         <Marker
             key={marker.alias}
             position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
-            getPosition
             onClick = {
                 props.onMarkerClick
             }

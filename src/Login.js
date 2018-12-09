@@ -7,8 +7,6 @@ class Login extends Component{
     super()
   }
 
-
-
   render(){
     if (this.props.toCreateAccount){
       return(
@@ -30,10 +28,10 @@ class Login extends Component{
             : (
               <div>
                 <button onClick={this.props.logIn} className="login__signIn app__button">Sign In</button>
-                <button className="login__signInAsGuest app__button">Sign In as Guest</button>
+                 <Link to = "/Main" > Sign In as Guest </Link>
               </div>
             )}
-        </div>
+              </div>
       </div>
     )
   }
