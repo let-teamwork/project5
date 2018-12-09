@@ -80,6 +80,7 @@ class App extends Component {
       }
     })
     this.fetchMessages();
+    console.log(this.state.messages);
   }
 
   componentWillUnmount() {
@@ -363,9 +364,10 @@ class App extends Component {
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
     const dbRefName = firebase.database().ref(`/userNames/`);
-    console.log("dbRefName:", dbRefName)
+    console.log(dbRefName);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
+      console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
         console.log(array)
         // console.log(search)
@@ -393,7 +395,7 @@ class App extends Component {
       console.log(snapshot);
       const newArrayOfArrays = Object.entries(snapshot.val());
       newArrayOfArrays.forEach((item) => {
-        console.log(item);
+        console.log('all entries', item);
         console.log(this.state.searchedUID);
         if (this.state.searchedUID === item[0]) {
           this.setState({
