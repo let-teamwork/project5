@@ -10,14 +10,11 @@ import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
 import messages from './messages'
 
-//Newest version of the code as of Saturday December 8 2:34 pm
-
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
 const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
 const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
-
 
 class App extends Component {
   constructor() {
@@ -57,6 +54,7 @@ class App extends Component {
       item: {}
     }
   }
+
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
       console.log('firing');
@@ -137,9 +135,7 @@ class App extends Component {
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm
-      // userCoordinates: this.state.userCoordinates
     }
-    // const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     const dbRefUserList = firebase.database().ref(`/userNames/${this.state.userName}`);
     dbRef.set(userInfo);
@@ -214,6 +210,8 @@ class App extends Component {
       markers:joinCoffeeToBar
     })
     console.log("Turning Locations into Markers:", this.state.markers)
+    console.log("Complete")
+    console.log("")
   }
 
   setUserCoordinates = (coordinates) => {
@@ -260,8 +258,14 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-    console.log("Submit clicked and calling search firebase function")
+    if (this.state.userName){
+      this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
+      console.log("Submit clicked as user")
+    }else{
+      console.log("Submit clicked as guest")
+      this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
+      this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates)
+    }
   }
 
   midPointBasedOnMOT = () => {
@@ -349,15 +353,16 @@ class App extends Component {
   }
 
   handleAddressChange = (e) => {
-    if (e.target.value) {
+    if(this.state.newUser !== true){
       this.setState({
         [e.target.id]: e.target.value
       })
+    }else{
+      this.setState({
+        secondLocation: e.target.value
+      })
     }
   }
-  
-  // this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
-
 
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
