@@ -71,6 +71,8 @@ class App extends Component {
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
                   userName: (snapshot.val().userName)
+                }, () => {
+                  this.fetchMessages(); 
                 })
               }
             })
@@ -78,7 +80,7 @@ class App extends Component {
         )
       }
     })
-    this.searchFirebase(`${this.state.userName}`, 'messages', this.deliverMessagesToUser);
+    this.fetchMessages();
   }
 
   componentWillUnmount() {
@@ -362,7 +364,6 @@ class App extends Component {
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
     const dbRefName = firebase.database().ref(`/userNames/`);
-    const dbRefNode = firebase.database().ref(`/${node}/`);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
       newArrayOfArrays.forEach((array) => {
@@ -373,15 +374,19 @@ class App extends Component {
         }
       })
     })
-    callback(search, dbRefNode)
+    console.log('node1', node);
+    callback(search, node)
   }  
 
 
 
-  getCoordinatesRelatedToSearch = (search, dbRefNode) => {
+  getCoordinatesRelatedToSearch = (search, node) => {
+    console.log('node2',node);
     this.setState({
       secondLocationBelongsToUser: false,
+      searchedUID: ""
     });
+    const dbRefNode = firebase.database().ref(`/${node}/`);
     dbRefNode.once('value').then((snapshot) => {  
       console.log(snapshot);
       const newArrayOfArrays = Object.entries(snapshot.val());
@@ -404,14 +409,21 @@ class App extends Component {
     // })
   }
 
-  deliverMessagesToUser = (search, dbRefNode) => {
-    // dbRefNode.once('value').then((snapshot) => {
-
-    // })
-    
-    // console.log('messages');
-    // console.log(search);
-    // console.log(item);
+  fetchMessages = () => {
+    const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
+    dbRef.once('value').then((snapshot) => {
+      const newArray = [];
+      Object.entries(snapshot.val()).forEach((entry) => {
+        newArray.push(entry);
+        console.log('not in state', newArray)
+      }, () => {
+        this.setState({
+          messages: newArray
+        }, () => {
+          console.log('state', this.state.messages);
+        })
+      })
+    })
   }
   
   searchForCoordinates = (search, user) => {
@@ -442,14 +454,18 @@ class App extends Component {
 
   handleSendMessage = (e) => {
     e.preventDefault();
-    const dbRef = firebase.database().ref(`/messages/${this.state.secondUserName}`);
+    this.searchFirebase(this.state.secondUserName, `messages`, this.deliverNewMessage);
+  }
+
+  deliverNewMessage = (receiver, node) => {
+    const dbRefNode = firebase.database().ref(`/${node}/${this.state.searchedUID}/`)
     const newMessageObject = {
-        from: this.state.userName,
-        sendingUID: this.state.user.uid,
-        message: this.state.newMessageContent
-        //should also add yelp ID
+      from: this.state.userName,
+      sendingUID: this.state.user.uid,
+      message: this.state.newMessageContent
+      //should also add yelp ID
     }
-    dbRef.push(newMessageObject);
+    dbRefNode.push(newMessageObject);
   }
 
   handleMOTChange = e => {
