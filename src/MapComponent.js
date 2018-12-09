@@ -69,4 +69,4 @@ const MapComponent = compose(
 
 
 
-export default MapComponent
+// export default MapComponent

@@ -39,12 +39,12 @@ class Main extends Component {
             }
             <MapWithMarkerClusterer
                     markers={this.props.markers} />
-                <h2>Im the main</h2>
+                <h2 key="main-h2">Im the main</h2>
                 
-                <p>{`User Coordinates: ${this.props.userCoordinates.lat},${this.props.userCoordinates.lng}`}</p>
-                <p>{`Date Coordinates: ${this.props.secondCoordinates.lat},${this.props.secondCoordinates.lng}`}</p>
-                <form>
-                    <input type="text" value={this.props.userLocation} id="userLocation" onChange={this.props.handleAddressChange} />
+                <p key="main-p1" >{`User Coordinates: ${this.props.userCoordinates.lat},${this.props.userCoordinates.lng}`}</p>
+                <p key="main-p2" >{`Date Coordinates: ${this.props.secondCoordinates.lat},${this.props.secondCoordinates.lng}`}</p>
+                <form key="main-form" >
+                    <input type="text" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
                     <label htmlFor="walkUser">Walking</label>
                     <input name="userMOT" type="radio" value="walk" id="walkUser" onChange={this.props.handleMOTChange}/>
                     <label htmlFor="bikeUser">By Bike</label>
@@ -64,14 +64,12 @@ class Main extends Component {
                     <input name="secondMOT" type="radio" value="public" id="publicSecond" onChange={this.props.handleMOTChange}/>
                     <button onClick={this.props.handleClick}>Get User and Second Coordinates</button>
                 </form>
-                <p>{`Midpoint: ${this.props.midPoint.lat},${this.props.midPoint.lng}`}</p>
-                <button onClick={this.props.toggleCoffee}value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                <button onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-
-
+                <p key="main-p3" >{`Midpoint: ${this.props.midPoint.lat},${this.props.midPoint.lng}`}</p>
+                <button key="main-button1" onClick={this.props.toggleCoffee}value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
+                <button key="main-button2" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
                 {this.props.secondLocationBelongsToUser
                 ? (
-                    <div>
+                    <div key="main-div1">
                         <form onSubmit={this.props.handleSendMessage}action="">
                                 <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
                             <button>Send Message</button>
@@ -82,7 +80,7 @@ class Main extends Component {
                 )}
 
                 {this.props.showingCoffee ? (this.props.coffee.map(coffeeShop => {
-                    return (<div>
+                    return (<div key={`div-${coffeeShop.alias}`}>
                         <p>{coffeeShop.alias}</p>
                         <p>{coffeeShop.display_phone}</p>
                         <img src={coffeeShop.image_url} alt=""/>
@@ -90,7 +88,7 @@ class Main extends Component {
                     )
                 })) : (null)}
                 {this.props.showingBar ? (this.props.bar.map(barShop => {
-                    return (<div>
+                    return (<div key={`div-${barShop.alias}`}>
                         <p>{barShop.alias}</p>
                         <p>{barShop.display_phone}</p>
                         <img src={barShop.image_url} alt=""/>

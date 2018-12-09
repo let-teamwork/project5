@@ -10,14 +10,11 @@ import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
 import messages from './messages'
 
-//Newest version of the code as of Saturday December 8 2:34 pm
-
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
-const geocodeKey = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo";
+const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
 const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?"
-
 
 class App extends Component {
   constructor() {
@@ -46,9 +43,7 @@ class App extends Component {
       userName: "",
       search: "",
       searchedUser: "",
-      directions: "",
       showDirections: false,
-
       searchedUID: "",
       secondLocationBelongsToUser: false,
       secondUserName: "",
@@ -60,31 +55,32 @@ class App extends Component {
       item: {}
     }
   }
-  // componentDidMount() {
-  //   auth.onAuthStateChanged((user) => {
-  //     console.log('firing');
-  //     if (user) {
-  //       this.setState(
-  //         {
-  //           user: user,
-  //         },() => {
-  //           this.dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
-  //           this.dbRef.on('value', (snapshot) => {
-  //             if (snapshot.val() !== null){
-  //               this.setState({
-  //                 userLocation: (snapshot.val().userAddress),
-  //                 userName: (snapshot.val().userName)
-  //               }, () => {
-  //                 this.fetchMessages(); 
-  //               })
-  //             }
-  //           })
-  //         }
-  //       )
-  //     }
-  //   })
-  //   this.fetchMessages();
-  // }
+
+  componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      console.log('firing');
+      if (user) {
+        this.setState(
+          {
+            user: user,
+          },() => {
+            this.dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
+            this.dbRef.on('value', (snapshot) => {
+              if (snapshot.val() !== null){
+                this.setState({
+                  userLocation: (snapshot.val().userAddress),
+                  userName: (snapshot.val().userName)
+                // }, () => {
+                //   this.fetchMessages(); 
+                })
+              }
+            })
+          }
+        )
+      }
+    })
+    // this.fetchMessages();
+  }
 
   componentWillUnmount() {
     if(this.dbRef){
@@ -142,9 +138,7 @@ class App extends Component {
     const userInfo = {
       userName: this.state.userNameForm,
       userAddress: this.state.userLocationForm
-      // userCoordinates: this.state.userCoordinates
     }
-    // const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     const dbRef = firebase.database().ref(`/users/${this.state.user.uid}`);
     const dbRefUserList = firebase.database().ref(`/userNames/${this.state.userName}`);
     dbRef.set(userInfo);
@@ -218,7 +212,9 @@ class App extends Component {
     this.setState({
       markers:joinCoffeeToBar
     })
-    
+    console.log("Turning Locations into Markers:", this.state.markers)
+    console.log("Complete")
+    console.log("")
   }
 
   setUserCoordinates = (coordinates) => {
@@ -265,10 +261,16 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-    console.log("Submit clicked and calling search firebase function")
+    if (this.state.userName){
+      this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
+      console.log("Submit clicked as user")
+    }else{
+      console.log("Submit clicked as guest")
+      this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
+      this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates)
+    }
   }
-  showDirections(){
+  showDirections=()=>{
     setTimeout(()=>{
         this.setState({
         showDirections: true
@@ -363,15 +365,16 @@ class App extends Component {
   }
 
   handleAddressChange = (e) => {
-    if (e.target.value) {
+    if(this.state.newUser !== true){
       this.setState({
         [e.target.id]: e.target.value
       })
+    }else{
+      this.setState({
+        secondLocation: e.target.value
+      })
     }
   }
-  
-  // this.searchFirebase(this.state.search, "users", this.searchForCoordinates);
-
 
   searchFirebase = (search, node, callback) => {
     console.log('searchingFB');
@@ -425,23 +428,23 @@ class App extends Component {
     })
   }
 
-  // fetchMessages = () => {
-  //   console.log('fetching');
-  //   const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-  //   dbRef.once('value').then((snapshot) => {
-  //     console.log(snapshot.val());
-  //     const newArray = [];
-  //     Object.entries(snapshot.val()).forEach((entry) => {
-  //       newArray.push(entry[1]);
-  //       console.log('not in state', newArray)
-  //     });
-  //     this.setState({
-  //       messages: newArray
-  //     }, () => {
-  //       console.log('state', this.state.messages);
-  //     });
-  //   })
-  // }
+  fetchMessages = () => {
+    console.log('fetching');
+    const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`)
+    dbRef.once('value').then((snapshot) => {
+      console.log(snapshot.val());
+      const newArray = [];
+      Object.entries(snapshot.val()).forEach((entry) => {
+        newArray.push(entry[1]);
+        console.log('not in state', newArray)
+      });
+      this.setState({
+        messages: newArray
+      }, () => {
+        console.log('state', this.state.messages);
+      });
+    })
+  }
 
   displayMessages = () => {
     
@@ -530,7 +533,7 @@ class App extends Component {
           <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
-          handleSubmit={this.handleSubmit}
+          onSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           userCoordinates={this.state.userCoordinates}
           secondCoordinates={this.state.secondCoordinates}
@@ -543,7 +546,7 @@ class App extends Component {
           toggleBar={this.toggleBar}
           handleAddressChange={this.handleAddressChange}
           handleClick={this.handleClick}
-          midPointCoordinates={this.state.midPointCoordinates}
+          // midPointCoordinates={this.state.midPointCoordinates}
 
 
           markers={this.state.markers}
