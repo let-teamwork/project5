@@ -8,7 +8,7 @@ import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
-import messages from './messages'
+
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
@@ -43,6 +43,7 @@ class App extends Component {
       userName: "",
       search: "",
       searchedUser: "",
+      showDirections: false,
       searchedUID: "",
       secondLocationBelongsToUser: false,
       secondUserName: "",
@@ -51,7 +52,8 @@ class App extends Component {
       newMessageContent: "",
       userMOT: "",
       secondMOT: "",
-      item: {}
+      item: {},
+      messagesdisplayed: false
     }
   }
 
@@ -175,7 +177,11 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
+<<<<<<< HEAD
           radius: 500,
+=======
+          radius: 1000,
+>>>>>>> 406e0138642c13a47df12c236a35d9df7306f09f
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -275,7 +281,16 @@ class App extends Component {
     //   this.getCoordinates(this.state.search, this.setSecondCoordinates)
     // }
   }
+  showDirections=()=>{
+    setTimeout(()=>{
+        this.setState({
+        showDirections: true
+      })}, 3000)
 
+  }
+    
+
+    
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
     if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
@@ -364,7 +379,7 @@ class App extends Component {
     this.setState({
       [e.target.id]: e.target.value
     })
-    }
+  }
 
 
   searchFirebase = (search, node, callback) => {
@@ -417,9 +432,9 @@ class App extends Component {
         this.searchForCoordinates(this.state.search)
       }
     })  
-    // this.setState({
-    //   searchedUID: ""
-    // })
+    this.setState({
+      searchedUID: ""
+    })
   }
 
   fetchMessages = () => {
@@ -433,20 +448,42 @@ class App extends Component {
       const newArray = [];
       Object.entries(snapshot.val()).forEach((entry) => {
         // console.log(entry);
-        newArray.push(entry[1]);
+        const newObject = entry[1];
+        newObject.key = entry[0];
+        newArray.push(newObject);
+        
         // console.log('not in state', newArray)
       });
       this.setState({
         messages: newArray
       }, () => {
-        this.displayMessages();
+        this.sortMessages();
       });
     });
   }
 
-  displayMessages = () => {
+  sortMessages = () => {
     console.log(this.state.messages);
+    const newMessagesArray = this.state.messages.sort((a, b) => {
+      // console.log('a',a,'b',b);
+      return a.currentDate - b.currentDate;
+    })
+    // console.log(newMessagesArray);
   }
+
+  handleClickDisplayMessages = () => {
+    if (this.state.messagesdisplayed) {
+      this.setState({
+        messagesdisplayed: false
+      });
+    } else {
+      this.setState({
+        messagesdisplayed: true
+      });
+    }
+  }
+
+
   
   searchForCoordinates = (search, user) => {
     this.getCoordinates(this.state.userLocation, this.setUserCoordinates);
@@ -498,6 +535,16 @@ class App extends Component {
     })
   }
 
+  replyToMessage = (replyToName, replyToUID, message) => {
+    this.setState({
+      searchedUID: replyToUID,
+      newMessageContent: message
+    }, () => {
+      this.deliverNewMessage(replyToName, 'messages')
+    });
+  }
+
+
   render() {
     return (
       <Router>
@@ -534,7 +581,7 @@ class App extends Component {
           <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
-          handleSubmit={this.handleSubmit}
+          onSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           userCoordinates={this.state.userCoordinates}
           secondCoordinates={this.state.secondCoordinates}
@@ -548,11 +595,36 @@ class App extends Component {
           handleAddressChange={this.handleAddressChange}
           handleClick={this.handleClick}
           midPointCoordinates={this.state.midPointCoordinates}
+
+
           markers={this.state.markers}
+
+          userCoordinatesLat = {
+            this.state.userCoordinates.lat
+          }
+          userCoordinatesLng = {
+            this.state.userCoordinates.lng
+          }
+
+          // showDirections = {
+          //   this.state.showDirections
+          // }
+
+
+          // midPointCoordinatesLat = {
+          //   this.state.secondCoordinates.lat
+          // }
+          // midPointCoordinatesLng = {
+          //   this.state.secondCoordinates.lng
+          // }
           secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}
           handleMOTChange={this.handleMOTChange}
+          messages={this.state.messages}
+          handleClickDisplayMessages={this.handleClickDisplayMessages}
+          messagesdisplayed={this.state.messagesdisplayed}
+          replyToMessage={this.replyToMessage}
           />
           
         )}/>

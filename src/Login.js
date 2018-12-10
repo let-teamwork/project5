@@ -19,21 +19,25 @@ class Login extends Component{
       )
     }
     return(
-      <div className="Login">
-        <h1>Meet Me Halfway</h1>
-        <h2>Im the login page</h2>
-        {(this.props.user) ?
-          <button onClick={this.props.logOut}>Logout</button>
-          : (
-            <div>
-              <button onClick={this.props.logIn}>Sign In</button>
-              <Link to="/Main" onClick={this.props.signInAsGuest}>Sign In as Guest</Link>
-            </div>
-          )}
+      <div className="login">
+        <div className="wrapper"> 
+          <h1 className="login__title">Middl.</h1>
+          <h2 className="login__subtitle">I'll meet you in the middle!</h2>
+          {(this.props.user) ?
+            <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
+            : (
+              <div>
+                <button onClick={this.props.logIn} className="login__signIn app__button">Sign In</button>
+                  <Link to = "/Main" > Sign In as Guest </Link>
+              </div>
+            )}
+              </div>
       </div>
     )
   }
 }
+
+
 
 
 
