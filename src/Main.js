@@ -4,7 +4,7 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-import Messages from './messages'
+import Messages from './Messages'
 
 
 class Main extends Component {
@@ -62,15 +62,32 @@ class Main extends Component {
             }) 
             console.log(resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-                                <p></p>
-                                <p className="main__displayResults--title">{resultArray[0].alias}</p>
-                                <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
-                                <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
-                                <button
-                                onClick= {
-                                    this.getDirections
-                                } > Need Diretions ? </button> 
-                            </div>
+                <p></p>
+                <p className="main__displayResults--title">{resultArray[0].alias}</p>
+                <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
+                <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
+                <button
+                onClick= {
+                    this.getDirections
+                } > Need Directions ? </button>
+                {this.props.bothAreUsers ? 
+                    (<div>
+                    <button onClick={() =>{this.props.showMessageBar(
+                        resultArray[0].name,
+                        resultArray[0].location.address1,
+                        resultArray[0].location.city,
+                        resultArray[0].location.state,
+                        resultArray[0].location.country,
+                        resultArray[0].id
+                    )}}>Share with your date</button>
+                    {this.props.showMessage ? 
+                        <form onSubmit={this.props.handleSendMessage}>
+                            <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
+                            <button>Send Message</button>
+                        </form>
+                    : ""}
+                </div>) : ""}
+            </div>
         )
     }
     render() {
@@ -83,6 +100,7 @@ class Main extends Component {
                     <Messages 
                     messages={this.props.messages}
                     replyToMessage={this.props.replyToMessage}
+                    recieveRestaurantResult={this.props.recieveRestaurantResult}
                     />   
                     ) : ""
                     }
@@ -148,6 +166,8 @@ class Main extends Component {
                            
                             </div>
                         </form>
+
+                        {this.props.inputsFilled ? null : <p>Please fill both addresses</p>}
                         
                         <button onClick={this.props.handleClick} 
                             
@@ -185,42 +205,10 @@ class Main extends Component {
                         null
                     }
                    
-                   
-                   
-                   
                     <div className="main__button--displayFlex">
                         <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
                         <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
                     </div>
-                    
-                   {/* {this.props.secondLocationBelongsToUser != false
-                    ? (
-                        <div key="main-div1">
-                            <form onSubmit={this.props.handleSendMessage}action="">
-                                    <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
-                                <button>Send Message</button>
-                            </form>
-                        </div>
-                    ) : (
-                        ""
-                    )}
-    
-                    {this.props.showingCoffee ? (this.props.coffee.map(coffeeShop => {
-                        return (<div className="main__displayResults wrapper" key={`div-${coffeeShop.alias}`}>
-                            <p className="main__displayResults--title">{coffeeShop.alias}</p>
-                            <p className="main__displayResults--number">{coffeeShop.display_phone}</p>
-                            <img className="main__displayResults--picture" src={coffeeShop.image_url} alt=""/>
-                        </div>
-                        )
-                    })) : (null)}
-                    {this.props.showingBar ? (this.props.bar.map(barShop => {
-                        return (<div className="main__displayResults wrapper" key={`div-${barShop.alias}`}>
-                            <p className="main__displayResults--title">{barShop.alias}</p>
-                            <p className="main__displayResults--number">{barShop.display_phone}</p>
-                            <img className="main__displayResults--picture" src={barShop.image_url} alt=""/>
-                        </div>
-                        )
-                    })) : (null)}*/}
                     
                 </div>
 
