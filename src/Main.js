@@ -4,7 +4,7 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-import Messages from './Messages'
+import Messages from './messages'
 
 
 class Main extends Component {
