@@ -31,7 +31,7 @@ const MapComponent = compose(
 
         DirectionsService.route({
             origin: new window.google.maps.LatLng(this.props.userCoordinatesLat, this.props.userCoordinatesLng),
-            destination: new window.google.maps.LatLng(this.props.midPointCoordinatesLat, this.props.midPointCoordinatesLng),
+            destination: new window.google.maps.LatLng(this.props.markerMidPoint.lat, this.props.markerMidPoint.lng),
             travelMode: window.google.maps.TravelMode.DRIVING,
         }, (result, status) => {
             if (status === window.google.maps.DirectionsStatus.OK) {
@@ -52,15 +52,6 @@ const MapComponent = compose(
             new window.google.maps.LatLng(43.6850075, -79.31502139999999)
         }
     >
-    {props.markers.map(marker => (
-        <Marker
-            key={marker.alias}
-            position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
-            onClick = {
-                props.onMarkerClick
-            }
-            />
-        ))}
         
         {props.directions && <DirectionsRenderer directions={props.directions} />}
     </GoogleMap>
@@ -69,4 +60,4 @@ const MapComponent = compose(
 
 
 
-// export default MapComponent
+export default MapComponent

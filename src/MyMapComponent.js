@@ -21,7 +21,7 @@ const MapWithMarkerClusterer = compose(
     withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `400px` }} className="wrapper mapComponent__mapContainer"/>,
     mapElement: <div style={{ height: `100%` }} />,
 }), 
 withHandlers({
@@ -30,6 +30,11 @@ withHandlers({
             console.log(`Current clicked markers length: ${clickedMarkers.length}`)
             console.log(clickedMarkers)
     }, 
+    // onMarkerClick: () => (marker) => {
+    //                 const markerLatLng = {lat:marker.latLng.lat(), lng:marker.latLng.lng()}
+    //                 console.log(markerLatLng)
+    //                 return markerLatLng;
+    //             },
 }),
     withScriptjs,
     withGoogleMap
@@ -48,6 +53,8 @@ withHandlers({
         <Marker
             key={marker.alias}
             position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
+            onClick={props.getMarkerMidPoint}
+
             />
         ))}
         </MarkerClusterer>

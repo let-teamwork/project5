@@ -1,0 +1,48 @@
+
+// ====================== main ========================
+
+.main{
+    background: $secondaryColor;
+    text-align:center;
+    &__h3 {
+        @include headingFont(2rem);
+        margin-top:50px;
+
+    }
+    &__divider{
+        border:1px solid black;
+    }
+}
+// ================= header ========================
+.header{
+    background:$primaryColor;
+    &__subTitle{
+        margin:0;
+        text-align:center;
+        @include headingFont(6rem);
+        padding:20px 0;
+        color:white;
+    }
+    
+}
+
+// =============== form ==================
+
+.mainForm{
+    @include bodyFont(black);
+    &__inputLabel--displayFlex{
+        display:flex;
+        justify-content: center;
+        
+    }
+    &__inputLabel--column{
+        display:flex;
+        flex-direction:column;
+        
+        align-items: center;
+        padding:0 10px;
+    }
+}
+label{
+    margin-bottom:10px;
+}
