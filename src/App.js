@@ -10,6 +10,7 @@ import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
 
 
+
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
@@ -351,56 +352,56 @@ class App extends Component {
     
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
-    if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
-      //Car-Walk
+    if (this.state.userMOT === "driving" && this.state.secondMOT === "walking") {
+      //driving-walking
       this.midY = (this.state.secondCoordinates.lat * 5 / 6) + (this.state.userCoordinates.lat / 6);
       this.midX = (this.state.secondCoordinates.lng * 5 / 6) + (this.state.userCoordinates.lng / 6);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "car") {
-      //Walk-Car
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "driving") {
+      //walking-driving
       this.midY = (this.state.secondCoordinates.lat / 6) + (this.state.userCoordinates.lat * 5 / 6);
       this.midX = (this.state.secondCoordinates.lng / 6) + (this.state.userCoordinates.lng * 5 / 6);
-    } else if (this.state.userMOT === "car" && this.state.secondMOT === "public") {
-      //Car-Public
+    } else if (this.state.userMOT === "driving" && this.state.secondMOT === "transit") {
+      //driving-transit
       this.midY = (this.state.secondCoordinates.lat * 5 / 8) + (this.state.userCoordinates.lat * 3 / 8);
       this.midX = (this.state.secondCoordinates.lng * 5 / 8) + (this.state.userCoordinates.lng * 3 / 8);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "car") {
-      //Public-Car
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "driving") {
+      //transit-driving
       this.midY = (this.state.secondCoordinates.lat * 3 / 8) + (this.state.userCoordinates.lat * 5 / 8);
       this.midX = (this.state.secondCoordinates.lng * 3 / 8) + (this.state.userCoordinates.lng * 5 / 8);
-    } else if (this.state.userMOT === "car" && this.state.secondMOT === "bike") {
-      //Car-Bike
+    } else if (this.state.userMOT === "driving" && this.state.secondMOT === "bicycling") {
+      //driving-bicycling
       this.midY = (this.state.secondCoordinates.lat * 5 / 7) + (this.state.userCoordinates.lat * 2 / 7);
       this.midX = (this.state.secondCoordinates.lng * 5 / 7) + (this.state.userCoordinates.lng * 2 / 7);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "car") {
-      //Bike-Car
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "driving") {
+      //bicycling-driving
       this.midY = (this.state.secondCoordinates.lat * 2 / 7) + (this.state.userCoordinates.lat * 5 / 7);
       this.midX = (this.state.secondCoordinates.lng * 2 / 7) + (this.state.userCoordinates.lng * 5 / 7);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "public") {
-      //Walk-Public
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "transit") {
+      //walking-transit
       this.midY = (this.state.secondCoordinates.lat / 4) + (this.state.userCoordinates.lat * 3 / 4);
       this.midX = (this.state.secondCoordinates.lng / 4) + (this.state.userCoordinates.lng * 3 / 4);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
-      //Public-Walk
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "walking") {
+      //transit-walking
       this.midY = (this.state.secondCoordinates.lat * 3 / 4) + (this.state.userCoordinates.lat / 4);
       this.midX = (this.state.secondCoordinates.lng * 3 / 4) + (this.state.userCoordinates.lng / 4);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "bike") {
-      //Walk-Bike
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "bicycling") {
+      //walking-bicycling
       this.midY = (this.state.secondCoordinates.lat / 3) + (this.state.userCoordinates.lat * 2 / 3);
       this.midX = (this.state.secondCoordinates.lng / 3) + (this.state.userCoordinates.lng * 2 / 3);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "walk") {
-      //Bike-Walk
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "walking") {
+      //bicycling-walking
       this.midY = (this.state.secondCoordinates.lat * 2 / 3) + (this.state.userCoordinates.lat / 3);
       this.midX = (this.state.secondCoordinates.lng * 2 / 3) + (this.state.userCoordinates.lng / 3);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "public") {
-      //Bike-Public
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "transit") {
+      //bicycling-transit
       this.midY = (this.state.secondCoordinates.lat * 2 / 5) + (this.state.userCoordinates.lat * 3 / 5);
       this.midX = (this.state.secondCoordinates.lng * 2 / 5) + (this.state.userCoordinates.lng * 3 / 5);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "bike") {
-      //Public-Bike
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "bicycling") {
+      //transit-bicycling
       this.midY = (this.state.secondCoordinates.lat * 3 / 5) + (this.state.userCoordinates.lat * 2 / 5);
       this.midX = (this.state.secondCoordinates.lng * 3 / 5) + (this.state.userCoordinates.lng * 2 / 5);
     } else {
-      //Car-Car Bike-Bike Walk-Walk Public-Public OR just no MOT specified
+      //driving-driving bicycling-bicycling walking-walking transit-transit OR just no MOT specified
       this.midY = ((this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2);
       this.midX = ((this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2);
     }
@@ -422,6 +423,7 @@ class App extends Component {
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
   }
+
 
   toggleCoffee = () => {
     this.setState({
@@ -448,6 +450,7 @@ class App extends Component {
     // console.log(dbRefName);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
+      console.log(snapshot.val());
       // console.log('aofa', newArrayOfArrays);
       // console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
@@ -701,6 +704,7 @@ class App extends Component {
           showMessage={this.state.showMessage}
           dateSuggestion={this.state.dateSuggestion}
           suggestDate={this.suggestDate}
+          userMOT={this.state.userMOT}
           />
           
         )}/>
