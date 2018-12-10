@@ -53,7 +53,11 @@ class App extends Component {
       userMOT: "",
       secondMOT: "",
       item: {},
-      messagesdisplayed: false
+      messagesdisplayed: false,
+      inputsFilled: true,
+      bothAreUsers: true,
+      showMessage: false,
+      dateSuggestion: {}
     }
   }
 
@@ -207,6 +211,61 @@ class App extends Component {
       })
     });
   };
+
+  recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
+    const urlYelp = "https://api.yelp.com/v3/businesses/matches";
+    const yelpKey =
+      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+    //API CALL FOR YELP DATA
+    axios({
+      method: "GET",
+      url: "http://proxy.hackeryou.com",
+      dataResponse: "json",
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, { arrayFormat: "brackets" });
+      },
+      params: {
+        reqUrl: urlYelp,
+        params: {
+          name: restaurantName,
+          address1: restaurantAddress,
+          city: restaurantCity,
+          state: restaurantState,
+          country: restaurantCountry,
+          yelp_business_id: restaurantID
+        },
+        proxyHeaders: {
+          Authorization: yelpKey
+        },
+        xmlToJSON: false
+      }
+    }).then(res => {
+      // console.log("calling Yelp API & retrieving all restaurants:", res)
+      console.log("match restaurant", res.data.businesses[0])
+      const restaurant = res.data.businesses[0]
+      return(
+        <div>
+          <p>{restaurant.name}</p>
+          
+        </div>
+      )
+    });
+  };
+
+  showMessageBar = (name, address, city, state, country, id) => {
+    const restaurant = {
+      restaurantName: name,
+      restaurantAddress: address,
+      restaurantCity: city,
+      restaurantState: state,
+      restaurantCountry: country,
+      restaurantID: id
+    }
+    this.setState({
+      showMessage: !this.state.showMessage,
+      dateSuggestion: restaurant
+    })
+  }
   
   pushCoffeeAndBarToMarker= ()=>{
     // console.log("Pushing bars to Bar Array:", this.state.bar) 
@@ -268,14 +327,17 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-    // console.log("Submit clicked as user")
-    // if (this.state.userName){
-    // }else{
-    //   console.log("Submit clicked as guest")
-    //   this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
-    //   this.getCoordinates(this.state.search, this.setSecondCoordinates)
-    // }
+    this.recieveRestaurantResult();
+    if (this.state.userLocation !== "" && this.state.search !== ""){
+      this.setState({
+        inputsFilled: true
+      })
+      this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
+    } else {
+      this.setState({
+        inputsFilled: false
+      })
+    }
   }
   showDirections=()=>{
     setTimeout(()=>{
@@ -394,7 +456,8 @@ class App extends Component {
         // console.log(array)
         if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[0]
+            searchedUID: array[0],
+            bothAreUsers: true
           }, () => {
             callback(search, node)
           });
@@ -517,6 +580,7 @@ class App extends Component {
 
   handleSendMessage = (e) => {
     e.preventDefault();
+
     this.searchFirebase(this.state.secondUserName, `messages`, this.deliverNewMessage);
   }
 
@@ -525,6 +589,7 @@ class App extends Component {
     const newMessageObject = {
       from: this.state.userName,
       sendingUID: this.state.user.uid,
+      restaurantSuggestion: this.state.dateSuggestion,
       message: this.state.newMessageContent,
       displayDate: new Date().toDateString(),
       currentDate: Date()
@@ -629,6 +694,13 @@ class App extends Component {
           handleClickDisplayMessages={this.handleClickDisplayMessages}
           messagesdisplayed={this.state.messagesdisplayed}
           replyToMessage={this.replyToMessage}
+          inputsFilled={this.state.inputsFilled}
+          bothAreUsers={this.state.bothAreUsers}
+          recieveRestaurantResult={this.recieveRestaurantResult}
+          showMessageBar={this.showMessageBar}
+          showMessage={this.state.showMessage}
+          dateSuggestion={this.state.dateSuggestion}
+          suggestDate={this.suggestDate}
           />
           
         )}/>

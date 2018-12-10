@@ -4,7 +4,7 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-import Messages from './messages'
+import Messages from './Messages'
 
 
 class Main extends Component {
@@ -43,6 +43,7 @@ class Main extends Component {
                     <Messages 
                     messages={this.props.messages}
                     replyToMessage={this.props.replyToMessage}
+                    recieveRestaurantResult={this.props.recieveRestaurantResult}
                     />   
                     ) : ""
                     }
@@ -84,7 +85,7 @@ class Main extends Component {
                 }
     
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
-                    <form key="main-form" className="mainform " >
+                    <form key="main-form" className="mainform" >
                         <label htmlFor=""> 
                             <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
                             <input type="text" className="app__input" placeholder="" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
@@ -98,12 +99,12 @@ class Main extends Component {
 
                             <div className="mainForm__inputLabel--column">
                                 <label htmlFor="bikeUser">By Bike</label>
-                                <input required name="userMOT" type="radio" value="bike" id="bikeUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="bike" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                              <div className="mainForm__inputLabel--column">
                                  <label htmlFor="carUser">By Car</label>
-                                <input required name="userMOT" type="radio" value="car" id="carUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="car" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
@@ -140,29 +141,38 @@ class Main extends Component {
                             
                            
                         </div>
-                        <button onClick={this.props.handleClick} className="app__button">Middl. Me</button>
+                        <button type="submit" onClick={this.props.handleClick} className="app__button">Middl. Me</button>
                     </form>
+                    
+                    {this.props.inputsFilled ? null : <p>Please fill both addresses</p>}
                     <button key="main-button1" onClick={this.props.toggleCoffee}value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
                     <button key="main-button2" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    {this.props.secondLocationBelongsToUser
-                    ? (
-                        <div key="main-div1">
-                            <form onSubmit={this.props.handleSendMessage}action="">
-                                    <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
-                                <button>Send Message</button>
-                            </form>
-                        </div>
-                    ) : (
-                        ""
-                    )}
     
                     {this.props.showingCoffee ? (this.props.coffee.map(coffeeShop => {
                         return (<div key={`div-${coffeeShop.alias}`}>
-                            <p>{coffeeShop.alias}</p>
-                            <p>{coffeeShop.display_phone}</p>
-                            <img src={coffeeShop.image_url} alt=""/>
-                        </div>
-                        )
+                            <div key="main-div1">
+                                <p>{coffeeShop.alias}</p>
+                                <p>{coffeeShop.display_phone}</p>
+                                <img src={coffeeShop.image_url} alt=""/>
+                            {this.props.bothAreUsers ? 
+                                (<div>
+                                <button onClick={() =>{this.props.showMessageBar(
+                                    coffeeShop.name,
+                                    coffeeShop.location.address1,
+                                    coffeeShop.location.city,
+                                    coffeeShop.location.state,
+                                    coffeeShop.location.country,
+                                    coffeeShop.id
+                                )}}>Share with your date</button>
+                                {this.props.showMessage ? 
+                                    <form onSubmit={this.props.handleSendMessage}>
+                                        <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
+                                        <button>Send Message</button>
+                                    </form>
+                                : ""}
+                            </div>) : ""}
+                            </div>
+                        </div>)
                     })) : (null)}
                     {this.props.showingBar ? (this.props.bar.map(barShop => {
                         return (<div key={`div-${barShop.alias}`}>
