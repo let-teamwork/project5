@@ -8,6 +8,7 @@ import {
 } from "react-google-maps"
 import {compose, withProps, withHandlers, lifecycle} from 'recompose';
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
+import MarkerWithLabel from "react-google-maps/lib/components/addons/MarkerClusterer"
 
 
 const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
@@ -33,10 +34,40 @@ withHandlers({
     }, 
 }), withScriptjs,
 withGoogleMap,
+    lifecycle({
+        // this lifecycle will run when you click on the butt "need directions" 
+        componentDidUpdate(prevProps) {
+            const userMOT = this.props.userMOT.toUpperCase()
+            console.log(userMOT)
+            const DirectionsService = new window.google.maps.DirectionsService();
+            prevProps = this.props.runDirections
+            console.log(prevProps)
+            if(prevProps !== false){
+                console.log("i should not run if")
+                DirectionsService.route({
+                    origin: new window.google.maps.LatLng(this.props.userCoordinatesLat, this.props.userCoordinatesLng),
+                    destination: new window.google.maps.LatLng(this.props.markerMidPoint.lat, this.props.markerMidPoint.lng),
+                    travelMode: window.google.maps.TravelMode[userMOT],
+                }, (result, status) => {
+                    if (status === window.google.maps.DirectionsStatus.OK) {
+                        console.log(result);
+                        this.props.getInfoFromDirections(result)
+                        this.setState({
+                            directions: result,
+                        });
+                    } else {
+                        console.error(`error fetching directions ${result}`);
+                    }
+                });
+            } else {
+                return null
+            }
+        }
+    })
 )(props =>
     <GoogleMap
     defaultZoom={zoomVal}
-    defaultCenter={ new window.google.maps.LatLng(43.6850075, -79.31502139999999)}
+    defaultCenter={torontoCoordinates}
     onClick={props.zoomClick}
     >  
     <MarkerClusterer
@@ -49,10 +80,14 @@ withGoogleMap,
             key={marker.alias}
             position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
             onClick={props.getMarkerMidPoint}
-
             />
         ))}
-        {props.directions && <DirectionsRenderer directions={props.directions} />}
+        {props.directions && <DirectionsRenderer directions={props.directions} 
+        getInfoFromDirections = {
+            props.getInfoFromDirections
+        }
+        />
+        }
         </MarkerClusterer>
     </GoogleMap>
 );

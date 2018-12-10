@@ -4,7 +4,7 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-import Messages from './Messages'
+import Messages from './messages'
 
 
 class Main extends Component {
@@ -12,29 +12,66 @@ class Main extends Component {
         super();
         this.state={
             markerMidPoint: {
-                lat:49.8881111,
-                lng:-79.899001991
             },
             runDirections:false
         }
     }
     //function that sets markerMidPoint
     getMarkerMidPoint = (marker)=>{
-    
+        console.log("marker", marker)
         const midLatLng = {};
-        midLatLng.lat=marker.latLng.lat();
-        midLatLng.lng=marker.latLng.lng();
+        const latString = marker.latLng.lat().toFixed(5);
+        const lngString = marker.latLng.lng().toFixed(5);
+        midLatLng.lat= parseFloat(latString);
+        midLatLng.lng= parseFloat(lngString);
         console.log(midLatLng)
         this.setState({
-            markerMidPoint:midLatLng
+            markerMidPoint:midLatLng,
+            travelMode:"",
+            distance:"",
+            duration:""
+        }, ()=>{
+            this.getSelectedInfo()
         })
 
+    }
+    getInfoFromDirections=(results)=>{
+        const travelMode = results.request.origin.travelMode;
+        const distance = results.routes[0].legs[0].distance.text;
+        const duration = results.routes[0].legs[0].duration.text;
+        console.log(travelMode,
+            distance,
+            duration)
+        this.setState({
+            travelMode,
+            distance,
+            duration
+        })
     }
     getDirections=(e)=>{
         e.preventDefault();
         this.setState({
             runDirections:true
         })
+    }
+    getSelectedInfo=()=>{
+        const array=this.props.markers;
+        console.log("i'm the array",array);
+            const resultArray = array.filter(latLng => {
+                    return(this.state.markerMidPoint.lat === latLng.coordinates.latitude && this.state.markerMidPoint.lng === latLng.coordinates.longitude)
+            }) 
+            console.log(resultArray)
+            return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
+                                <p></p>
+                                <p className="main__displayResults--title">{resultArray[0].alias}</p>
+                                <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
+                                <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
+                                <button
+                                onClick= {
+                                    this.getDirections
+                                } > Need Diretions ? </button> 
+                            </div>
+        )
     }
     render() {
         
@@ -45,6 +82,7 @@ class Main extends Component {
                     ? (
                     <Messages 
                     messages={this.props.messages}
+                    replyToMessage={this.props.replyToMessage}
                     />   
                     ) : ""
                     }
@@ -53,38 +91,6 @@ class Main extends Component {
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
                 <div className="main wrapper">
-
-                
-                {
-                    // this.state.runDirections !== false ? 
-                    // <MapComponent 
-                    //     userCoordinatesLat = {
-                    //         this.props.userCoordinates.lat
-                    //     }
-                    //     userCoordinatesLng = {
-                    //         this.props.userCoordinates.lng
-                    //     }
-                    //     />
-                    //     :
-                    //     null
-                }
-                {
-                    // this.state.markerMidPoint === {}? 
-                    // <form action="">
-                    //     <label 
-                    //         htmlFor = "main__getDirections"
-                    //         onSubmit ={this.getDirections} >
-                    //             <input 
-                    //                 id="main__getDirections"
-                    //                 type="submit"
-                    //                 />
-                    //     </label>
-                    // </form>
-                    // :
-                    // null
-    
-                }
-    
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
                     <form key="main-form" className="mainForm" >
                         <label htmlFor=""> 
@@ -95,22 +101,22 @@ class Main extends Component {
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
                                 <label htmlFor="walkUser">Walking</label>
-                                <input name="userMOT" type="radio" value="walk" id="walkUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="walking" id="walkUser" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">
                                 <label htmlFor="bikeUser">By Bike</label>
-                                <input name="userMOT" type="radio" value="bike" id="bikeUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                              <div className="mainForm__inputLabel--column">
                                  <label htmlFor="carUser">By Car</label>
-                                <input name="userMOT" type="radio" value="car" id="carUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
                                 <label htmlFor="publicUser"> Public Transport</label>
-                                <input name="userMOT" type="radio" value="public" id="publicUser" onChange={this.props.handleMOTChange}/>
+                                <input name="userMOT" type="radio" value="transit" id="publicUser" onChange={this.props.handleMOTChange}/>
                             </div>
                         </div>
                         <div className="main__divider"></div>
@@ -122,48 +128,61 @@ class Main extends Component {
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">   
                                 <label htmlFor="walkSecond">Walking</label>
-                                <input name="secondMOT" type="radio" value="walk" id="walkSecond" onChange={this.props.handleMOTChange}/>
+                                <input name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">   
                                 <label htmlFor="bikeSecond">By Bike</label>
-                                <input name="secondMOT" type="radio" value="bike" id="bikeSecond" onChange={this.props.handleMOTChange}/>
+                                <input name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                             <div className="mainForm__inputLabel--column">   
                                 <label htmlFor="carSecond">By Car</label>
-                                <input name="secondMOT" type="radio" value="car" id="carSecond" onChange={this.props.handleMOTChange}/>
+                                <input name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">   
                                 <label htmlFor="publicSecond">Public Transport</label>
-                                <input name="secondMOT" type="radio" value="public" id="publicSecond" onChange={this.props.handleMOTChange}/>
+                                <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                            
                             </div>
                         </form>
-                        <button onClick={this.props.handleClick} className="app__button">Middl. Me</button>
+                        
+                        <button onClick={this.props.handleClick} 
+                            
+                        className="app__button">Middl. Me</button>
                     <MapWithMarkerClusterer
+                        getInfoFromDirections = {
+                            this.getInfoFromDirections
+                        }
                         getMarkerMidPoint = {
                             this.getMarkerMidPoint
+                        }
+                        markerMidPoint={this.state.markerMidPoint}
+                        userCoordinatesLat = {
+                            this.props.userCoordinatesLat
+                        }
+                        userCoordinatesLng = {
+                            this.props.userCoordinatesLng
                         }
                         markers = {
                             this.props.markers
                         }
                         runDirections={this.state.runDirections}
+                        userMOT = {
+                            this.props.userMOT
+                        }
                     />
                     {/* this ternary statement will call directions on mymapcomponent */}
+                    
                     {
                         this.state.markerMidPoint.lat  
                         ?
                         
-                            <button
-                            onClick = {
-                                this.getDirections
-                            } > Need Diretions ? </button> 
+                            this.getSelectedInfo()
                         : 
-                            null
-                    
+                        null
                     }
                    
                    
@@ -174,7 +193,7 @@ class Main extends Component {
                         <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
                     </div>
                     
-                    {this.props.secondLocationBelongsToUser != false
+                   {/* {this.props.secondLocationBelongsToUser != false
                     ? (
                         <div key="main-div1">
                             <form onSubmit={this.props.handleSendMessage}action="">
@@ -201,7 +220,7 @@ class Main extends Component {
                             <img className="main__displayResults--picture" src={barShop.image_url} alt=""/>
                         </div>
                         )
-                    })) : (null)}
+                    })) : (null)}*/}
                     
                 </div>
 
