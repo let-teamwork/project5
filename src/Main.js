@@ -98,12 +98,12 @@ class Main extends Component {
 
                             <div className="mainForm__inputLabel--column">
                                 <label htmlFor="bikeUser">By Bike</label>
-                                <input name="userMOT" type="radio" value="bike" id="bikeUser" onChange={this.props.handleMOTChange}/>
+                                <input required name="userMOT" type="radio" value="bike" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                              <div className="mainForm__inputLabel--column">
                                  <label htmlFor="carUser">By Car</label>
-                                <input name="userMOT" type="radio" value="car" id="carUser" onChange={this.props.handleMOTChange}/>
+                                <input required name="userMOT" type="radio" value="car" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
