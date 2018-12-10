@@ -22,7 +22,6 @@ class FullScreenMessage extends Component {
         })
     }
 
-
     render(){
         return(
             <div className="fullScreenMessage">
