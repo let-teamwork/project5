@@ -175,7 +175,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 5000,
+          radius: 500,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
