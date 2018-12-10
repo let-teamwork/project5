@@ -11,7 +11,10 @@ class Main extends Component {
     constructor() {
         super();
         this.state={
-            markerMidPoint: {},
+            markerMidPoint: {
+                lat:49.8881111,
+                lng:-79.899001991
+            },
             runDirections:false
         }
     }
@@ -83,7 +86,7 @@ class Main extends Component {
                 }
     
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
-                    <form key="main-form" className="mainform " >
+                    <form key="main-form" className="mainForm" >
                         <label htmlFor=""> 
                             <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
                             <input type="text" className="app__input" placeholder="" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
@@ -126,24 +129,52 @@ class Main extends Component {
                                 <label htmlFor="bikeSecond">By Bike</label>
                                 <input name="secondMOT" type="radio" value="bike" id="bikeSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-                           
                             <div className="mainForm__inputLabel--column">   
                                 <label htmlFor="carSecond">By Car</label>
                                 <input name="secondMOT" type="radio" value="car" id="carSecond" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">   
-                                 <label htmlFor="publicSecond">Public Transport</label>
+                                <label htmlFor="publicSecond">Public Transport</label>
                                 <input name="secondMOT" type="radio" value="public" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                            
-                        </div>
+                            </div>
+                        </form>
                         <button onClick={this.props.handleClick} className="app__button">Middl. Me</button>
-                    </form>
-                    <button key="main-button1" onClick={this.props.toggleCoffee}value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                    <button key="main-button2" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    {this.props.secondLocationBelongsToUser
+                    <MapWithMarkerClusterer
+                        getMarkerMidPoint = {
+                            this.getMarkerMidPoint
+                        }
+                        markers = {
+                            this.props.markers
+                        }
+                        runDirections={this.state.runDirections}
+                    />
+                    {/* this ternary statement will call directions on mymapcomponent */}
+                    {
+                        this.state.markerMidPoint.lat  
+                        ?
+                        
+                            <button
+                            onClick = {
+                                this.getDirections
+                            } > Need Diretions ? </button> 
+                        : 
+                            null
+                    
+                    }
+                   
+                   
+                   
+                   
+                    <div className="main__button--displayFlex">
+                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
+                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
+                    </div>
+                    
+                    {this.props.secondLocationBelongsToUser != false
                     ? (
                         <div key="main-div1">
                             <form onSubmit={this.props.handleSendMessage}action="">
@@ -156,29 +187,22 @@ class Main extends Component {
                     )}
     
                     {this.props.showingCoffee ? (this.props.coffee.map(coffeeShop => {
-                        return (<div key={`div-${coffeeShop.alias}`}>
-                            <p>{coffeeShop.alias}</p>
-                            <p>{coffeeShop.display_phone}</p>
-                            <img src={coffeeShop.image_url} alt=""/>
+                        return (<div className="main__displayResults wrapper" key={`div-${coffeeShop.alias}`}>
+                            <p className="main__displayResults--title">{coffeeShop.alias}</p>
+                            <p className="main__displayResults--number">{coffeeShop.display_phone}</p>
+                            <img className="main__displayResults--picture" src={coffeeShop.image_url} alt=""/>
                         </div>
                         )
                     })) : (null)}
                     {this.props.showingBar ? (this.props.bar.map(barShop => {
-                        return (<div key={`div-${barShop.alias}`}>
-                            <p>{barShop.alias}</p>
-                            <p>{barShop.display_phone}</p>
-                            <img src={barShop.image_url} alt=""/>
+                        return (<div className="main__displayResults wrapper" key={`div-${barShop.alias}`}>
+                            <p className="main__displayResults--title">{barShop.alias}</p>
+                            <p className="main__displayResults--number">{barShop.display_phone}</p>
+                            <img className="main__displayResults--picture" src={barShop.image_url} alt=""/>
                         </div>
                         )
                     })) : (null)}
-                    <MapWithMarkerClusterer
-                    getMarkerMidPoint = {
-                        this.getMarkerMidPoint
-                    }
-                    markers = {
-                        this.props.markers
-                    }
-                    />
+                    
                 </div>
 
             </div>

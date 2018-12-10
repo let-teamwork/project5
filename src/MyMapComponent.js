@@ -3,9 +3,10 @@ import {
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    Marker
+    Marker,
+    DirectionsRenderer,
 } from "react-google-maps"
-import {compose, withProps, withHandlers} from 'recompose';
+import {compose, withProps, withHandlers, lifecycle} from 'recompose';
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 
 
@@ -30,21 +31,15 @@ withHandlers({
             console.log(`Current clicked markers length: ${clickedMarkers.length}`)
             console.log(clickedMarkers)
     }, 
-    // onMarkerClick: () => (marker) => {
-    //                 const markerLatLng = {lat:marker.latLng.lat(), lng:marker.latLng.lng()}
-    //                 console.log(markerLatLng)
-    //                 return markerLatLng;
-    //             },
-}),
-    withScriptjs,
-    withGoogleMap
+}), withScriptjs,
+withGoogleMap,
 )(props =>
     <GoogleMap
     defaultZoom={zoomVal}
-    defaultCenter={torontoCoordinates}
+    defaultCenter={ new window.google.maps.LatLng(43.6850075, -79.31502139999999)}
     onClick={props.zoomClick}
     >  
-        <MarkerClusterer
+    <MarkerClusterer
             onClick={props.onMarkerClustererClick}
             averageCenter
             gridSize={3}
@@ -57,6 +52,7 @@ withHandlers({
 
             />
         ))}
+        {props.directions && <DirectionsRenderer directions={props.directions} />}
         </MarkerClusterer>
     </GoogleMap>
 );

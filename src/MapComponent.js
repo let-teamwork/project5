@@ -27,6 +27,8 @@ const MapComponent = compose(
     withGoogleMap,
     lifecycle({
     componentDidMount() {
+        //pass it as a prop from main.js (runDirections)
+        //componentwillupdate
         const DirectionsService = new window.google.maps.DirectionsService();
 
         DirectionsService.route({
