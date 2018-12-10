@@ -11,6 +11,8 @@
     }
     &__divider{
         border:1px solid black;
+        width:10%;
+        margin: 20px auto;
     }
 }
 // ================= header ========================
@@ -41,6 +43,9 @@
         
         align-items: center;
         padding:0 10px;
+    }
+    &__address{
+        margin:0;
     }
 }
 label{

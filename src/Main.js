@@ -4,7 +4,7 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-
+import Messages from './Messages'
 
 
 class Main extends Component {
@@ -37,6 +37,15 @@ class Main extends Component {
         
         return (
             <div className="main" key="main">
+                <button onClick={this.props.handleClickDisplayMessages}>Display Messages</button>
+                    {this.props.messagesdisplayed 
+                    ? (
+                    <Messages 
+                    messages={this.props.messages}
+                    />   
+                    ) : ""
+                    }
+            
                 <header className="header">
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
@@ -74,10 +83,6 @@ class Main extends Component {
                 }
     
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
-                    <div className="main__userBlock">
-                    
-                    
-                    </div>
                     <form key="main-form" className="mainform " >
                         <label htmlFor=""> 
                             <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
@@ -104,10 +109,8 @@ class Main extends Component {
                                 <label htmlFor="publicUser"> Public Transport</label>
                                 <input name="userMOT" type="radio" value="public" id="publicUser" onChange={this.props.handleMOTChange}/>
                             </div>
-                           
-                           
                         </div>
-                    
+                        <div className="main__divider"></div>
                         <label htmlFor="">
                             <p className="mainForm__address">enter your date's address or username</p>
                             <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
