@@ -3,10 +3,12 @@ import {
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    Marker
+    Marker,
+    DirectionsRenderer,
 } from "react-google-maps"
-import {compose, withProps, withHandlers} from 'recompose';
+import {compose, withProps, withHandlers, lifecycle} from 'recompose';
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
+import MarkerWithLabel from "react-google-maps/lib/components/addons/MarkerClusterer"
 
 
 const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
@@ -30,21 +32,45 @@ withHandlers({
             console.log(`Current clicked markers length: ${clickedMarkers.length}`)
             console.log(clickedMarkers)
     }, 
-    // onMarkerClick: () => (marker) => {
-    //                 const markerLatLng = {lat:marker.latLng.lat(), lng:marker.latLng.lng()}
-    //                 console.log(markerLatLng)
-    //                 return markerLatLng;
-    //             },
-}),
-    withScriptjs,
-    withGoogleMap
+}), withScriptjs,
+withGoogleMap,
+    lifecycle({
+        // this lifecycle will run when you click on the butt "need directions" 
+        componentDidUpdate(prevProps) {
+            const userMOT = this.props.userMOT.toUpperCase()
+            console.log(userMOT)
+            const DirectionsService = new window.google.maps.DirectionsService();
+            prevProps = this.props.runDirections
+            console.log(prevProps)
+            if(prevProps !== false){
+                console.log("i should not run if")
+                DirectionsService.route({
+                    origin: new window.google.maps.LatLng(this.props.userCoordinatesLat, this.props.userCoordinatesLng),
+                    destination: new window.google.maps.LatLng(this.props.markerMidPoint.lat, this.props.markerMidPoint.lng),
+                    travelMode: window.google.maps.TravelMode[userMOT],
+                }, (result, status) => {
+                    if (status === window.google.maps.DirectionsStatus.OK) {
+                        console.log(result);
+                        this.props.getInfoFromDirections(result)
+                        this.setState({
+                            directions: result,
+                        });
+                    } else {
+                        console.error(`error fetching directions ${result}`);
+                    }
+                });
+            } else {
+                return null
+            }
+        }
+    })
 )(props =>
     <GoogleMap
     defaultZoom={zoomVal}
     defaultCenter={torontoCoordinates}
     onClick={props.zoomClick}
     >  
-        <MarkerClusterer
+    <MarkerClusterer
             onClick={props.onMarkerClustererClick}
             averageCenter
             gridSize={3}
@@ -54,9 +80,14 @@ withHandlers({
             key={marker.alias}
             position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
             onClick={props.getMarkerMidPoint}
-
             />
         ))}
+        {props.directions && <DirectionsRenderer directions={props.directions} 
+        getInfoFromDirections = {
+            props.getInfoFromDirections
+        }
+        />
+        }
         </MarkerClusterer>
     </GoogleMap>
 );
