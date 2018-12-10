@@ -42,6 +42,7 @@ class Main extends Component {
                     ? (
                     <Messages 
                     messages={this.props.messages}
+                    replyToMessage={this.props.replyToMessage}
                     />   
                     ) : ""
                     }

@@ -62,6 +62,7 @@ class Messages extends Component {
                 ? (
                     <FullScreenMessage 
                     message={this.state.selectedMessageObject}
+                    replyToMessage={this.props.replyToMessage}
                     />
                 ) : (
                     ""

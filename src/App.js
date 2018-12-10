@@ -375,7 +375,7 @@ class App extends Component {
     this.setState({
       [e.target.id]: e.target.value
     })
-    }
+  }
 
 
   searchFirebase = (search, node, callback) => {
@@ -531,6 +531,16 @@ class App extends Component {
     })
   }
 
+  replyToMessage = (replyToName, replyToUID, message) => {
+    this.setState({
+      searchedUID: replyToUID,
+      newMessageContent: message
+    }, () => {
+      this.deliverNewMessage(replyToName, 'messages')
+    });
+  }
+
+
   render() {
     return (
       <Router>
@@ -610,6 +620,7 @@ class App extends Component {
           messages={this.state.messages}
           handleClickDisplayMessages={this.handleClickDisplayMessages}
           messagesdisplayed={this.state.messagesdisplayed}
+          replyToMessage={this.replyToMessage}
           />
           
         )}/>
