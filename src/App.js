@@ -43,6 +43,7 @@ class App extends Component {
       userName: "",
       search: "",
       searchedUser: "",
+      showDirections: false,
       searchedUID: "",
       secondLocationBelongsToUser: false,
       secondUserName: "",
@@ -176,7 +177,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 5000,
+          radius: 1000,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -276,7 +277,16 @@ class App extends Component {
     //   this.getCoordinates(this.state.search, this.setSecondCoordinates)
     // }
   }
+  showDirections=()=>{
+    setTimeout(()=>{
+        this.setState({
+        showDirections: true
+      })}, 3000)
 
+  }
+    
+
+    
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
     if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
@@ -418,9 +428,9 @@ class App extends Component {
         this.searchForCoordinates(this.state.search)
       }
     })  
-    // this.setState({
-    //   searchedUID: ""
-    // })
+    this.setState({
+      searchedUID: ""
+    })
   }
 
   fetchMessages = () => {
@@ -557,7 +567,7 @@ class App extends Component {
           <Main {...props} 
           user={this.state.user}
           userLocation={this.state.userLocation}
-          handleSubmit={this.handleSubmit}
+          onSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           userCoordinates={this.state.userCoordinates}
           secondCoordinates={this.state.secondCoordinates}
@@ -571,7 +581,28 @@ class App extends Component {
           handleAddressChange={this.handleAddressChange}
           handleClick={this.handleClick}
           midPointCoordinates={this.state.midPointCoordinates}
+
+
           markers={this.state.markers}
+
+          userCoordinatesLat = {
+            this.state.userCoordinates.lat
+          }
+          userCoordinatesLng = {
+            this.state.userCoordinates.lng
+          }
+
+          // showDirections = {
+          //   this.state.showDirections
+          // }
+
+
+          // midPointCoordinatesLat = {
+          //   this.state.secondCoordinates.lat
+          // }
+          // midPointCoordinatesLng = {
+          //   this.state.secondCoordinates.lng
+          // }
           secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}

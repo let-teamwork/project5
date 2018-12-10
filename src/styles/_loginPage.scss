@@ -1,0 +1,24 @@
+.login{
+    background: $secondaryColor;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+    height:100vh;
+    text-align:center;
+    &__title{
+        @include headingFont(8rem);
+        color:$primaryColor;
+        margin:0;
+    }
+    &__subtitle{
+        @include bodyFont($primaryColor);
+        margin-bottom:10rem;
+    }
+    // &__signIn,
+    // &__logOut,
+    // &__signInAsGuest{
+    //     @include button(1.8rem);
+    //     font-weight:bold;
+    // }
+}

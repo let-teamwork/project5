@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu:700|Work+Sans");
 html {
   font-size: 62.5%; }
 
@@ -149,3 +150,158 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   clip-path: inset(100%);
   clip: rect(0 0 0);
   overflow: hidden; }
+
+.wrapper {
+  max-width: 320px;
+  margin: 0 auto; }
+
+.app__button {
+  line-height: 1.8rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1.6rem;
+  color: #e898e9;
+  text-transform: uppercase;
+  display: block;
+  font-size: 1.8rem;
+  padding: 20px 20px;
+  width: 250px;
+  cursor: pointer;
+  box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+  border-radius: 50px;
+  margin: 20px auto;
+  font-weight: bold; }
+  .app__button:active {
+    outline: none;
+    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+    -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+    box-shadow: inset 0px 0px 5px #c1c1c1; }
+
+.app__input {
+  width: 300px;
+  padding: 10px 10px;
+  margin: 10px auto;
+  cursor: pointer; }
+
+.login {
+  background: #b6d2cf;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center; }
+  .login__title {
+    font-size: 8rem;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #0d6978;
+    margin: 0; }
+  .login__subtitle {
+    line-height: 1.8rem;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.6rem;
+    color: #0d6978;
+    margin-bottom: 10rem; }
+
+.createAccount {
+  background: #b6d2cf;
+  height: 100vh; }
+  .createAccount__subtitle {
+    font-size: 6rem;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #0d6978;
+    text-align: center; }
+  .createAccount__text {
+    line-height: 1.8rem;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.6rem;
+    color: black; }
+  .createAccount__text--address {
+    text-align: center; }
+
+.createAccount__header {
+  text-align: center; }
+
+.header__background {
+  background: #0d6978; }
+
+.header__userName {
+  font-size: 3rem;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+  font-weight: bold;
+  margin: 0;
+  padding: 30px 0px; }
+
+.header__companyM {
+  font-size: 5rem; }
+
+.header__userName {
+  padding-left: 50px;
+  text-transform: capitalize;
+  text-align: center; }
+
+.createAccount__form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px; }
+
+.createAccount__label {
+  line-height: 1.8rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1.6rem;
+  color: black;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold; }
+
+.main {
+  background: #b6d2cf;
+  text-align: center; }
+  .main__h3 {
+    font-size: 2rem;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 50px; }
+  .main__divider {
+    border: 1px solid black;
+    width: 10%;
+    margin: 20px auto; }
+
+.header {
+  background: #0d6978; }
+  .header__subTitle {
+    margin: 0;
+    text-align: center;
+    font-size: 6rem;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 20px 0;
+    color: white; }
+
+.mainForm {
+  line-height: 1.8rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1.6rem;
+  color: black; }
+  .mainForm__inputLabel--displayFlex {
+    display: flex;
+    justify-content: center; }
+  .mainForm__inputLabel--column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px; }
+  .mainForm__address {
+    margin: 0; }
+
+label {
+  margin-bottom: 10px; }

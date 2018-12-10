@@ -1,0 +1,58 @@
+.createAccount {
+    background:$secondaryColor;
+    height: 100vh;
+    &__subtitle{
+        @include headingFont(6rem);
+        color:$primaryColor;
+        text-align: center;
+    } &__text{
+        @include bodyFont(black);
+        
+    }
+    &__text--address{
+        text-align: center;
+    }
+}
+
+
+// ======================== header =====================
+
+.createAccount__header{
+    text-align:center;
+    
+}
+.header__background{
+    background:$primaryColor;
+}
+
+.header__userName
+{
+    @include headingFont(3rem);
+    color:white;
+    font-weight:bold;
+    margin:0;
+    padding:30px 0px;
+}
+.header__companyM{
+    font-size:5rem;
+}
+.header__userName{
+    padding-left:50px;
+    text-transform: capitalize;
+    text-align:center;
+    
+}
+
+// ============== form =================
+
+.createAccount__form{
+    display:flex;
+    flex-direction: column;
+    margin-top:50px;
+}
+.createAccount__label{
+    @include bodyFont(black);
+    margin-top:10px;
+    text-align:center;
+    font-weight:bold;
+}
