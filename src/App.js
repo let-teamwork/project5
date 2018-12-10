@@ -177,11 +177,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-<<<<<<< HEAD
-          radius: 500,
-=======
           radius: 1000,
->>>>>>> 406e0138642c13a47df12c236a35d9df7306f09f
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
