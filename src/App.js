@@ -269,7 +269,7 @@ class App extends Component {
   handleClick = (e) => {
     e.preventDefault();
     this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-    console.log("Submit clicked as user")
+    // console.log("Submit clicked as user")
     // if (this.state.userName){
     // }else{
     //   console.log("Submit clicked as guest")
@@ -353,7 +353,9 @@ class App extends Component {
     midObj.lng = this.midX
 
     this.setState({
-      midPointCoordinates: midObj
+      midPointCoordinates: midObj,
+      searchedUID: "",
+      secondLocationBelongsToUser: false
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
@@ -380,46 +382,52 @@ class App extends Component {
 
   searchFirebase = (search, node, callback) => {
     // console.log('searchingFB');
-    const dbRefName = firebase.database().ref(`/userNames/`);
-    console.log(dbRefName);
+    const dbRefName = firebase.database().ref(`/users/`);
+    // console.log(dbRefName);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
+      // console.log('aofa', newArrayOfArrays);
       // console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
-        // console.log(array)
+        // console.log(array[1].userName)
         // console.log(search)
         // console.log(array)
-        if (search === array[0]) {
+        if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[1]
+            searchedUID: array[0]
+          }, () => {
+            callback(search, node)
           });
+          console.log('UID1', this.state.searchedUID);
+        } else {
+          callback(search, node)
         }
       })
     })
-    // console.log('node1', node);
-    callback(search, node)
   }  
 
 
 
   getCoordinatesRelatedToSearch = (search, node) => {
     // console.log('node2',node);
+    
     this.setState({
       secondLocationBelongsToUser: false,
-      searchedUID: ""
+      // searchedUID: ""
     });
     const dbRefNode = firebase.database().ref(`/${node}/`);
     dbRefNode.once('value').then((snapshot) => {  
       // console.log(snapshot);
       const newArrayOfArrays = Object.entries(snapshot.val());
       newArrayOfArrays.forEach((item) => {
-        // console.log('all entries', item);
-        // console.log(this.state.searchedUID);
+        console.log('all entries', item);
+        console.log('UID', this.state.searchedUID);
+        
         if (this.state.searchedUID === item[0]) {
           this.setState({
             secondLocationBelongsToUser: true,
             item:item
-          })
+          });
         }
       })
       if (this.state.secondLocationBelongsToUser){
@@ -429,7 +437,7 @@ class App extends Component {
       }
     })  
     this.setState({
-      searchedUID: ""
+      // searchedUID: ""
     })
   }
 
@@ -522,7 +530,7 @@ class App extends Component {
       currentDate: Date()
       //should also add yelp ID
     }
-    dbRefNode.push(newMessageObject);
+    dbRefNode.push(newMessageObject); 
   }
 
   handleMOTChange = e => {
