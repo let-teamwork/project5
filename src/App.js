@@ -643,6 +643,9 @@ class App extends Component {
       dbRefConversations.push(newConversation)
       this.setState({
         currentOpenConversation: newArray[0]
+      }, () => {
+        this.addConversationToUserInbox();
+        this.createOpenConversationInSecondUserAccount();
       })
     })
   }
@@ -653,8 +656,28 @@ class App extends Component {
       const newArray = snapshot.val();
       newArray.push(conversation.message[0]);
       dbRefOpenConversation.set(newArray);
+      this.addConversationToUserInbox();
     })
   }
+
+  addConversationToUserInbox = () => {
+    const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/`);
+    const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`)
+    dbRefOpenConversation.once('value').then((snapshot) => {
+      console.log('newest snapshot', snapshot.val());
+      const newObject = snapshot.val();
+      newObject.from = this.state.secondUserName;
+      newObject.sendingUID = this.state.searchedUID;
+      console.log(`adjusted from `, newObject)
+      dbRefUserConversation.set(newObject);
+    });
+  }
+
+  createOpenConversationInSecondUserAccount = () => {
+    const dbRefSecondUser = firebase.database().ref(`/users/${this.state.searchedUID}/openConversations/`)
+    const newConversation = { [this.state.searchedUID]: this.state.currentOpenConversation }
+  };
+
 
   handleMOTChange = e => {
     this.setState({
@@ -668,6 +691,12 @@ class App extends Component {
       newMessageContent: message
     }, () => {
       this.deliverNewMessage(replyToName, 'messages')
+    });
+  }
+
+  selectMessageForReply = (currentOpenConversation) => {
+    this.setState({
+      currentOpenConversation: currentOpenConversation
     });
   }
 
@@ -760,6 +789,7 @@ class App extends Component {
           dateSuggestion={this.state.dateSuggestion}
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
+          selectMessageForReply={this.selectMessageForReply}
           />
           
         )}/>
