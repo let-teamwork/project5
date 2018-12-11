@@ -1,12 +1,10 @@
 // import { Route, Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
-// import firebase from './firebase'
-// import axios from 'axios';
-import MapWithMarkerClusterer from './MyMapComponent';
-// import MapComponent from './MapComponent';
-import Messages from './messages';
-// import swal from 'sweetalert';
-
+import firebase from './firebase'
+import axios from 'axios';
+import MapWithMarkerClusterer from './MyMapComponent'
+import MapComponent from './MapComponent';
+import Messages from './messages'
 
 
 class Main extends Component {
@@ -15,35 +13,34 @@ class Main extends Component {
         this.state={
             markerMidPoint: {
             },
-            runDirections:false
+            runDirections:false,
+            travelMode:"",
+            distance:"",
+            duration:""
         }
     }
     //function that sets markerMidPoint
     getMarkerMidPoint = (marker)=>{
-        console.log("marker", marker)
+     
         const midLatLng = {};
-        const latString = marker.latLng.lat().toFixed(5);
-        const lngString = marker.latLng.lng().toFixed(5);
+        const latString = Math.floor(marker.latLng.lat().toFixed(5) * 10000);
+        const lngString = Math.floor(marker.latLng.lng().toFixed(5) * 10000);
         midLatLng.lat= parseFloat(latString);
         midLatLng.lng= parseFloat(lngString);
-        console.log(midLatLng)
+        console.log("this is the latLng from the clicked event",latString, lngString)
         this.setState({
             markerMidPoint:midLatLng,
-            travelMode:"",
-            distance:"",
-            duration:""
         }, ()=>{
             this.getSelectedInfo()
         })
 
     }
     getInfoFromDirections=(results)=>{
-        const travelMode = results.request.origin.travelMode;
+        console.log(results)
+        const travelMode = results.request.travelMode;
         const distance = results.routes[0].legs[0].distance.text;
         const duration = results.routes[0].legs[0].duration.text;
-        console.log(travelMode,
-            distance,
-            duration)
+        console.log(travelMode,distance,duration)
         this.setState({
             travelMode,
             distance,
@@ -57,14 +54,21 @@ class Main extends Component {
         })
     }
     getSelectedInfo=()=>{
+        // const regExLat= RegExp();
+        // const regExLng= RegExp();
         const array=this.props.markers;
-        console.log("i'm the array",array);
-        const resultArray = array.filter(latLng => {
-            return(this.state.markerMidPoint.lat === latLng.coordinates.latitude && this.state.markerMidPoint.lng === latLng.coordinates.longitude)
+        console.log("this is the array which LatLng coordinates will be filtering through",array);
+            const resultArray = array.filter(latLng => {
+                const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
+                const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
+                console.log(long, lat)
+                //const minusedLat = lat - lat
+                //if(minusedLat <= 0.009)reutnr array. 
+                    return (lat == this.state.markerMidPoint.lat && long == this.state.markerMidPoint.lng)
         }) 
-        console.log(resultArray)
-        return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-                <p></p>
+            console.log("this is the filtered result",resultArray)
+            return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
+                <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
@@ -133,8 +137,8 @@ class Main extends Component {
                                 <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
-                            <div className="mainForm__inputLabel--column">
-                                <label htmlFor="carUser">By Car</label>
+                             <div className="mainForm__inputLabel--column">
+                                 <label htmlFor="carUser">By Car</label>
                                 <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
