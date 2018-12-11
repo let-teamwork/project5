@@ -4,14 +4,16 @@ import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 import MapComponent from './MapComponent';
-import Messages from './Messages'
+import Messages from './messages'
 
 
-class Main extends Component {
+class FindInvite extends Component {
     constructor() {
         super();
         this.state={
             markerMidPoint: {
+                // lat: 43.65439,
+                // lng: -79.42355
             },
             runDirections:false
         }
@@ -70,23 +72,6 @@ class Main extends Component {
                 onClick= {
                     this.getDirections
                 } > Need Directions ? </button>
-                {this.props.bothAreUsers ? 
-                    (<div>
-                    <button onClick={() =>{this.props.showMessageBar(
-                        resultArray[0].name,
-                        resultArray[0].location.address1,
-                        resultArray[0].location.city,
-                        resultArray[0].location.state,
-                        resultArray[0].location.country,
-                        resultArray[0].id
-                    )}}>Share with your date</button>
-                    {this.props.showMessage ? 
-                        <form onSubmit={this.props.handleSendMessage}>
-                            <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
-                            <button>Send Message</button>
-                        </form>
-                    : ""}
-                </div>) : ""}
             </div>
         )
     }
@@ -109,69 +94,7 @@ class Main extends Component {
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
                 <div className="main wrapper">
-                    <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
-                    <form key="main-form" className="mainForm" >
-                        <label htmlFor=""> 
-                            <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
-                            <input type="text" className="app__input" placeholder="" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
-                        </label>
-                        <p className="mainForm__mot">Mode of Transportation</p>
-                        <div className="mainForm__inputLabel--displayFlex">
-                            <div className="mainForm__inputLabel--column">
-                                <label htmlFor="walkUser">Walking</label>
-                                <input name="userMOT" type="radio" value="walking" id="walkUser" onChange={this.props.handleMOTChange}/>
-                            </div>
-
-                            <div className="mainForm__inputLabel--column">
-                                <label htmlFor="bikeUser">By Bike</label>
-                                <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
-                            </div>
-                            
-                             <div className="mainForm__inputLabel--column">
-                                 <label htmlFor="carUser">By Car</label>
-                                <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
-                            </div>
-                            
-                            <div className="mainForm__inputLabel--column">
-                                <label htmlFor="publicUser"> Public Transport</label>
-                                <input name="userMOT" type="radio" value="transit" id="publicUser" onChange={this.props.handleMOTChange}/>
-                            </div>
-                        </div>
-                        <div className="main__divider"></div>
-                        <label htmlFor="">
-                            <p className="mainForm__address">enter your date's address or username</p>
-                            <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
-                        </label>
-                        <p className="form__mot">Mode of Transportation</p>
-                        <div className="mainForm__inputLabel--displayFlex">
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="walkSecond">Walking</label>
-                                <input name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
-                            </div>
-
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="bikeSecond">By Bike</label>
-                                <input name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
-                            </div>
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="carSecond">By Car</label>
-                                <input name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
-                            </div>
-
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="publicSecond">Public Transport</label>
-                                <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
-                            </div>
-                            
-                           
-                            </div>
-                        </form>
-
-                        {this.props.inputsFilled ? null : <p>Please fill both addresses</p>}
-                        
-                        <button onClick={this.props.handleClick} 
-                            
-                        className="app__button">Middl. Me</button>
+                    <h3 key="main-h2" className="main__h3">Your date is located here</h3>
                     <MapWithMarkerClusterer
                         getInfoFromDirections = {
                             this.getInfoFromDirections
@@ -204,12 +127,6 @@ class Main extends Component {
                         : 
                         null
                     }
-                   
-                    <div className="main__button--displayFlex">
-                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    </div>
-                    
                 </div>
 
             </div>
@@ -217,4 +134,4 @@ class Main extends Component {
     }
 }
 
-export default Main
+export default FindInvite
