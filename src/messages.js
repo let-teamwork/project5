@@ -27,34 +27,28 @@ class Messages extends Component {
         const selectedMessageArray = this.props.messages.filter((message) => {
             return (message.key === this.state.selectedMessageKey)
         });
-        console.log(selectedMessageArray);
+        console.log("sma", selectedMessageArray);
         this.setState({
             selectedMessageObject: selectedMessageArray[0]
         }, () => {
             this.setState({
                 viewSingleMessage: true 
             })
-            console.log(this.state.selectedMessageObject)
+            console.log("yo", this.state.selectedMessageObject)
         });
     }
     
     
 
     render(){
+        // console.log("key", this.props.messages[0].key)
         return (
             <div>
                 {this.props.messages.map((message) => {
-                    // console.log(message);
                     return (
-                        <div key={message.key} className="message-preview">
-                            <a id={message.key} onClick={this.viewMessage}>
-                                <div>
-                                    <p>{message.from}</p>
-                                </div>
-                                <div>
-                                    <p>{message.displayDate}</p>
-                                </div>
-                            </a>
+                        <div id={message.key} className="message-preview" onClick={this.viewMessage} >
+                            <p id={message.key} >{message.from}</p>
+                            <p id={message.key} >{message.displayDate}</p>
                         </div>
                     )
                 })}
@@ -63,6 +57,7 @@ class Messages extends Component {
                     <FullScreenMessage 
                     message={this.state.selectedMessageObject}
                     replyToMessage={this.props.replyToMessage}
+                    recieveRestaurantResult={this.props.recieveRestaurantResult}
                     />
                 ) : (
                     ""

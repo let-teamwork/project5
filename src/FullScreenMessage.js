@@ -23,14 +23,15 @@ class FullScreenMessage extends Component {
     }
 
     render(){
+        console.log("message", this.props.message)
         return(
             <div className="fullScreenMessage">
                 <div className="fullScreenMessage__header">
                     <div className="fullScreenMessage__messageDate">
-                        <p>{this.props.message.displayDate}</p>
+                        {/* <p>{this.props.message.displayDate}</p> */}
                     </div>
                     <div className="fullScreenMessage__from">
-                        <p>{this.props.message.from}</p>
+                        {/* <p>{this.props.message.from}</p> */}
                     </div>
                 </div>
                 <div className="fullScreenMessage__messageBody">
@@ -38,6 +39,17 @@ class FullScreenMessage extends Component {
                         <p>{this.props.message.message}</p>
                     </div> 
                 </div>
+                {this.props.message.restaurantSuggestion ? 
+                <div>
+                    <button onClick={()=>{this.props.recieveRestaurantResult(
+                        this.props.message.restaurantSuggestion.restaurantName,
+                        this.props.message.restaurantSuggestion.restaurantAddress,
+                        this.props.message.restaurantSuggestion.restaurantCity,
+                        this.props.message.restaurantSuggestion.restaurantState,
+                        this.props.message.restaurantSuggestion.restaurantCountry,
+                        this.props.message.restaurantSuggestion.restaurantID
+                    )}}>See your date invite!</button>
+                </div>: ""}
                 <div className="fullScreenMessage__reply">
                     <form onSubmit={this.handleReplySubmit} action="">
                         <label htmlFor="messageReply"></label>

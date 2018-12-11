@@ -10,6 +10,7 @@ import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
 
 
+
 const provider = new firebase.auth.GoogleAuthProvider();
 const auth = firebase.auth();
 
@@ -54,7 +55,11 @@ class App extends Component {
       secondMOT: "",
       item: {},
       messagesdisplayed: false,
-      currentOpenConversation: ""
+      currentOpenConversation: "",
+      inputsFilled: true,
+      bothAreUsers: true,
+      showMessage: false,
+      dateSuggestion: {}
     }
   }
 
@@ -208,6 +213,61 @@ class App extends Component {
       })
     });
   };
+
+  recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
+    const urlYelp = "https://api.yelp.com/v3/businesses/matches";
+    const yelpKey =
+      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+    //API CALL FOR YELP DATA
+    axios({
+      method: "GET",
+      url: "http://proxy.hackeryou.com",
+      dataResponse: "json",
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, { arrayFormat: "brackets" });
+      },
+      params: {
+        reqUrl: urlYelp,
+        params: {
+          name: restaurantName,
+          address1: restaurantAddress,
+          city: restaurantCity,
+          state: restaurantState,
+          country: restaurantCountry,
+          yelp_business_id: restaurantID
+        },
+        proxyHeaders: {
+          Authorization: yelpKey
+        },
+        xmlToJSON: false
+      }
+    }).then(res => {
+      // console.log("calling Yelp API & retrieving all restaurants:", res)
+      console.log("match restaurant", res.data.businesses[0])
+      const restaurant = res.data.businesses[0]
+      return(
+        <div>
+          <p>{restaurant.name}</p>
+          
+        </div>
+      )
+    });
+  };
+
+  showMessageBar = (name, address, city, state, country, id) => {
+    const restaurant = {
+      restaurantName: name,
+      restaurantAddress: address,
+      restaurantCity: city,
+      restaurantState: state,
+      restaurantCountry: country,
+      restaurantID: id
+    }
+    this.setState({
+      showMessage: !this.state.showMessage,
+      dateSuggestion: restaurant
+    })
+  }
   
   pushCoffeeAndBarToMarker= ()=>{
     // console.log("Pushing bars to Bar Array:", this.state.bar) 
@@ -269,14 +329,17 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
-    // console.log("Submit clicked as user")
-    // if (this.state.userName){
-    // }else{
-    //   console.log("Submit clicked as guest")
-    //   this.getCoordinates(this.state.userLocation, this.setUserCoordinates)
-    //   this.getCoordinates(this.state.search, this.setSecondCoordinates)
-    // }
+    this.recieveRestaurantResult();
+    if (this.state.userLocation !== "" && this.state.search !== ""){
+      this.setState({
+        inputsFilled: true
+      })
+      this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
+    } else {
+      this.setState({
+        inputsFilled: false
+      })
+    }
   }
   showDirections=()=>{
     setTimeout(()=>{
@@ -290,56 +353,56 @@ class App extends Component {
     
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
-    if (this.state.userMOT === "car" && this.state.secondMOT === "walk") {
-      //Car-Walk
+    if (this.state.userMOT === "driving" && this.state.secondMOT === "walking") {
+      //driving-walking
       this.midY = (this.state.secondCoordinates.lat * 5 / 6) + (this.state.userCoordinates.lat / 6);
       this.midX = (this.state.secondCoordinates.lng * 5 / 6) + (this.state.userCoordinates.lng / 6);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "car") {
-      //Walk-Car
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "driving") {
+      //walking-driving
       this.midY = (this.state.secondCoordinates.lat / 6) + (this.state.userCoordinates.lat * 5 / 6);
       this.midX = (this.state.secondCoordinates.lng / 6) + (this.state.userCoordinates.lng * 5 / 6);
-    } else if (this.state.userMOT === "car" && this.state.secondMOT === "public") {
-      //Car-Public
+    } else if (this.state.userMOT === "driving" && this.state.secondMOT === "transit") {
+      //driving-transit
       this.midY = (this.state.secondCoordinates.lat * 5 / 8) + (this.state.userCoordinates.lat * 3 / 8);
       this.midX = (this.state.secondCoordinates.lng * 5 / 8) + (this.state.userCoordinates.lng * 3 / 8);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "car") {
-      //Public-Car
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "driving") {
+      //transit-driving
       this.midY = (this.state.secondCoordinates.lat * 3 / 8) + (this.state.userCoordinates.lat * 5 / 8);
       this.midX = (this.state.secondCoordinates.lng * 3 / 8) + (this.state.userCoordinates.lng * 5 / 8);
-    } else if (this.state.userMOT === "car" && this.state.secondMOT === "bike") {
-      //Car-Bike
+    } else if (this.state.userMOT === "driving" && this.state.secondMOT === "bicycling") {
+      //driving-bicycling
       this.midY = (this.state.secondCoordinates.lat * 5 / 7) + (this.state.userCoordinates.lat * 2 / 7);
       this.midX = (this.state.secondCoordinates.lng * 5 / 7) + (this.state.userCoordinates.lng * 2 / 7);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "car") {
-      //Bike-Car
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "driving") {
+      //bicycling-driving
       this.midY = (this.state.secondCoordinates.lat * 2 / 7) + (this.state.userCoordinates.lat * 5 / 7);
       this.midX = (this.state.secondCoordinates.lng * 2 / 7) + (this.state.userCoordinates.lng * 5 / 7);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "public") {
-      //Walk-Public
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "transit") {
+      //walking-transit
       this.midY = (this.state.secondCoordinates.lat / 4) + (this.state.userCoordinates.lat * 3 / 4);
       this.midX = (this.state.secondCoordinates.lng / 4) + (this.state.userCoordinates.lng * 3 / 4);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "walk") {
-      //Public-Walk
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "walking") {
+      //transit-walking
       this.midY = (this.state.secondCoordinates.lat * 3 / 4) + (this.state.userCoordinates.lat / 4);
       this.midX = (this.state.secondCoordinates.lng * 3 / 4) + (this.state.userCoordinates.lng / 4);
-    } else if (this.state.userMOT === "walk" && this.state.secondMOT === "bike") {
-      //Walk-Bike
+    } else if (this.state.userMOT === "walking" && this.state.secondMOT === "bicycling") {
+      //walking-bicycling
       this.midY = (this.state.secondCoordinates.lat / 3) + (this.state.userCoordinates.lat * 2 / 3);
       this.midX = (this.state.secondCoordinates.lng / 3) + (this.state.userCoordinates.lng * 2 / 3);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "walk") {
-      //Bike-Walk
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "walking") {
+      //bicycling-walking
       this.midY = (this.state.secondCoordinates.lat * 2 / 3) + (this.state.userCoordinates.lat / 3);
       this.midX = (this.state.secondCoordinates.lng * 2 / 3) + (this.state.userCoordinates.lng / 3);
-    } else if (this.state.userMOT === "bike" && this.state.secondMOT === "public") {
-      //Bike-Public
+    } else if (this.state.userMOT === "bicycling" && this.state.secondMOT === "transit") {
+      //bicycling-transit
       this.midY = (this.state.secondCoordinates.lat * 2 / 5) + (this.state.userCoordinates.lat * 3 / 5);
       this.midX = (this.state.secondCoordinates.lng * 2 / 5) + (this.state.userCoordinates.lng * 3 / 5);
-    } else if (this.state.userMOT === "public" && this.state.secondMOT === "bike") {
-      //Public-Bike
+    } else if (this.state.userMOT === "transit" && this.state.secondMOT === "bicycling") {
+      //transit-bicycling
       this.midY = (this.state.secondCoordinates.lat * 3 / 5) + (this.state.userCoordinates.lat * 2 / 5);
       this.midX = (this.state.secondCoordinates.lng * 3 / 5) + (this.state.userCoordinates.lng * 2 / 5);
     } else {
-      //Car-Car Bike-Bike Walk-Walk Public-Public OR just no MOT specified
+      //driving-driving bicycling-bicycling walking-walking transit-transit OR just no MOT specified
       this.midY = ((this.state.secondCoordinates.lat + this.state.userCoordinates.lat) / 2);
       this.midX = ((this.state.secondCoordinates.lng + this.state.userCoordinates.lng) / 2);
     }
@@ -361,6 +424,7 @@ class App extends Component {
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
   }
+
 
   toggleCoffee = () => {
     this.setState({
@@ -387,6 +451,7 @@ class App extends Component {
     // console.log(dbRefName);
     dbRefName.once('value').then((snapshot) => {
       const newArrayOfArrays = Object.entries(snapshot.val())
+      console.log(snapshot.val());
       // console.log('aofa', newArrayOfArrays);
       // console.log(snapshot.val());
       newArrayOfArrays.forEach((array) => {
@@ -395,7 +460,8 @@ class App extends Component {
         // console.log(array)
         if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[0]
+            searchedUID: array[0],
+            bothAreUsers: true
           }, () => {
             callback(search, node)
           });
@@ -540,6 +606,7 @@ class App extends Component {
 
   handleSendMessage = (e) => {
     e.preventDefault();
+
     this.searchFirebase(this.state.secondUserName, `messages`, this.deliverNewMessage);
   }
 
@@ -551,6 +618,7 @@ class App extends Component {
       message: [
         [this.state.newMessageContent, new Date().toDateString()]
       ],
+      restaurantSuggestion: this.state.dateSuggestion,
       displayDate: new Date().toDateString(),
       currentDate: Date()
       //should also add yelp ID
@@ -684,6 +752,14 @@ class App extends Component {
           handleClickDisplayMessages={this.handleClickDisplayMessages}
           messagesdisplayed={this.state.messagesdisplayed}
           replyToMessage={this.replyToMessage}
+          inputsFilled={this.state.inputsFilled}
+          bothAreUsers={this.state.bothAreUsers}
+          recieveRestaurantResult={this.recieveRestaurantResult}
+          showMessageBar={this.showMessageBar}
+          showMessage={this.state.showMessage}
+          dateSuggestion={this.state.dateSuggestion}
+          suggestDate={this.suggestDate}
+          userMOT={this.state.userMOT}
           />
           
         )}/>
