@@ -1,14 +1,14 @@
 import React from 'react';
-import {withGoogleMap, withScriptjs, GoogleMap, DirectionsRenderer, Marker} from 'react-google-maps';
+import {withGoogleMap, withScriptjs, GoogleMap, DirectionsRenderer} from 'react-google-maps';
 import {compose, withProps, lifecycle, withHandlers} from 'recompose';
 
 
 
-const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
-const torontoCoordinates = {
-    lat:43.6529,
-    lng:-79.3849
-}
+// const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
+// const torontoCoordinates = {
+//     lat:43.6529,
+//     lng:-79.3849
+// }
 
 
 const MapComponent = compose(

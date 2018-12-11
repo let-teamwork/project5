@@ -8,10 +8,10 @@ import {
 } from "react-google-maps"
 import {compose, withProps, withHandlers, lifecycle} from 'recompose';
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
-import MarkerWithLabel from "react-google-maps/lib/components/addons/MarkerClusterer"
+// import MarkerWithLabel from "react-google-maps/lib/components/addons/MarkerClusterer"
 
 
-const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
+// const googleApiKeyJS = "AIzaSyB0fy93k6kiEYE_U0cUZYnRLXR-mzUQSyo"
 const torontoCoordinates = {
     lat:43.6529,
     lng:-79.3849

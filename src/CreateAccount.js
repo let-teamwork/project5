@@ -1,12 +1,10 @@
-import { Route, Link } from 'react-router-dom';
+// import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
 
 
 class CreateAccount extends Component{
-  constructor(){
-    super();
-  }
+  
   render(){
     return(
       <div className="createAccount">

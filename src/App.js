@@ -3,11 +3,11 @@ import './styles/App.css';
 import firebase from './firebase'
 import axios from 'axios';
 import Qs from 'qs';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
-import MapWithMarkerClusterer from './MyMapComponent'
+// import MapWithMarkerClusterer from './MyMapComponent'
 import FindInvite from './FindInvite'
 
 
@@ -143,6 +143,7 @@ class App extends Component {
       this.setState({
         user: null
       })
+      console.log("I'm logging out")
     })
   }
 
@@ -425,7 +426,7 @@ class App extends Component {
 
   midPoint = () => {
     this.midPointBasedOnMOT();
-
+    console.log("I'm running")
     const midObj = {};
     midObj.lat = this.midY
     midObj.lng = this.midX
@@ -553,7 +554,7 @@ class App extends Component {
 
   sortMessages = () => {
     console.log(this.state.messages);
-    const newMessagesArray = this.state.messages.sort((a, b) => {
+    this.state.messages.sort((a, b) => {
       // console.log('a',a,'b',b);
       return a.currentDate - b.currentDate;
     })
@@ -663,7 +664,6 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
-        this.createOpenConversationInSecondUserAccount();
       })
     })
   }
@@ -694,7 +694,8 @@ class App extends Component {
   createOpenConversationInSecondUserAccount = () => {
     const dbRefSecondUser = firebase.database().ref(`/users/${this.state.searchedUID}/openConversations/`)
     const newConversation = { [this.state.searchedUID]: this.state.currentOpenConversation }
-  };
+    dbRefSecondUser.push(newConversation)
+  }
 
 
   handleMOTChange = e => {
@@ -715,6 +716,8 @@ class App extends Component {
   selectMessageForReply = (currentOpenConversation) => {
     this.setState({
       currentOpenConversation: currentOpenConversation
+    }, () => {
+      this.createOpenConversationInSecondUserAccount();
     });
   }
 
@@ -808,6 +811,7 @@ class App extends Component {
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
+          logOut={this.logOut}
           />
           
         )}/>
@@ -859,6 +863,7 @@ class App extends Component {
           dateSuggestion={this.state.dateSuggestion}
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
+          logOut={this.logOut}
           />
           
         )}/>

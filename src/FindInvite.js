@@ -1,9 +1,9 @@
-import { Route, Link } from 'react-router-dom';
+// import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import firebase from './firebase'
-import axios from 'axios';
+// import firebase from './firebase'
+// import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
-import MapComponent from './MapComponent';
+// import MapComponent from './MapComponent';
 import Messages from './messages'
 
 

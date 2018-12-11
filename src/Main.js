@@ -1,4 +1,4 @@
-import { Route, Link } from 'react-router-dom';
+// import { Route, Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
 import firebase from './firebase'
 import axios from 'axios';
@@ -23,8 +23,8 @@ class Main extends Component {
     getMarkerMidPoint = (marker)=>{
      
         const midLatLng = {};
-        const latString = marker.latLng.lat().toFixed(5);
-        const lngString = marker.latLng.lng().toFixed(5);
+        const latString = Math.floor(marker.latLng.lat().toFixed(5) * 10000);
+        const lngString = Math.floor(marker.latLng.lng().toFixed(5) * 10000);
         midLatLng.lat= parseFloat(latString);
         midLatLng.lng= parseFloat(lngString);
         console.log("this is the latLng from the clicked event",latString, lngString)
@@ -59,8 +59,8 @@ class Main extends Component {
         const array=this.props.markers;
         console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
-                const long=latLng.coordinates.longitude.toFixed(5);
-                const lat = latLng.coordinates.latitude.toFixed(5);
+                const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
+                const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
                 console.log(long, lat)
                 //const minusedLat = lat - lat
                 //if(minusedLat <= 0.009)reutnr array. 
@@ -69,7 +69,7 @@ class Main extends Component {
             console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
-                <p className="main__displayResults--title">{resultArray[0].alias}</p>
+                <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
                 <button
@@ -96,6 +96,8 @@ class Main extends Component {
             </div>
         )
     }
+
+
     render() {
         
         return (
@@ -113,6 +115,7 @@ class Main extends Component {
                     }
             
                 <header className="header">
+                    <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
                 <div className="main wrapper">
@@ -169,10 +172,8 @@ class Main extends Component {
                                 <label htmlFor="publicSecond">Public Transport</label>
                                 <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-                            
-                           
-                            </div>
-                        </form>
+                        </div>
+                    </form>
 
                         {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
