@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import MapWithMarkerClusterer from './MyMapComponent';
 // import MapComponent from './MapComponent';
 import Messages from './messages';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
 
 
 
@@ -171,7 +171,7 @@ class Main extends Component {
                         </div>
                     </form>
 
-                        {this.props.inputsFilled ? null : swal("Please fill in all fields!")}
+                        {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
                         <button onClick={this.props.handleClick} 
                             
