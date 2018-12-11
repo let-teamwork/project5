@@ -14,7 +14,7 @@ class Messages extends Component {
 
     viewMessage = (e) => {
         e.preventDefault();
-        console.log("target", e.target.id);
+        console.log(e.target.id);
         this.setState({
             // viewSingleMessage: true,
             selectedMessageKey: e.target.id
@@ -62,8 +62,6 @@ class Messages extends Component {
                 ) : (
                     ""
                 )   
-
-
                 }
             </div>
             )

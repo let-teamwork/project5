@@ -55,6 +55,7 @@ class App extends Component {
       secondMOT: "",
       item: {},
       messagesdisplayed: false,
+      currentOpenConversation: "",
       inputsFilled: true,
       bothAreUsers: true,
       showMessage: false,
@@ -417,7 +418,7 @@ class App extends Component {
 
     this.setState({
       midPointCoordinates: midObj,
-      searchedUID: "",
+      // searchedUID: "",
       secondLocationBelongsToUser: false
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
@@ -465,8 +466,9 @@ class App extends Component {
             callback(search, node)
           });
           console.log('UID1', this.state.searchedUID);
-        } else {
+        } else if (node === "users"){
           callback(search, node)
+          //IF THERE IS TIME TRY TO FIND A WAY TO MAKE THIS ONLY RUN AFTER THE SEARCH RUNS THROUGH EACH ITTERATION
         }
       })
     })
@@ -566,11 +568,14 @@ class App extends Component {
         // console.log('setting second location', this.state.secondLocation);
         // console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
+        this.searchForOpenConversations();
       });
       } else {
       // console.log('not a user: getting coordinates')
       this.setState({
-        secondLocation: search
+        secondLocation: search,
+        searchedUID: "",
+        currentOpenConversation: ""
       }, () => {
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
       })
@@ -581,6 +586,24 @@ class App extends Component {
     })
   }
 
+  searchForOpenConversations = () => {
+    const dbRefConversations = firebase.database().ref(`/users/${this.state.user.uid}/openConversations/`);
+    dbRefConversations.once('value').then((snapshot) => {
+      Object.entries(snapshot.val()).forEach((conversation) => {
+        if (Object.keys(conversation[1])[0] === this.state.searchedUID){
+          this.setState({
+            currentOpenConversation: conversation[1][this.state.searchedUID]
+          }, () => {
+            this.setState({
+              searchedUID: ""
+            })
+          })
+        }
+        // return conversation[1][this.state.searchedUID]
+      })
+    });
+  }
+
   handleSendMessage = (e) => {
     e.preventDefault();
 
@@ -589,16 +612,48 @@ class App extends Component {
 
   deliverNewMessage = (receiver, node) => {
     const dbRefNode = firebase.database().ref(`/${node}/${this.state.searchedUID}/`)
-    const newMessageObject = {
+    const conversation = {
       from: this.state.userName,
       sendingUID: this.state.user.uid,
+      message: [
+        [this.state.newMessageContent, new Date().toDateString()]
+      ],
       restaurantSuggestion: this.state.dateSuggestion,
-      message: this.state.newMessageContent,
       displayDate: new Date().toDateString(),
       currentDate: Date()
       //should also add yelp ID
     }
-    dbRefNode.push(newMessageObject); 
+    if(!this.state.currentOpenConversation){
+      this.createFirstConversation(dbRefNode, conversation)
+      console.log(1);
+    } else {
+      this.addToExistingConversation(conversation)
+      console.log(2);
+    }
+    // dbRefNode.val();
+  }
+
+  createFirstConversation = (dbRefNode, conversation) => {
+    const dbRefConversations = firebase.database().ref(`/users/${this.state.user.uid}/openConversations`)
+    dbRefNode.push(conversation);
+    dbRefNode.once('value').then((snapshot) => {
+      const newArray = Object.keys(snapshot.val());
+      // console.log(newArray[0]);
+      const newConversation = {[this.state.searchedUID]: newArray[0]}
+      dbRefConversations.push(newConversation)
+      this.setState({
+        currentOpenConversation: newArray[0]
+      })
+    })
+  }
+
+  addToExistingConversation = (conversation) => {
+    const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/message/`);
+    dbRefOpenConversation.once('value').then((snapshot) => {
+      const newArray = snapshot.val();
+      newArray.push(conversation.message[0]);
+      dbRefOpenConversation.set(newArray);
+    })
   }
 
   handleMOTChange = e => {

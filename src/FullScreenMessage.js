@@ -22,7 +22,6 @@ class FullScreenMessage extends Component {
         })
     }
 
-
     render(){
         console.log("message", this.props.message)
         return(
