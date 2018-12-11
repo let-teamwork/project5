@@ -680,20 +680,47 @@ class App extends Component {
   }
 
   addConversationToUserInbox = () => {
+    const savedID = this.state.searchedUID;
+    const savedName = this.state.secondUserName;
+    const currentconvo = this.state.currentOpenConversation;
     const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/`);
-    const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`)
+    const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`);
+    const dbRefSecondUser = firebase.database().ref(`/users/${savedID}/openConversations/`);
     dbRefOpenConversation.once('value').then((snapshot) => {
       console.log('newest snapshot', snapshot.val());
       const newObject = snapshot.val();
-      newObject.from = this.state.secondUserName;
+      newObject.from = savedName;
       newObject.sendingUID = this.state.searchedUID;
-      console.log(`adjusted from `, newObject)
+      console.log(`adjusted from`, newObject)
       dbRefUserConversation.set(newObject);
     });
+    // dbRefSecondUser.once('value').then((snapshot) => {
+    //   const newArray = Object.entries(snapshot.val());
+    //     console.log('newest Array', newArray);
+    //     const n=0
+    //     newArray.forEach((openConversation) => {
+    //       console.log(openConversation);
+    //       console.log('length' ,newArray.length)
+    //       n++
+    //       console.log('n', n)
+    //       if (openConversation[1][savedID] === currentconvo){
+    //         return
+    //       } 
+    //       if (n === newArray.length){
+    //         this.createOpenConversationInSecondUserAccount(savedID);
+    //       }
+    //       // openConversation[1][savedID] === currentconvo
+    //     })
+    //     // console.log('newest array2', newArray);
+        
+        
+    //   })
+      
+      this.createOpenConversationInSecondUserAccount(savedID);
   }
 
-  createOpenConversationInSecondUserAccount = () => {
-    const dbRefSecondUser = firebase.database().ref(`/users/${this.state.searchedUID}/openConversations/`)
+  createOpenConversationInSecondUserAccount = (savedID) => {
+    const dbRefSecondUser = firebase.database().ref(`/users/${savedID}/openConversations/`)
     const newConversation = { [this.state.searchedUID]: this.state.currentOpenConversation }
     dbRefSecondUser.push(newConversation)
   }
@@ -717,9 +744,7 @@ class App extends Component {
   selectMessageForReply = (currentOpenConversation) => {
     this.setState({
       currentOpenConversation: currentOpenConversation
-    }, () => {
-      this.createOpenConversationInSecondUserAccount();
-    });
+    })
   }
 
 
