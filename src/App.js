@@ -568,7 +568,7 @@ class App extends Component {
         // console.log('setting second location', this.state.secondLocation);
         // console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
-        this.searchForOpenConversations();
+        // this.searchForOpenConversations();
       });
       } else {
       // console.log('not a user: getting coordinates')
