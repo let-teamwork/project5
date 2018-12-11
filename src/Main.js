@@ -1,10 +1,12 @@
-import { Route, Link } from 'react-router-dom';
+// import { Route, Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
-import firebase from './firebase'
-import axios from 'axios';
+// import firebase from './firebase'
+// import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent';
-import MapComponent from './MapComponent';
+// import MapComponent from './MapComponent';
 import Messages from './messages';
+import swal from 'sweetalert';
+
 
 
 class Main extends Component {
@@ -57,11 +59,11 @@ class Main extends Component {
     getSelectedInfo=()=>{
         const array=this.props.markers;
         console.log("i'm the array",array);
-            const resultArray = array.filter(latLng => {
-                    return(this.state.markerMidPoint.lat === latLng.coordinates.latitude && this.state.markerMidPoint.lng === latLng.coordinates.longitude)
-            }) 
-            console.log(resultArray)
-            return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
+        const resultArray = array.filter(latLng => {
+            return(this.state.markerMidPoint.lat === latLng.coordinates.latitude && this.state.markerMidPoint.lng === latLng.coordinates.longitude)
+        }) 
+        console.log(resultArray)
+        return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p></p>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
@@ -90,6 +92,8 @@ class Main extends Component {
             </div>
         )
     }
+
+
     render() {
         
         return (
@@ -107,7 +111,7 @@ class Main extends Component {
                     }
             
                 <header className="header">
-                     <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
+                    <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
                 <div className="main wrapper">
@@ -164,12 +168,10 @@ class Main extends Component {
                                 <label htmlFor="publicSecond">Public Transport</label>
                                 <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-                            
-                           
-                            </div>
-                        </form>
+                        </div>
+                    </form>
 
-                        {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
+                        {this.props.inputsFilled ? null : swal("Please fill in all fields!")}
                         
                         <button onClick={this.props.handleClick} 
                             
