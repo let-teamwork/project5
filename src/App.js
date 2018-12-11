@@ -56,7 +56,7 @@ class App extends Component {
       item: {},
       messagesdisplayed: false,
       inputsFilled: true,
-      bothAreUsers: true,
+      bothAreUsers: false,
       showMessage: false,
       dateSuggestion: {}
     }
@@ -459,8 +459,7 @@ class App extends Component {
         // console.log(array)
         if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[0],
-            bothAreUsers: true
+            searchedUID: array[0]
           }, () => {
             callback(search, node)
           });
@@ -560,7 +559,8 @@ class App extends Component {
     if(user){
       this.setState({
         secondLocation: user[1].userAddress,
-        secondUserName: user[1].userName, 
+        secondUserName: user[1].userName,
+        bothAreUsers: (this.state.userName ? true : false)
         // secondLocationBelongsToUser: true
       }, () => {
         // console.log('setting second location', this.state.secondLocation);
