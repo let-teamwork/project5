@@ -88,7 +88,8 @@ class Main extends Component {
                         resultArray[0].location.city,
                         resultArray[0].location.state,
                         resultArray[0].location.country,
-                        resultArray[0].id
+                        resultArray[0].id,
+                        resultArray[0].coordinates
                     )}}>Share with your date</button>
                     {this.props.showMessage ? 
                         <form onSubmit={this.props.handleSendMessage}>
