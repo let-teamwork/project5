@@ -23,8 +23,8 @@ class Main extends Component {
     getMarkerMidPoint = (marker)=>{
      
         const midLatLng = {};
-        const latString = marker.latLng.lat().toFixed(5);
-        const lngString = marker.latLng.lng().toFixed(5);
+        const latString = Math.floor((marker.latLng.lat().toFixed(5))*10000);
+        const lngString = Math.floor((marker.latLng.lng().toFixed(5))*10000);
         midLatLng.lat= parseFloat(latString);
         midLatLng.lng= parseFloat(lngString);
         console.log("this is the latLng from the clicked event",latString, lngString)
@@ -59,8 +59,8 @@ class Main extends Component {
         const array=this.props.markers;
         console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
-                const long=latLng.coordinates.longitude.toFixed(5);
-                const lat = latLng.coordinates.latitude.toFixed(5);
+                const long=Math.floor((latLng.coordinates.longitude.toFixed(5)));
+                const lat = Math.floor(latLng.coordinates.latitude.toFixed(5));
                 console.log(long, lat)
                 //const minusedLat = lat - lat
                 //if(minusedLat <= 0.009)reutnr array. 
