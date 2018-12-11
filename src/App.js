@@ -256,14 +256,15 @@ class App extends Component {
     });
   };
 
-  showMessageBar = (name, address, city, state, country, id) => {
+  showMessageBar = (name, address, city, state, country, id, coordinates) => {
     const restaurant = {
       restaurantName: name,
       restaurantAddress: address,
       restaurantCity: city,
       restaurantState: state,
       restaurantCountry: country,
-      restaurantID: id
+      restaurantID: id,
+      restaurantCoordinates: coordinates
     }
     this.setState({
       showMessage: !this.state.showMessage,
@@ -864,6 +865,8 @@ class App extends Component {
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
           logOut={this.logOut}
+          getCoordinates={this.getCoordinates}
+          setUserCoordinates={this.setUserCoordinates}
           />
           
         )}/>
