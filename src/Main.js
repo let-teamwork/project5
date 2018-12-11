@@ -101,6 +101,7 @@ class Main extends Component {
                     messages={this.props.messages}
                     replyToMessage={this.props.replyToMessage}
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
+                    selectMessageForReply={this.props.selectMessageForReply}
                     />   
                     ) : ""
                     }

@@ -20,6 +20,7 @@ class Messages extends Component {
             selectedMessageKey: e.target.id
         }, () => {
             this.selectSingleMessage();
+            this.props.selectMessageForReply(this.state.selectedMessageKey);
         })
     }   
     
