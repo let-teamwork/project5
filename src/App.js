@@ -8,6 +8,7 @@ import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
 import MapWithMarkerClusterer from './MyMapComponent'
+import FindInvite from './FindInvite'
 
 
 
@@ -57,7 +58,7 @@ class App extends Component {
       messagesdisplayed: false,
       currentOpenConversation: "",
       inputsFilled: true,
-      bothAreUsers: true,
+      bothAreUsers: false,
       showMessage: false,
       dateSuggestion: {}
     }
@@ -270,19 +271,32 @@ class App extends Component {
   }
   
   pushCoffeeAndBarToMarker= ()=>{
-    // console.log("Pushing bars to Bar Array:", this.state.bar) 
-    // console.log("Pushing coffee shops to Coffee Array:", this.state.coffee)
-    const newMarkersArray = [];
-    const coffee = this.state.coffee
-    const bar = this.state.bar
-    const joinCoffeeToBar = bar.concat(coffee)
+    if(this.state.showingCoffee === true && this.state.showingBar === true){
+      console.log("1")
+      const coffee = this.state.coffee
+      const bar = this.state.bar
+      this.setState({
+        markers: bar.concat(coffee)
+      })
+    } else if (this.state.showingCoffee === true && this.state.showingBar === false){
+      console.log("2")
+      const coffee = this.state.coffee
+      this.setState({
+        markers: coffee
+      })
+    } else if (this.state.showingBar === true && this.state.showingCoffee === false){
+      console.log("3")
+      const bar = this.state.bar
+      this.setState({
+        markers: bar
+      })
+    } else {
+      this.setState({
+        markers: []
+      })
+    }
+    console.log("Da restos", this.state.markers)
     
-    this.setState({
-      markers:joinCoffeeToBar
-    })
-    // console.log("Turning Locations into Markers:", this.state.markers)
-    // console.log("Complete")
-    // console.log("")
   }
 
   setUserCoordinates = (coordinates) => {
@@ -330,7 +344,7 @@ class App extends Component {
   handleClick = (e) => {
     e.preventDefault();
     this.recieveRestaurantResult();
-    if (this.state.userLocation !== "" && this.state.search !== ""){
+    if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
         inputsFilled: true
       })
@@ -429,12 +443,16 @@ class App extends Component {
   toggleCoffee = () => {
     this.setState({
       showingCoffee: !this.state.showingCoffee
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
     })
   }
 
   toggleBar = () => {
     this.setState({
       showingBar: !this.state.showingBar
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
     })
   }
 
@@ -460,8 +478,7 @@ class App extends Component {
         // console.log(array)
         if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[0],
-            bothAreUsers: true
+            searchedUID: array[0]
           }, () => {
             callback(search, node)
           });
@@ -562,13 +579,14 @@ class App extends Component {
     if(user){
       this.setState({
         secondLocation: user[1].userAddress,
-        secondUserName: user[1].userName, 
+        secondUserName: user[1].userName,
+        bothAreUsers: (this.state.userName ? true : false)
         // secondLocationBelongsToUser: true
       }, () => {
         // console.log('setting second location', this.state.secondLocation);
         // console.log("is a user: getting coordinates");
         this.getCoordinates(this.state.secondLocation, this.setSecondCoordinates);
-        this.searchForOpenConversations();
+        // this.searchForOpenConversations();
       });
       } else {
       // console.log('not a user: getting coordinates')
@@ -790,6 +808,57 @@ class App extends Component {
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
+          />
+          
+        )}/>
+
+        <Route 
+          exact path="/FindInvite" 
+          render={(props) => (
+          <FindInvite {...props} 
+          user={this.state.user}
+          userLocation={this.state.userLocation}
+          onSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          userCoordinates={this.state.userCoordinates}
+          secondCoordinates={this.state.secondCoordinates}
+          midPoint={this.state.midPointCoordinates}
+          bar={this.state.bar}
+          coffee={this.state.coffee}
+          showingCoffee={this.state.showingCoffee}
+          showingBar={this.state.showingBar}
+          toggleCoffee={this.toggleCoffee}
+          toggleBar={this.toggleBar}
+          handleAddressChange={this.handleAddressChange}
+          handleClick={this.handleClick}
+          midPointCoordinates={this.state.midPointCoordinates}
+
+
+          markers={this.state.markers}
+
+          userCoordinatesLat = {
+            this.state.userCoordinates.lat
+          }
+          userCoordinatesLng = {
+            this.state.userCoordinates.lng
+          }
+
+          secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
+          newMessageContent={this.state.newMessageContent}
+          handleSendMessage={this.handleSendMessage}
+          handleMOTChange={this.handleMOTChange}
+          messages={this.state.messages}
+          handleClickDisplayMessages={this.handleClickDisplayMessages}
+          messagesdisplayed={this.state.messagesdisplayed}
+          replyToMessage={this.replyToMessage}
+          inputsFilled={this.state.inputsFilled}
+          bothAreUsers={this.state.bothAreUsers}
+          recieveRestaurantResult={this.recieveRestaurantResult}
+          showMessageBar={this.showMessageBar}
+          showMessage={this.state.showMessage}
+          dateSuggestion={this.state.dateSuggestion}
+          suggestDate={this.suggestDate}
+          userMOT={this.state.userMOT}
           />
           
         )}/>

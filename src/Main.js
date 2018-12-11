@@ -168,7 +168,7 @@ class Main extends Component {
                             </div>
                         </form>
 
-                        {this.props.inputsFilled ? null : <p>Please fill both addresses</p>}
+                        {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
                         <button onClick={this.props.handleClick} 
                             
