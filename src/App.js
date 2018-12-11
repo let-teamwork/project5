@@ -3,11 +3,12 @@ import './styles/App.css';
 import firebase from './firebase'
 import axios from 'axios';
 import Qs from 'qs';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Login from "./Login";
 import CreateAccount from './CreateAccount'
 import Main from './Main'
-import MapWithMarkerClusterer from './MyMapComponent'
+// import MapWithMarkerClusterer from './MyMapComponent'
+import FindInvite from './FindInvite'
 
 
 
@@ -57,7 +58,7 @@ class App extends Component {
       messagesdisplayed: false,
       currentOpenConversation: "",
       inputsFilled: true,
-      bothAreUsers: true,
+      bothAreUsers: false,
       showMessage: false,
       dateSuggestion: {}
     }
@@ -142,6 +143,7 @@ class App extends Component {
       this.setState({
         user: null
       })
+      console.log("I'm logging out")
     })
   }
 
@@ -183,7 +185,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 1000,
+          radius: 500,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -214,45 +216,45 @@ class App extends Component {
     });
   };
 
-  recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
-    const urlYelp = "https://api.yelp.com/v3/businesses/matches";
-    const yelpKey =
-      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-    //API CALL FOR YELP DATA
-    axios({
-      method: "GET",
-      url: "http://proxy.hackeryou.com",
-      dataResponse: "json",
-      paramsSerializer: function (params) {
-        return Qs.stringify(params, { arrayFormat: "brackets" });
-      },
-      params: {
-        reqUrl: urlYelp,
-        params: {
-          name: restaurantName,
-          address1: restaurantAddress,
-          city: restaurantCity,
-          state: restaurantState,
-          country: restaurantCountry,
-          yelp_business_id: restaurantID
-        },
-        proxyHeaders: {
-          Authorization: yelpKey
-        },
-        xmlToJSON: false
-      }
-    }).then(res => {
-      // console.log("calling Yelp API & retrieving all restaurants:", res)
-      console.log("match restaurant", res.data.businesses[0])
-      const restaurant = res.data.businesses[0]
-      return(
-        <div>
-          <p>{restaurant.name}</p>
+  // recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
+  //   const urlYelp = "https://api.yelp.com/v3/businesses/matches";
+  //   const yelpKey =
+  //     "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+  //   //API CALL FOR YELP DATA
+  //   axios({
+  //     method: "GET",
+  //     url: "http://proxy.hackeryou.com",
+  //     dataResponse: "json",
+  //     paramsSerializer: function (params) {
+  //       return Qs.stringify(params, { arrayFormat: "brackets" });
+  //     },
+  //     params: {
+  //       reqUrl: urlYelp,
+  //       params: {
+  //         name: restaurantName,
+  //         address1: restaurantAddress,
+  //         city: restaurantCity,
+  //         state: restaurantState,
+  //         country: restaurantCountry,
+  //         yelp_business_id: restaurantID
+  //       },
+  //       proxyHeaders: {
+  //         Authorization: yelpKey
+  //       },
+  //       xmlToJSON: false
+  //     }
+  //   }).then(res => {
+  //     // console.log("calling Yelp API & retrieving all restaurants:", res)
+  //     console.log("match restaurant", res.data.businesses[0])
+  //     const restaurant = res.data.businesses[0]
+  //     return(
+  //       <div>
+  //         <p>{restaurant.name}</p>
           
-        </div>
-      )
-    });
-  };
+  //       </div>
+  //     )
+  //   });
+  // };
 
   showMessageBar = (name, address, city, state, country, id) => {
     const restaurant = {
@@ -270,19 +272,32 @@ class App extends Component {
   }
   
   pushCoffeeAndBarToMarker= ()=>{
-    // console.log("Pushing bars to Bar Array:", this.state.bar) 
-    // console.log("Pushing coffee shops to Coffee Array:", this.state.coffee)
-    const newMarkersArray = [];
-    const coffee = this.state.coffee
-    const bar = this.state.bar
-    const joinCoffeeToBar = bar.concat(coffee)
+    if(this.state.showingCoffee === true && this.state.showingBar === true){
+      console.log("1")
+      const coffee = this.state.coffee
+      const bar = this.state.bar
+      this.setState({
+        markers: bar.concat(coffee)
+      })
+    } else if (this.state.showingCoffee === true && this.state.showingBar === false){
+      console.log("2")
+      const coffee = this.state.coffee
+      this.setState({
+        markers: coffee
+      })
+    } else if (this.state.showingBar === true && this.state.showingCoffee === false){
+      console.log("3")
+      const bar = this.state.bar
+      this.setState({
+        markers: bar
+      })
+    } else {
+      this.setState({
+        markers: []
+      })
+    }
+    console.log("Da restos", this.state.markers)
     
-    this.setState({
-      markers:joinCoffeeToBar
-    })
-    // console.log("Turning Locations into Markers:", this.state.markers)
-    // console.log("Complete")
-    // console.log("")
   }
 
   setUserCoordinates = (coordinates) => {
@@ -329,8 +344,8 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.recieveRestaurantResult();
-    if (this.state.userLocation !== "" && this.state.search !== ""){
+    // this.recieveRestaurantResult();
+    if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
         inputsFilled: true
       })
@@ -348,8 +363,6 @@ class App extends Component {
       })}, 3000)
 
   }
-    
-
     
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
@@ -411,7 +424,7 @@ class App extends Component {
 
   midPoint = () => {
     this.midPointBasedOnMOT();
-
+    console.log("I'm running")
     const midObj = {};
     midObj.lat = this.midY
     midObj.lng = this.midX
@@ -423,19 +436,6 @@ class App extends Component {
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
-  }
-
-
-  toggleCoffee = () => {
-    this.setState({
-      showingCoffee: !this.state.showingCoffee
-    })
-  }
-
-  toggleBar = () => {
-    this.setState({
-      showingBar: !this.state.showingBar
-    })
   }
 
   handleAddressChange = (e) => {
@@ -460,8 +460,7 @@ class App extends Component {
         // console.log(array)
         if (search === array[1].userName) {
           this.setState({
-            searchedUID: array[0],
-            bothAreUsers: true
+            searchedUID: array[0]
           }, () => {
             callback(search, node)
           });
@@ -536,7 +535,7 @@ class App extends Component {
 
   sortMessages = () => {
     console.log(this.state.messages);
-    const newMessagesArray = this.state.messages.sort((a, b) => {
+    this.state.messages.sort((a, b) => {
       // console.log('a',a,'b',b);
       return a.currentDate - b.currentDate;
     })
@@ -562,7 +561,8 @@ class App extends Component {
     if(user){
       this.setState({
         secondLocation: user[1].userAddress,
-        secondUserName: user[1].userName, 
+        secondUserName: user[1].userName,
+        bothAreUsers: (this.state.userName ? true : false)
         // secondLocationBelongsToUser: true
       }, () => {
         // console.log('setting second location', this.state.secondLocation);
@@ -643,6 +643,8 @@ class App extends Component {
       dbRefConversations.push(newConversation)
       this.setState({
         currentOpenConversation: newArray[0]
+      }, () => {
+        this.addConversationToUserInbox();
       })
     })
   }
@@ -653,8 +655,44 @@ class App extends Component {
       const newArray = snapshot.val();
       newArray.push(conversation.message[0]);
       dbRefOpenConversation.set(newArray);
+      this.addConversationToUserInbox();
     })
   }
+  toggleCoffee = () => {
+    this.setState({
+      showingCoffee: !this.state.showingCoffee
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
+    })
+  }
+
+  toggleBar = () => {
+    this.setState({
+      showingBar: !this.state.showingBar
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
+    })
+  }
+
+  addConversationToUserInbox = () => {
+    const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/`);
+    const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`)
+    dbRefOpenConversation.once('value').then((snapshot) => {
+      console.log('newest snapshot', snapshot.val());
+      const newObject = snapshot.val();
+      newObject.from = this.state.secondUserName;
+      newObject.sendingUID = this.state.searchedUID;
+      console.log(`adjusted from `, newObject)
+      dbRefUserConversation.set(newObject);
+    });
+  }
+
+  createOpenConversationInSecondUserAccount = () => {
+    const dbRefSecondUser = firebase.database().ref(`/users/${this.state.searchedUID}/openConversations/`)
+    const newConversation = { [this.state.searchedUID]: this.state.currentOpenConversation }
+    dbRefSecondUser.push(newConversation)
+  }
+
 
   handleMOTChange = e => {
     this.setState({
@@ -668,6 +706,14 @@ class App extends Component {
       newMessageContent: message
     }, () => {
       this.deliverNewMessage(replyToName, 'messages')
+    });
+  }
+
+  selectMessageForReply = (currentOpenConversation) => {
+    this.setState({
+      currentOpenConversation: currentOpenConversation
+    }, () => {
+      this.createOpenConversationInSecondUserAccount();
     });
   }
 
@@ -732,18 +778,6 @@ class App extends Component {
           userCoordinatesLng = {
             this.state.userCoordinates.lng
           }
-
-          // showDirections = {
-          //   this.state.showDirections
-          // }
-
-
-          // midPointCoordinatesLat = {
-          //   this.state.secondCoordinates.lat
-          // }
-          // midPointCoordinatesLng = {
-          //   this.state.secondCoordinates.lng
-          // }
           secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}
@@ -760,6 +794,60 @@ class App extends Component {
           dateSuggestion={this.state.dateSuggestion}
           suggestDate={this.suggestDate}
           userMOT={this.state.userMOT}
+          selectMessageForReply={this.selectMessageForReply}
+          logOut={this.logOut}
+          />
+          
+        )}/>
+
+        <Route 
+          exact path="/FindInvite" 
+          render={(props) => (
+          <FindInvite {...props} 
+          user={this.state.user}
+          userLocation={this.state.userLocation}
+          onSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          userCoordinates={this.state.userCoordinates}
+          secondCoordinates={this.state.secondCoordinates}
+          midPoint={this.state.midPointCoordinates}
+          bar={this.state.bar}
+          coffee={this.state.coffee}
+          showingCoffee={this.state.showingCoffee}
+          showingBar={this.state.showingBar}
+          toggleCoffee={this.toggleCoffee}
+          toggleBar={this.toggleBar}
+          handleAddressChange={this.handleAddressChange}
+          handleClick={this.handleClick}
+          midPointCoordinates={this.state.midPointCoordinates}
+
+
+          markers={this.state.markers}
+
+          userCoordinatesLat = {
+            this.state.userCoordinates.lat
+          }
+          userCoordinatesLng = {
+            this.state.userCoordinates.lng
+          }
+
+          secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
+          newMessageContent={this.state.newMessageContent}
+          handleSendMessage={this.handleSendMessage}
+          handleMOTChange={this.handleMOTChange}
+          messages={this.state.messages}
+          handleClickDisplayMessages={this.handleClickDisplayMessages}
+          messagesdisplayed={this.state.messagesdisplayed}
+          replyToMessage={this.replyToMessage}
+          inputsFilled={this.state.inputsFilled}
+          bothAreUsers={this.state.bothAreUsers}
+          recieveRestaurantResult={this.recieveRestaurantResult}
+          showMessageBar={this.showMessageBar}
+          showMessage={this.state.showMessage}
+          dateSuggestion={this.state.dateSuggestion}
+          suggestDate={this.suggestDate}
+          userMOT={this.state.userMOT}
+          logOut={this.logOut}
           />
           
         )}/>

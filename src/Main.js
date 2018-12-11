@@ -1,10 +1,11 @@
-import { Route, Link } from 'react-router-dom';
+// import { Route, Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
-import firebase from './firebase'
-import axios from 'axios';
-import MapWithMarkerClusterer from './MyMapComponent'
-import MapComponent from './MapComponent';
-import Messages from './messages'
+import MapWithMarkerClusterer from './MyMapComponent';
+import Messages from './messages';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar   } from '@fortawesome/free-solid-svg-icons';
+
+
 
 
 class Main extends Component {
@@ -21,10 +22,9 @@ class Main extends Component {
     }
     //function that sets markerMidPoint
     getMarkerMidPoint = (marker)=>{
-     
         const midLatLng = {};
-        const latString = Math.floor((marker.latLng.lat().toFixed(5))*10000);
-        const lngString = Math.floor((marker.latLng.lng().toFixed(5))*10000);
+        const latString = marker.latLng.lat()
+        const lngString = marker.latLng.lng()
         midLatLng.lat= parseFloat(latString);
         midLatLng.lng= parseFloat(lngString);
         console.log("this is the latLng from the clicked event",latString, lngString)
@@ -59,17 +59,21 @@ class Main extends Component {
         const array=this.props.markers;
         console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
-                const long=Math.floor((latLng.coordinates.longitude.toFixed(5)));
-                const lat = Math.floor(latLng.coordinates.latitude.toFixed(5));
+                const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
+                const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
+                const midLat = Math.floor(this.state.markerMidPoint.lat.toFixed(5) * 10000);
+                const midLng = Math.floor(this.state.markerMidPoint.lng.toFixed(5) * 10000)
                 console.log(long, lat)
                 //const minusedLat = lat - lat
                 //if(minusedLat <= 0.009)reutnr array. 
-                    return (lat == this.state.markerMidPoint.lat && long == this.state.markerMidPoint.lng)
+                    return (lat == midLat && long == midLng)
         }) 
             console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-                <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
-                <p className="main__displayResults--title">{resultArray[0].alias}</p>
+                <div className={this.state.travelMode !== ""? null: "visuallyhidden"}>
+                    <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
+                </div>
+                <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
                 <button
@@ -96,6 +100,8 @@ class Main extends Component {
             </div>
         )
     }
+
+
     render() {
         
         return (
@@ -107,12 +113,21 @@ class Main extends Component {
                     messages={this.props.messages}
                     replyToMessage={this.props.replyToMessage}
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
+                    selectMessageForReply={this.props.selectMessageForReply}
                     />   
                     ) : ""
                     }
             
                 <header className="header">
+                    <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
                     <h2 className="header__subTitle">Middl.</h2>
+                     <FontAwesomeIcon icon={faCoffee} />
+                     <FontAwesomeIcon icon={faCar} />
+                     <FontAwesomeIcon icon={faBicycle} />
+                     <FontAwesomeIcon icon={faBus} />
+                     <FontAwesomeIcon icon={faWalking} />
+                     <FontAwesomeIcon icon={faWineGlassAlt} />
+                     
                 </header>
                 <div className="main wrapper">
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
@@ -133,8 +148,8 @@ class Main extends Component {
                                 <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
-                             <div className="mainForm__inputLabel--column">
-                                 <label htmlFor="carUser">By Car</label>
+                            <div className="mainForm__inputLabel--column">
+                                <label htmlFor="carUser">By Car</label>
                                 <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
@@ -168,12 +183,14 @@ class Main extends Component {
                                 <label htmlFor="publicSecond">Public Transport</label>
                                 <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-                            
-                           
-                            </div>
-                        </form>
+                        </div>
+                    </form>
+                     <div className={this.state.markerMidPoint.lat ? " visuallyhidden main__button--displayFlex" : "main__button--displayFlex"}>
+                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
+                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
+                    </div>
 
-                        {this.props.inputsFilled ? null : <p>Please fill both addresses</p>}
+                        {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
                         <button onClick={this.props.handleClick} 
                             
@@ -210,12 +227,6 @@ class Main extends Component {
                         : 
                         null
                     }
-                   
-                    <div className="main__button--displayFlex">
-                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    </div>
-                    
                 </div>
 
             </div>

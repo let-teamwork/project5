@@ -1,12 +1,8 @@
-import { Route, Link, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
-import firebase from './firebase'
+// import firebase from './firebase'
 
 class Login extends Component{
-  constructor(){
-    super()
-  }
-
   render(){
     if (this.props.toCreateAccount){
       return(
