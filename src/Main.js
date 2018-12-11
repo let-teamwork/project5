@@ -2,9 +2,9 @@ import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import firebase from './firebase'
 import axios from 'axios';
-import MapWithMarkerClusterer from './MyMapComponent'
+import MapWithMarkerClusterer from './MyMapComponent';
 import MapComponent from './MapComponent';
-import Messages from './Messages'
+import Messages from './messages';
 
 
 class Main extends Component {
@@ -127,8 +127,8 @@ class Main extends Component {
                                 <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
-                             <div className="mainForm__inputLabel--column">
-                                 <label htmlFor="carUser">By Car</label>
+                            <div className="mainForm__inputLabel--column">
+                                <label htmlFor="carUser">By Car</label>
                                 <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
