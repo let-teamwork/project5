@@ -185,7 +185,7 @@ class App extends Component {
       params: {
         reqUrl: urlYelp,
         params: {
-          radius: 1000,
+          radius: 500,
           categories: "coffee,bars",
           latitude: lat,
           longitude: lng
@@ -216,45 +216,45 @@ class App extends Component {
     });
   };
 
-  recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
-    const urlYelp = "https://api.yelp.com/v3/businesses/matches";
-    const yelpKey =
-      "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-    //API CALL FOR YELP DATA
-    axios({
-      method: "GET",
-      url: "http://proxy.hackeryou.com",
-      dataResponse: "json",
-      paramsSerializer: function (params) {
-        return Qs.stringify(params, { arrayFormat: "brackets" });
-      },
-      params: {
-        reqUrl: urlYelp,
-        params: {
-          name: restaurantName,
-          address1: restaurantAddress,
-          city: restaurantCity,
-          state: restaurantState,
-          country: restaurantCountry,
-          yelp_business_id: restaurantID
-        },
-        proxyHeaders: {
-          Authorization: yelpKey
-        },
-        xmlToJSON: false
-      }
-    }).then(res => {
-      // console.log("calling Yelp API & retrieving all restaurants:", res)
-      console.log("match restaurant", res.data.businesses[0])
-      const restaurant = res.data.businesses[0]
-      return(
-        <div>
-          <p>{restaurant.name}</p>
+  // recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
+  //   const urlYelp = "https://api.yelp.com/v3/businesses/matches";
+  //   const yelpKey =
+  //     "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
+  //   //API CALL FOR YELP DATA
+  //   axios({
+  //     method: "GET",
+  //     url: "http://proxy.hackeryou.com",
+  //     dataResponse: "json",
+  //     paramsSerializer: function (params) {
+  //       return Qs.stringify(params, { arrayFormat: "brackets" });
+  //     },
+  //     params: {
+  //       reqUrl: urlYelp,
+  //       params: {
+  //         name: restaurantName,
+  //         address1: restaurantAddress,
+  //         city: restaurantCity,
+  //         state: restaurantState,
+  //         country: restaurantCountry,
+  //         yelp_business_id: restaurantID
+  //       },
+  //       proxyHeaders: {
+  //         Authorization: yelpKey
+  //       },
+  //       xmlToJSON: false
+  //     }
+  //   }).then(res => {
+  //     // console.log("calling Yelp API & retrieving all restaurants:", res)
+  //     console.log("match restaurant", res.data.businesses[0])
+  //     const restaurant = res.data.businesses[0]
+  //     return(
+  //       <div>
+  //         <p>{restaurant.name}</p>
           
-        </div>
-      )
-    });
-  };
+  //       </div>
+  //     )
+  //   });
+  // };
 
   showMessageBar = (name, address, city, state, country, id, coordinates) => {
     const restaurant = {
@@ -345,7 +345,7 @@ class App extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.recieveRestaurantResult();
+    // this.recieveRestaurantResult();
     if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
         inputsFilled: true
@@ -364,8 +364,6 @@ class App extends Component {
       })}, 3000)
 
   }
-    
-
     
   midPointBasedOnMOT = () => {
     // console.log("Coordinates available to find midpoint", this.state.userCoordinates, this.state.secondCoordinates)
@@ -439,23 +437,6 @@ class App extends Component {
     });
     this.restaurantResults(this.state.midPointCoordinates.lat, this.state.midPointCoordinates.lng)
     setTimeout(this.pushCoffeeAndBarToMarker, 1000);
-  }
-
-
-  toggleCoffee = () => {
-    this.setState({
-      showingCoffee: !this.state.showingCoffee
-    }, () => {
-      this.pushCoffeeAndBarToMarker()
-    })
-  }
-
-  toggleBar = () => {
-    this.setState({
-      showingBar: !this.state.showingBar
-    }, () => {
-      this.pushCoffeeAndBarToMarker()
-    })
   }
 
   handleAddressChange = (e) => {
@@ -678,6 +659,21 @@ class App extends Component {
       this.addConversationToUserInbox();
     })
   }
+  toggleCoffee = () => {
+    this.setState({
+      showingCoffee: !this.state.showingCoffee
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
+    })
+  }
+
+  toggleBar = () => {
+    this.setState({
+      showingBar: !this.state.showingBar
+    }, () => {
+      this.pushCoffeeAndBarToMarker()
+    })
+  }
 
   addConversationToUserInbox = () => {
     const savedID = this.state.searchedUID;
@@ -808,18 +804,6 @@ class App extends Component {
           userCoordinatesLng = {
             this.state.userCoordinates.lng
           }
-
-          // showDirections = {
-          //   this.state.showDirections
-          // }
-
-
-          // midPointCoordinatesLat = {
-          //   this.state.secondCoordinates.lat
-          // }
-          // midPointCoordinatesLng = {
-          //   this.state.secondCoordinates.lng
-          // }
           secondLocationBelongsToUser={this.state.secondLocationBelongsToUser}
           newMessageContent={this.state.newMessageContent}
           handleSendMessage={this.handleSendMessage}
