@@ -63,7 +63,7 @@ class Main extends Component {
             console.log(resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p></p>
-                <p className="main__displayResults--title">{resultArray[0].alias}</p>
+                <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
                 <button
@@ -107,6 +107,7 @@ class Main extends Component {
                     }
             
                 <header className="header">
+                     <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
                     <h2 className="header__subTitle">Middl.</h2>
                 </header>
                 <div className="main wrapper">

@@ -663,7 +663,6 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
-        this.createOpenConversationInSecondUserAccount();
       })
     })
   }
@@ -694,7 +693,8 @@ class App extends Component {
   createOpenConversationInSecondUserAccount = () => {
     const dbRefSecondUser = firebase.database().ref(`/users/${this.state.searchedUID}/openConversations/`)
     const newConversation = { [this.state.searchedUID]: this.state.currentOpenConversation }
-  };
+    dbRefSecondUser.push(newConversation)
+  }
 
 
   handleMOTChange = e => {
@@ -715,6 +715,8 @@ class App extends Component {
   selectMessageForReply = (currentOpenConversation) => {
     this.setState({
       currentOpenConversation: currentOpenConversation
+    }, () => {
+      this.createOpenConversationInSecondUserAccount();
     });
   }
 
