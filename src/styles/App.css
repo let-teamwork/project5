@@ -204,7 +204,7 @@ input[type="radio"] {
   color: #e898e9; }
 
 .login {
-  background: #b6d2cf;
+  background: linear-gradient(90deg, #b6d2cf 50%, #0d6978 50%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -216,14 +216,23 @@ input[type="radio"] {
     font-family: 'Ubuntu', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    color: #0d6978;
-    margin: 0; }
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 15px; }
   .login__subtitle {
     line-height: 1.8rem;
     font-family: 'Work Sans', sans-serif;
     font-size: 1.6rem;
-    color: #0d6978;
-    margin-bottom: 10rem; }
+    color: #f1f1f1;
+    font-size: 2rem;
+    margin-bottom: 10rem;
+    word-spacing: 10px; }
+
+span.login__span--primaryColor {
+  color: #0d6978; }
+
+span.login__span--secondaryColor {
+  color: #b6d2cf; }
 
 .createAccount {
   min-height: 100vh;

@@ -362,7 +362,8 @@ class App extends Component {
     // this.recieveRestaurantResult();
     if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
-        inputsFilled: true
+        inputsFilled: true,
+
       })
       this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
     } else {
@@ -374,7 +375,7 @@ class App extends Component {
   showDirections=()=>{
     setTimeout(()=>{
         this.setState({
-        showDirections: true
+        showDirections: true,
       })}, 3000)
 
   }

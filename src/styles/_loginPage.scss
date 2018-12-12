@@ -1,5 +1,5 @@
 .login{
-    background: $secondaryColor;
+    background: linear-gradient(90deg, $secondaryColor 50%,$primaryColor 50%);
     display:flex;
     flex-direction:column;
     justify-content: center;
@@ -8,12 +8,15 @@
     text-align:center;
     &__title{
         @include headingFont(8rem);
-        color:$primaryColor;
+        color:#ffffff;
         margin:0;
+        letter-spacing: 15px;
     }
     &__subtitle{
-        @include bodyFont($primaryColor);
+        @include bodyFont(#f1f1f1);
+        font-size:2rem;
         margin-bottom:10rem;
+        word-spacing: 10px;
     }
     // &__signIn,
     // &__logOut,
@@ -21,4 +24,10 @@
     //     @include button(1.8rem);
     //     font-weight:bold;
     // }
+}
+span.login__span--primaryColor{
+    color:$primaryColor;
+}
+span.login__span--secondaryColor {
+    color:$secondaryColor;
 }
