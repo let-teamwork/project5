@@ -164,7 +164,8 @@ class App extends Component {
     dbRef.once('value').then((snapshot) => {
       this.setState ({
         userLocation: (snapshot.val().userAddress),
-        userName: (snapshot.val().userName)
+        userName: (snapshot.val().userName),
+        toMain:true
       }, () => {
         dbRefUserList.set(this.state.user.uid);
       })
@@ -349,7 +350,8 @@ class App extends Component {
     // this.recieveRestaurantResult();
     if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
-        inputsFilled: true
+        inputsFilled: true,
+
       })
       this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
     } else {
@@ -361,7 +363,7 @@ class App extends Component {
   showDirections=()=>{
     setTimeout(()=>{
         this.setState({
-        showDirections: true
+        showDirections: true,
       })}, 3000)
 
   }
@@ -823,6 +825,7 @@ class App extends Component {
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
           logOut={this.logOut}
+          secondMOT={this.state.secondMOT}
           userName={this.state.userName}
           />
           
