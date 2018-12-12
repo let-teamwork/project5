@@ -756,6 +756,12 @@ class App extends Component {
     })
   }
 
+  fillTheInputs = () => {
+    this.setState({
+      inputsFilled: true
+    })
+  }
+
 
   render() {
     return (
@@ -839,6 +845,8 @@ class App extends Component {
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
           logOut={this.logOut}
+          secondMOT={this.state.secondMOT}
+          fillTheInputs={this.fillTheInputs}
           />
           
         )}/>

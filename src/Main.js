@@ -6,9 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar, faEnvelope   } from '@fortawesome/free-solid-svg-icons';
 
 
-
-
-
 class Main extends Component {
     constructor() {
         super();
@@ -79,7 +76,7 @@ class Main extends Component {
 
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
-                 <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
+                <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
                     <p className="main__resultDirections">{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
                 </div>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
@@ -136,11 +133,6 @@ class Main extends Component {
 
                     <h2 className="header__subTitle">Middl.</h2> 
 
-                 
-             
-                   
-                     
-
                 </header>
 
                 <div className="main">
@@ -150,7 +142,7 @@ class Main extends Component {
                             <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
                             <input type="text" className="app__input" placeholder="" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
                         </label>
-                        <p className="createAccount__label">Mode of Transportation</p>
+                        <p className="createAccount__label">Your Mode of Transportation</p>
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
                                 <label className={`app__radioLabel ${(this.props.userMOT === "walking") ? "activeLabel" : ""}`} htmlFor="walkUser"><FontAwesomeIcon className="app__font-awesome" icon={faWalking} /></label>
@@ -166,8 +158,6 @@ class Main extends Component {
 
                                 <label className={`app__radioLabel ${(this.props.userMOT === "driving") ? "activeLabel" : ""}`} htmlFor="carUser"><FontAwesomeIcon className="app__font-awesome" icon={faCar} /></label>
                                 <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
-
-                                <label htmlFor="carUser">By Car</label>
                                 <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
 
                             </div>
@@ -179,45 +169,38 @@ class Main extends Component {
                         </div>
                         <div className="main__divider"></div>
                         <label htmlFor="">
-                            <p className="mainForm__address">enter your date's address or username</p>
+                            <p className="mainForm__address">Enter your date's address or username</p>
                             <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
                         </label>
 
 
 
-                        <p className="createAccount__label">Mode of Transportation</p>
+                        <p className="createAccount__label">Date's Mode of Transportation</p>
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
-                                <label className={`app__radioLabel ${(this.props.secondMOT === "walking") ? "activeLabel" : ""}`} htmlFor="walkSecond"><FontAwesomeIcon className="app__font-awesome" icon={faWalking} /></label>
-                                <input className="activeInput" name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
+                                
+                                <label className={`app__radioLabel ${(this.props.secondMOT) === "walking" ? "activeLabel" : ""}`} htmlFor="walkSecond"><FontAwesomeIcon className="app__font-awesome" icon={faWalking} /></label>
+                                <input className="activeInput visuallyhidden" name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">
                                 <label className={`app__radioLabel ${(this.props.secondMOT === "bicycling") ? "activeLabel" : ""}`} htmlFor="bikeSecond"> <FontAwesomeIcon className="app__font-awesome" icon={faBicycle} /></label>
-                                <input className="activeInput" name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
+                                <input className="activeInput visuallyhidden" name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
                                 <label className={`app__radioLabel ${(this.props.secondMOT === "driving") ? "activeLabel" : ""}`} htmlFor="carSecond"><FontAwesomeIcon className="app__font-awesome" icon={faCar} /></label>
-                                <input className="activeInput" name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
+                                <input className="activeInput visuallyhidden" name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
                                 <label className={`app__radioLabel ${(this.props.secondMOT === "transit") ? "activeLabel" : ""}`} htmlFor="publicSecond"><FontAwesomeIcon className="app__font-awesome" icon={faBus} /></label>
-                                <input className="activeInput" name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
+                                <input className="activeInput visuallyhidden" name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                         </div>
                     </form>
 
-                     
-
-                     <div className={this.state.markerMidPoint.lat ? " visuallyhidden main__button--displayFlex" : "main__button--displayFlex"}>
-                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    </div>
-
-
-                        {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
+                        {this.props.inputsFilled ? null : <button className="mainForm__errorMessage" onClick={this.props.fillTheInputs} ><p>Please fill in all input fields</p><p className="mainForm__errorMessageHint" >click on the box to return</p></button>}
                         
                         <button onClick={this.props.handleClick} 
                             
