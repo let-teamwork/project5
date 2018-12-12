@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 
 class FullScreenMessage extends Component {
@@ -23,7 +24,15 @@ class FullScreenMessage extends Component {
     }
 
     render(){
+<<<<<<< HEAD
         return(
+=======
+        console.log("my resto", this.props.message.restaurantSuggestion.restaurantName)
+        if(this.props.showFindInvite === true){
+            return ( < Redirect to = '/FindInvite' / > )
+        }else{
+        return (
+>>>>>>> bd7731c86468e8c7f830b7f621998a7bd4abf7e8
             <div className="fullScreenMessage">
                 <div className="fullScreenMessage__messageBody">
                     {
@@ -55,6 +64,8 @@ class FullScreenMessage extends Component {
                 </div>
             </div>
         )
+        }
+
     }
 }
 

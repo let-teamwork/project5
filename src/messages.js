@@ -40,7 +40,10 @@ class Messages extends Component {
     
 
     render(){
+<<<<<<< HEAD
         //    ("key", this.props.messages[0].key)
+=======
+>>>>>>> bd7731c86468e8c7f830b7f621998a7bd4abf7e8
         return (
             <div className="messages">
                 <div className="messages__inbox">
@@ -52,7 +55,7 @@ class Messages extends Component {
                             <button id={message.key} className="messages__preview" onClick={this.viewMessage} >
                                 <div id={message.key} className="wrapper">
                                     <p className="messages__previewFrom" id={message.key} >{message.from}</p>
-                                    <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>                     
+                                    <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>              
                                 </div>
                             </button>
                         )
@@ -64,6 +67,7 @@ class Messages extends Component {
                         replyToMessage={this.props.replyToMessage}
                         recieveRestaurantResult={this.props.recieveRestaurantResult}
                         userName={this.props.userName}
+                        showFindInvite={this.props.showFindInvite}
                         />
                     ) : (
                         ""

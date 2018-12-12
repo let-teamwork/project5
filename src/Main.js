@@ -114,6 +114,7 @@ class Main extends Component {
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
                     selectMessageForReply={this.props.selectMessageForReply}
                     userName={this.props.userName}
+                    showFindInvite={this.props.showFindInvite}
                     />   
                     ) : ""
                     }

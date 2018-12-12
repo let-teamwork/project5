@@ -61,7 +61,9 @@ class App extends Component {
       bothAreUsers: false,
       showMessage: false,
       dateSuggestion: {},
-      inviteMarker: []
+      inviteMarker: [],
+      markerMidPoint: {},
+      showFindInvite: false
     }
   }
 
@@ -80,7 +82,7 @@ class App extends Component {
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
                   userName: (snapshot.val().userName),
-                  // toMain: true
+                  toMain: !this.state.showFindInvite ? true : false
                 }, () => {
                   this.fetchMessages(); 
                 })
@@ -216,47 +218,8 @@ class App extends Component {
     });
   };
 
-  // recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
-  //   const urlYelp = "https://api.yelp.com/v3/businesses/matches";
-  //   const yelpKey =
-  //     "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-  //   //API CALL FOR YELP DATA
-  //   axios({
-  //     method: "GET",
-  //     url: "http://proxy.hackeryou.com",
-  //     dataResponse: "json",
-  //     paramsSerializer: function (params) {
-  //       return Qs.stringify(params, { arrayFormat: "brackets" });
-  //     },
-  //     params: {
-  //       reqUrl: urlYelp,
-  //       params: {
-  //         name: restaurantName,
-  //         address1: restaurantAddress,
-  //         city: restaurantCity,
-  //         state: restaurantState,
-  //         country: restaurantCountry,
-  //         yelp_business_id: restaurantID
-  //       },
-  //       proxyHeaders: {
-  //         Authorization: yelpKey
-  //       },
-  //       xmlToJSON: false
-  //     }
-  //   }).then(res => {
-  //     //  ("calling Yelp API & retrieving all restaurants:", res)
-  //      ("match restaurant", res.data.businesses[0])
-  //     const restaurant = res.data.businesses[0]
-  //     return(
-  //       <div>
-  //         <p>{restaurant.name}</p>
-          
-  //       </div>
-  //     )
-  //   });
-  // };
 
-  receiveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
+  recieveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
     const marker = {
       coordinates: restaurantCoordinates,
       phone: restaurantPhone,
@@ -269,10 +232,16 @@ class App extends Component {
     invite.push(marker)
     
     this.setState({
-      inviteMarker: invite
+      markerMidPoint: restaurantCoordinates,
+      inviteMarker: invite,
+      showFindInvite: true
+    }, () => {
+      this.setState({
+        messagesdisplayed: false
+      })
     })
-
-  }  
+  }
+  
 
   showMessageBar = (name, phone, image, id, coordinates) => {
     const restaurant = {
@@ -290,7 +259,6 @@ class App extends Component {
   
   pushCoffeeAndBarToMarker= ()=>{
     if(this.state.showingCoffee === true && this.state.showingBar === true){
- 
       const coffee = this.state.coffee
       const bar = this.state.bar
       this.setState({
@@ -839,6 +807,7 @@ class App extends Component {
           secondMOT={this.state.secondMOT}
           fillTheInputs={this.fillTheInputs}
           userName={this.state.userName}
+          showFindInvite={this.state.showFindInvite}
           />
           
         )}/>
@@ -885,7 +854,8 @@ class App extends Component {
           logOut={this.logOut}
           getCoordinates={this.getCoordinates}
           setUserCoordinates={this.setUserCoordinates}
-          isGuest={this.state.isGuest}
+          inviteMarker={this.state.inviteMarker}
+          markerMidPoint={this.state.markerMidPoint}
           />
         )}/>
         </div>
