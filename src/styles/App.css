@@ -421,8 +421,8 @@ label {
 
 .main__messagesButton {
   position: absolute;
-  right: 0;
-  top: 30px;
+  right: 20px;
+  top: 19px;
   color: white;
   background: none;
   border: none; }

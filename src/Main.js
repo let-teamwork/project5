@@ -116,7 +116,7 @@ class Main extends Component {
                 <button className="main__messagesButton" onClick={this.props.handleClickDisplayMessages}><FontAwesomeIcon className="app__font-awesome" icon={faEnvelope} /></button>
                     {this.props.messagesdisplayed 
                     ? (
-                    <Messages 
+                    <Messages className="messages"
                     messages={this.props.messages}
                     replyToMessage={this.props.replyToMessage}
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
