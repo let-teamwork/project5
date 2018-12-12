@@ -57,16 +57,42 @@ $grey:#adaeae;
 }
 
 .wrapper {
-    max-width:320px;
+    width:90%;
     margin: 0 auto;
 }
 // add this class to implement button styles to all buttons on the app. 
 .app__button{
     @include button(1.8rem);
     font-weight:bold;
+    text-decoration: none;
+    background:white;
 }
 
 // add this class to implement input styles to all buttons
 .app__input {
     @include input(300px);
+}
+
+input[type="radio"]{
+    position:absolute;
+    z-index: -1;
+    // visibility: hidden;
+   
+  
+}
+.app__font-awesome:hover,
+.app__radioLabel:hover{
+    color:$thirdColor;
+}
+.app__font-awesome{
+    font-size:3rem;
+    margin-top: 20px;
+   
+}
+.app__radioLabel{
+    color:$primaryColor;
+}
+.activeLabel {
+    color: $thirdColor;
+    
 }

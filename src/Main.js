@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import MapWithMarkerClusterer from './MyMapComponent';
 import Messages from './messages';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar   } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar, faEnvelope   } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -70,19 +70,24 @@ class Main extends Component {
         }) 
             console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-                <div className={this.state.travelMode !== ""? null: "visuallyhidden"}>
-                    <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
-                </div>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
+                 <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
+                    <p className="main__resultDirections">{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
+                </div>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
-                <button
-                onClick= {
-                    this.getDirections
-                } > Need Directions ? </button>
+                <div className="main__displayResultsDirectionsButton">
+                    <button
+                    className="app__button"
+                    onClick= {
+                        this.getDirections
+                    } > Need Directions ? </button>
+                </div>
                 {this.props.bothAreUsers ? 
                     (<div>
-                    <button onClick={() =>{this.props.showMessageBar(
+                    <button 
+                    className="app__button"
+                    onClick={() =>{this.props.showMessageBar(
                         resultArray[0].name,
                         resultArray[0].location.address1,
                         resultArray[0].location.city,
@@ -93,8 +98,9 @@ class Main extends Component {
                     )}}>Share with your date</button>
                     {this.props.showMessage ? 
                         <form onSubmit={this.props.handleSendMessage}>
-                            <input onChange={this.props.handleChange} type="text" id="newMessageContent"  />
-                            <button>Send Message</button>
+                            <input className="app__input" onChange={this.props.handleChange} type="text" id="newMessageContent"  />
+                            <button
+                            className="main__displayResultsButton app__button">Send Message</button>
                         </form>
                     : ""}
                 </div>) : ""}
@@ -107,7 +113,7 @@ class Main extends Component {
         
         return (
             <div className="main" key="main">
-                <button onClick={this.props.handleClickDisplayMessages}>Display Messages</button>
+                <button className="main__messagesButton" onClick={this.props.handleClickDisplayMessages}><FontAwesomeIcon className="app__font-awesome" icon={faEnvelope} /></button>
                     {this.props.messagesdisplayed 
                     ? (
                     <Messages 
@@ -120,43 +126,36 @@ class Main extends Component {
                     }
             
                 <header className="header">
-                    <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
-                    <h2 className="header__subTitle">Middl.</h2>
-                     <FontAwesomeIcon icon={faCoffee} />
-                     <FontAwesomeIcon icon={faCar} />
-                     <FontAwesomeIcon icon={faBicycle} />
-                     <FontAwesomeIcon icon={faBus} />
-                     <FontAwesomeIcon icon={faWalking} />
-                     <FontAwesomeIcon icon={faWineGlassAlt} />
-                     
+                    <h2 className="header__subTitle">Middl.</h2> 
                 </header>
-                <div className="main wrapper">
+
+                <div className="main">
                     <h3 key="main-h2" className="main__h3">Please provide the following information</h3>
-                    <form key="main-form" className="mainForm" >
+                    <form key="main-form" className="mainForm wrapper" >
                         <label htmlFor=""> 
                             <p className="mainForm__address">Please enter your destination (registered users will have their address loaded automatically) </p>
                             <input type="text" className="app__input" placeholder="" value={this.props.userLocation} id="userLocation" onChange={this.props.handleChange} />
                         </label>
-                        <p className="mainForm__mot">Mode of Transportation</p>
+                        <p className="createAccount__label">Mode of Transportation</p>
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
-                                <label htmlFor="walkUser">Walking</label>
-                                <input name="userMOT" type="radio" value="walking" id="walkUser" onChange={this.props.handleMOTChange}/>
+                                <label className={`app__radioLabel ${(this.props.userMOT === "walking") ? "activeLabel" : ""}`} htmlFor="walkUser"><FontAwesomeIcon className="app__font-awesome" icon={faWalking} /></label>
+                                <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="walking" id="walkUser" onChange={this.props.handleMOTChange}/>
                             </div>
 
                             <div className="mainForm__inputLabel--column">
-                                <label htmlFor="bikeUser">By Bike</label>
-                                <input name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
+                                <label className={`app__radioLabel ${(this.props.userMOT === "bicycling") ? "activeLabel" : ""}`} htmlFor="bikeUser"> <FontAwesomeIcon className="app__font-awesome" icon={faBicycle} /></label>
+                                <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="bicycling" id="bikeUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
-                                <label htmlFor="carUser">By Car</label>
-                                <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
+                                <label className={`app__radioLabel ${(this.props.userMOT === "driving") ? "activeLabel" : ""}`} htmlFor="carUser"><FontAwesomeIcon className="app__font-awesome" icon={faCar} /></label>
+                                <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
-                                <label htmlFor="publicUser"> Public Transport</label>
-                                <input name="userMOT" type="radio" value="transit" id="publicUser" onChange={this.props.handleMOTChange}/>
+                                <label className={`app__radioLabel ${(this.props.userMOT === "transit") ? "activeLabel" : ""}`} htmlFor="publicUser"><FontAwesomeIcon className="app__font-awesome" icon={faBus} /></label>
+                                <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="transit" id="publicUser" onChange={this.props.handleMOTChange}/>
                             </div>
                         </div>
                         <div className="main__divider"></div>
@@ -164,38 +163,56 @@ class Main extends Component {
                             <p className="mainForm__address">enter your date's address or username</p>
                             <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
                         </label>
-                        <p className="form__mot">Mode of Transportation</p>
+
+
+
+                        <p className="createAccount__label">Mode of Transportation</p>
                         <div className="mainForm__inputLabel--displayFlex">
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="walkSecond">Walking</label>
-                                <input name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
+                            <div className="mainForm__inputLabel--column">
+                                <label className={`app__radioLabel ${(this.props.secondMOT === "walking") ? "activeLabel" : ""}`} htmlFor="walkSecond"><FontAwesomeIcon className="app__font-awesome" icon={faWalking} /></label>
+                                <input className="activeInput" name="secondMOT" type="radio" value="walking" id="walkSecond" onChange={this.props.handleMOTChange}/>
                             </div>
 
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="bikeSecond">By Bike</label>
-                                <input name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
+                            <div className="mainForm__inputLabel--column">
+                                <label className={`app__radioLabel ${(this.props.secondMOT === "bicycling") ? "activeLabel" : ""}`} htmlFor="bikeSecond"> <FontAwesomeIcon className="app__font-awesome" icon={faBicycle} /></label>
+                                <input className="activeInput" name="secondMOT" type="radio" value="bicycling" id="bikeSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="carSecond">By Car</label>
-                                <input name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
+                            
+                            <div className="mainForm__inputLabel--column">
+                                <label className={`app__radioLabel ${(this.props.secondMOT === "driving") ? "activeLabel" : ""}`} htmlFor="carSecond"><FontAwesomeIcon className="app__font-awesome" icon={faCar} /></label>
+                                <input className="activeInput" name="secondMOT" type="radio" value="driving" id="carSecond" onChange={this.props.handleMOTChange}/>
                             </div>
-
-                            <div className="mainForm__inputLabel--column">   
-                                <label htmlFor="publicSecond">Public Transport</label>
-                                <input name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
+                            
+                            <div className="mainForm__inputLabel--column">
+                                <label className={`app__radioLabel ${(this.props.secondMOT === "transit") ? "activeLabel" : ""}`} htmlFor="publicSecond"><FontAwesomeIcon className="app__font-awesome" icon={faBus} /></label>
+                                <input className="activeInput" name="secondMOT" type="radio" value="transit" id="publicSecond" onChange={this.props.handleMOTChange}/>
                             </div>
                         </div>
                     </form>
-                     <div className={this.state.markerMidPoint.lat ? " visuallyhidden main__button--displayFlex" : "main__button--displayFlex"}>
-                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
-                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
-                    </div>
+                     
 
                         {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
                         <button onClick={this.props.handleClick} 
                             
                         className="app__button">Middl. Me</button>
+
+                    <div className="main__map">
+                        <div className="main__mapPadding">
+                            <div className={this.state.markerMidPoint.lat ? " visuallyhidden main__button--displayFlex" : "main__button--displayFlex"}>
+                        <div className="main__map--filterButtons">
+                            <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>
+                            {this.props.showingCoffee ?  
+                                <FontAwesomeIcon className="main__fontAwesome" icon={faCoffee} /> : 
+                                <FontAwesomeIcon className="main__fontAwesome--notShowing" icon={faCoffee} />
+                            }
+                            </button>
+                            <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? 
+                                <FontAwesomeIcon className="main__fontAwesome" icon={faWineGlassAlt} /> :   <FontAwesomeIcon className="main__fontAwesome--notShowing" icon={faWineGlassAlt} />}</button>
+                        </div>
+                        </div>
+                        
+                    </div>
                     <MapWithMarkerClusterer
                         getInfoFromDirections = {
                             this.getInfoFromDirections
@@ -228,6 +245,8 @@ class Main extends Component {
                         : 
                         null
                     }
+                    </div>
+                        
                 </div>
 
             </div>
