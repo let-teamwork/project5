@@ -483,8 +483,11 @@ label {
       justify-content: flex-end; }
     .fullScreenMessage__message--received {
       justify-content: flex-start; }
-  .fullScreenMessage__messageContent .fullScreenMessage--sent {
-    background-color: #0d6978;
-    color: white; }
-  .fullScreenMessage--received {
-    background-color: #b6d2cf; }
+  .fullScreenMessage__messageContent {
+    padding: 5px 10px;
+    border-radius: 40%; }
+    .fullScreenMessage__messageContent--sent {
+      background-color: #0d6978;
+      color: white; }
+    .fullScreenMessage__messageContent--received {
+      background-color: #b6d2cf; }

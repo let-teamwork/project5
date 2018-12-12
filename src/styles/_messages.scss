@@ -52,11 +52,11 @@
         flex-grow: 1;
         flex-direction: column;
         margin: 0 auto;
-        
     }
     &__message{
         display: flex;
         width: 100%;
+        // background: red;
         &--sent{
             justify-content: flex-end;
         }
@@ -64,16 +64,17 @@
             justify-content: flex-start;
         }
     }
-    &__messageContent    
+    &__messageContent{
+        padding: 5px 10px;
+        border-radius: 40%;
         &--sent{
             // text-align: right;
             background-color: $primaryColor;
             color: white;
         }
         &--received{
-            !important
             // text-align: left;
             background-color: $secondaryColor;
         }
-    
+    }
 }
