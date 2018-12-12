@@ -649,6 +649,8 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
+        
+        // this.createOpenConversationInSecondUserAccount(savedID);
       })
     })
   }
@@ -715,7 +717,7 @@ class App extends Component {
         
     //   })
       
-      this.createOpenConversationInSecondUserAccount(savedID);
+      // this.createOpenConversationInSecondUserAccount(savedID);
   }
 
   createOpenConversationInSecondUserAccount = (savedID) => {
