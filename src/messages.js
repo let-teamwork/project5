@@ -47,7 +47,7 @@ class Messages extends Component {
             <div className="messages">
                 <div className="messages__inbox">
                     <div>
-                        <button>Home</button>
+                        <button className="app__button">Home</button>
                     </div>
                     {this.props.messages.map((message) => {
                         return (
