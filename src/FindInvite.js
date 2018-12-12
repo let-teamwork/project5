@@ -111,7 +111,6 @@ class FindInvite extends Component {
             </div>
         )
     }
-
     render() {
         
         return (
