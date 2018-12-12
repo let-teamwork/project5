@@ -19,8 +19,8 @@ const MapComponent = compose(
     mapElement: <div style={{ height: `100%` }} />,
     }), withHandlers({
         onMarkerClick: () => (marker) => {
-            console.log(this)
-            console.log(marker.latLng.lat(), marker.latLng.lng())
+             (this)
+             (marker.latLng.lat(), marker.latLng.lng())
         },
     }),
     withScriptjs,
@@ -37,7 +37,7 @@ const MapComponent = compose(
             travelMode: window.google.maps.TravelMode.DRIVING,
         }, (result, status) => {
             if (status === window.google.maps.DirectionsStatus.OK) {
-                console.log(result);
+                 (result);
             this.setState({
                 directions: result,
             });

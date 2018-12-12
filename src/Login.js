@@ -17,7 +17,6 @@ class Login extends Component{
       <div className="login">
         <div className="wrapper"> 
           <h1 className="login__title"><span className="login__span--primaryColor">Mid</span><span className="login__span--secondaryColor">dl.</span>  </h1>
-         
           {(this.props.user) ?
             <button className="login__logOut app__button" onClick={this.props.logOut}>Logout</button>
             : (

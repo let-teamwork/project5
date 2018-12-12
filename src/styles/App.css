@@ -153,7 +153,7 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
 .wrapper {
   width: 90%;
   margin: 0 auto;
-  max-width: 950px; }
+  max-width: 750px; }
 
 .app__button {
   line-height: 1.8rem;
@@ -399,7 +399,8 @@ span.login__span--secondaryColor {
   font-size: 1.2rem; }
   .mainForm__inputLabel--displayFlex {
     display: flex;
-    justify-content: space-around; }
+    justify-content: space-around;
+    margin: center; }
   .mainForm__inputLabel--column {
     display: flex;
     flex-direction: column;

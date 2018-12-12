@@ -41,23 +41,18 @@ class FindInvite extends Component {
     }
     
     run=()=>{
-        console.log("markers", this.state.markers)
-        console.log("markerMidPoint", this.state.markerMidPoint)
-        console.log("location of USER", this.props.userLocation)
         this.props.getCoordinates(this.props.userLocation, this.props.setUserCoordinates)
         this.setTheCoordinates(this.props.userCoordinatesLat, this.props.userCoordinatesLng)
     
     }
     
     setTheCoordinates=(userlat , userlng)=>{
-        console.log("coordinates of USER", this.props.userCoordinatesLat)
         this.setState({
             userCoordinates: {
                 lat: userlat,
                 lng: userlng
             }
         })
-        console.log("state set", this.state.userCoordinates)
         this.getMarkerMidPoint(this.state.markerMidPoint)
 
     }
@@ -69,11 +64,9 @@ class FindInvite extends Component {
         const lngString = Math.floor(marker.Y.toFixed(5) * 10000);
         midLatLng.lat = parseFloat(latString);
         midLatLng.lng = parseFloat(lngString);
-        console.log("this is the latLng from the clicked event", latString, lngString)
         this.setState({
             markerMidPoint: midLatLng,
         }, () => {
-            console.log("new mmp", this.state.markerMidPoint)
             this.getSelectedInfo()
         })
 
@@ -81,16 +74,13 @@ class FindInvite extends Component {
     
     getSelectedInfo=()=>{
         const array=this.state.markers;
-        console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
                 const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
                 const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
-                console.log(long, lat)
                 //const minusedLat = lat - lat
                 //if(minusedLat <= 0.009)reutnr array. 
                     return (lat == this.state.markerMidPoint.lat && long == this.state.markerMidPoint.lng)
         }) 
-            console.log(resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p></p>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
@@ -103,26 +93,6 @@ class FindInvite extends Component {
             </div>
         )
     }
-
-    // getInfoFromDirections = (results) => {
-    //     console.log("results", results)
-    //     const travelMode = "walking";
-    //     const distance = results.routes[0].legs[0].distance.text;
-    //     const duration = results.routes[0].legs[0].duration.text;
-    //     console.log(travelMode, distance, duration)
-    //     this.setState({
-    //         travelMode,
-    //         distance,
-    //         duration
-    //     })
-    // }
-    // getDirections = (e) => {
-    //     e.preventDefault();
-    //     this.setState({
-    //         runDirections: true
-    //     })
-    // }
-
     render() {
         
         return (

@@ -23,7 +23,6 @@ class FullScreenMessage extends Component {
     }
 
     render(){
-        console.log("message", this.props.message)
         return(
             <div className="fullScreenMessage">
                 <div className="fullScreenMessage__messageBody">

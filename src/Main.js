@@ -1,9 +1,10 @@
-// import { Route, Link, Redirect } from 'react-router-dom';
-import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import React, { Component} from 'react';
 import MapWithMarkerClusterer from './MyMapComponent';
 import Messages from './messages';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar, faEnvelope   } from '@fortawesome/free-solid-svg-icons';
+
 
 
 
@@ -18,7 +19,7 @@ class Main extends Component {
             runDirections:false,
             travelMode:"",
             distance:"",
-            duration:""
+            duration:"",
         }
     }
     //function that sets markerMidPoint
@@ -28,7 +29,6 @@ class Main extends Component {
         const lngString = marker.latLng.lng()
         midLatLng.lat= parseFloat(latString);
         midLatLng.lng= parseFloat(lngString);
-        console.log("this is the latLng from the clicked event",latString, lngString)
         this.setState({
             markerMidPoint:midLatLng,
         }, ()=>{
@@ -37,11 +37,9 @@ class Main extends Component {
 
     }
     getInfoFromDirections=(results)=>{
-        console.log(results)
         const travelMode = results.request.travelMode;
         const distance = results.routes[0].legs[0].distance.text;
         const duration = results.routes[0].legs[0].duration.text;
-        console.log(travelMode,distance,duration)
         this.setState({
             travelMode,
             distance,
@@ -55,25 +53,18 @@ class Main extends Component {
         })
     }
     getSelectedInfo=()=>{
-        // const regExLat= RegExp();
-        // const regExLng= RegExp();
         const array=this.props.markers;
-        console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
                 const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
                 const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
                 const midLat = Math.floor(this.state.markerMidPoint.lat.toFixed(5) * 10000);
                 const midLng = Math.floor(this.state.markerMidPoint.lng.toFixed(5) * 10000)
-                console.log(long, lat)
-                //const minusedLat = lat - lat
-                //if(minusedLat <= 0.009)reutnr array. 
                     return (lat == midLat && long == midLng)
         }) 
-            console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
-                 <div className={this.state.travelMode ? null: "visuallyhidden"}>
+                <div className={this.state.travelMode ? null: "visuallyhidden"}>
                     <p className="main__resultDirections">{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
                 </div>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
@@ -111,7 +102,6 @@ class Main extends Component {
 
 
     render() {
-        
         return (
             <div className="main" key="main">
                 <button className="main__messagesButton" onClick={this.props.handleClickDisplayMessages}><FontAwesomeIcon className="app__font-awesome" icon={faEnvelope} /></button>
@@ -130,12 +120,6 @@ class Main extends Component {
                 <header className="header">
 
                     <h2 className="header__subTitle">Middl.</h2> 
-
-                 
-             
-                   
-                     
-
                 </header>
 
                 <div className="main">
@@ -172,9 +156,6 @@ class Main extends Component {
                             <p className="mainForm__address">enter your date's address or username</p>
                             <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
                         </label>
-
-
-
                         <p className="createAccount__label">Mode of Transportation</p>
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
@@ -256,6 +237,7 @@ class Main extends Component {
                         : 
                         null
                     }
+                    
 
                     </div>
                         
