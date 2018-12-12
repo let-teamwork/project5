@@ -22,7 +22,6 @@ class Messages extends Component {
 
     viewMessage = (e) => {
         e.preventDefault();
-        console.log(e.target.id);
         this.setState({
             // viewSingleMessage: true,
             selectedMessageKey: e.target.id
@@ -31,7 +30,6 @@ class Messages extends Component {
             this.props.selectMessageForReply(this.state.selectedMessageKey);
         })
     }   
-    
     selectSingleMessage = () => {
         const selectedMessageArray = this.props.messages.filter((message) => {
             return (message.key === this.state.selectedMessageKey)
@@ -44,14 +42,10 @@ class Messages extends Component {
             this.setState({
                 viewSingleMessage: true 
             })
-            console.log("yo", this.state.selectedMessageObject)
         });
     }
     
-    
-
     render(){
-        // console.log("key", this.props.messages[0].key)
         return (
             <div className="messages">
                 <div className="messages__inbox">
@@ -75,6 +69,7 @@ class Messages extends Component {
                         replyToMessage={this.props.replyToMessage}
                         recieveRestaurantResult={this.props.recieveRestaurantResult}
                         userName={this.props.userName}
+                        showFindInvite={this.props.showFindInvite}
                         />
                     ) : (
                         ""
