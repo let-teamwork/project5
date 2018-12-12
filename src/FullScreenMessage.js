@@ -26,18 +26,16 @@ class FullScreenMessage extends Component {
         console.log("message", this.props.message)
         return(
             <div className="fullScreenMessage">
-                <div className="fullScreenMessage__header">
-                    <div className="fullScreenMessage__messageDate">
-                        {/* <p>{this.props.message.displayDate}</p> */}
-                    </div>
-                    <div className="fullScreenMessage__from">
-                        {/* <p>{this.props.message.from}</p> */}
-                    </div>
-                </div>
                 <div className="fullScreenMessage__messageBody">
-                    <div className="fullScreenMessage__messageBodyContents">
-                        <p>{this.props.message.message}</p>
-                    </div> 
+                    {
+                    this.props.message.message.map((oneMessage) => {
+                        return(
+                            <div className={oneMessage[2] === this.props.userName ? "fullScreenMessage__message fullScreenMessage__message--sent" : "fullScreenMessage__message fullScreenMessage__message--received"} >
+                                <p className={oneMessage[2] === this.props.userName ? "fullScreenMessage__messageContent fullScreenMessage__messageContent--sent" : "fullScreenMessage__messageContent fullScreenMessage__messageContent--received"} >{oneMessage[0]}</p>
+                            </div>
+                        )
+                    })
+                    }
                 </div>
                 {this.props.message.restaurantSuggestion ? 
                 <div>
