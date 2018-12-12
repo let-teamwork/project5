@@ -61,7 +61,9 @@ class App extends Component {
       bothAreUsers: false,
       showMessage: false,
       dateSuggestion: {},
-      inviteMarker: []
+      inviteMarker: [],
+      markerMidPoint: {},
+      showFindInvite: false
     }
   }
 
@@ -80,7 +82,7 @@ class App extends Component {
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
                   userName: (snapshot.val().userName),
-                  toMain: true
+                  toMain: !this.state.showFindInvite ? true : false
                 }, () => {
                   this.fetchMessages(); 
                 })
@@ -220,7 +222,7 @@ class App extends Component {
   };
 
 
-  receiveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
+  recieveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
     const marker = {
       coordinates: restaurantCoordinates,
       phone: restaurantPhone,
@@ -233,10 +235,16 @@ class App extends Component {
     invite.push(marker)
     
     this.setState({
-      inviteMarker: invite
+      markerMidPoint: restaurantCoordinates,
+      inviteMarker: invite,
+      showFindInvite: true
+    }, () => {
+      this.setState({
+        messagesdisplayed: false
+      })
     })
-
-  }  
+  }
+  
 
   showMessageBar = (name, phone, image, id, coordinates) => {
     const restaurant = {
@@ -814,6 +822,7 @@ class App extends Component {
           secondMOT={this.state.secondMOT}
           fillTheInputs={this.fillTheInputs}
           userName={this.state.userName}
+          showFindInvite={this.state.showFindInvite}
           />
           
         )}/>
@@ -868,6 +877,8 @@ class App extends Component {
           logOut={this.logOut}
           getCoordinates={this.getCoordinates}
           setUserCoordinates={this.setUserCoordinates}
+          inviteMarker={this.state.inviteMarker}
+          markerMidPoint={this.state.markerMidPoint}
           />
           
         )}/>

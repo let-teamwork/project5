@@ -55,7 +55,6 @@ class Main extends Component {
         // const regExLat= RegExp();
         // const regExLng= RegExp();
         const array=this.props.markers;
-        console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
                 const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
                 const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
@@ -118,6 +117,7 @@ class Main extends Component {
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
                     selectMessageForReply={this.props.selectMessageForReply}
                     userName={this.props.userName}
+                    showFindInvite={this.props.showFindInvite}
                     />   
                     ) : ""
                     }
