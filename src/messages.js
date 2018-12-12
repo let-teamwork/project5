@@ -11,6 +11,7 @@ class Messages extends Component {
             selectedMessageObject: {}
         }
     }
+    
 
     viewMessage = (e) => {
         e.preventDefault();

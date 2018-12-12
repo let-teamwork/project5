@@ -73,7 +73,7 @@ class Main extends Component {
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
-                 <div className={this.state.travelMode ? null: "visuallyhidden"}>
+                <div className={this.state.travelMode ? null: "visuallyhidden"}>
                     <p className="main__resultDirections">{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
                 </div>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>

@@ -649,6 +649,7 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
+        
         // this.createOpenConversationInSecondUserAccount(savedID);
       })
     })
