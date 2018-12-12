@@ -78,7 +78,8 @@ class App extends Component {
               if (snapshot.val() !== null){
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
-                  userName: (snapshot.val().userName)
+                  userName: (snapshot.val().userName),
+                  toMain: true
                 }, () => {
                   this.fetchMessages(); 
                 })
