@@ -108,6 +108,9 @@ label{
     @include headingFont(2.8rem);
     color:$primaryColor;
 }
+.main__displayResults--picture{
+    margin:0;
+}
 .main__displayResults{
     background:$secondaryColor;
   

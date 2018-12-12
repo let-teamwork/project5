@@ -166,7 +166,8 @@ class App extends Component {
     dbRef.once('value').then((snapshot) => {
       this.setState ({
         userLocation: (snapshot.val().userAddress),
-        userName: (snapshot.val().userName)
+        userName: (snapshot.val().userName),
+        toMain:true
       }, () => {
         dbRefUserList.set(this.state.user.uid);
       })
@@ -839,6 +840,7 @@ class App extends Component {
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
           logOut={this.logOut}
+          secondMOT={this.state.secondMOT}
           />
           
         )}/>

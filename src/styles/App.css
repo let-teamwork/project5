@@ -3,7 +3,6 @@ html {
   font-size: 62.5%; }
 
 img {
-  display: block;
   max-width: 100%; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
@@ -153,7 +152,8 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
 
 .wrapper {
   width: 90%;
-  margin: 0 auto; }
+  margin: 0 auto;
+  max-width: 950px; }
 
 .app__button {
   line-height: 1.8rem;
@@ -412,6 +412,9 @@ label {
   font-weight: 700;
   text-transform: uppercase;
   color: #0d6978; }
+
+.main__displayResults--picture {
+  margin: 0; }
 
 .main__displayResults {
   background: #b6d2cf; }
