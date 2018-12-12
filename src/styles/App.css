@@ -425,7 +425,8 @@ label {
   top: 19px;
   color: white;
   background: none;
-  border: none; }
+  border: none;
+  z-index: 100; }
 
 .messages {
   position: absolute;
@@ -434,11 +435,56 @@ label {
   left: 0;
   right: 0;
   z-index: 9;
-  background-color: white;
+  background-color: #0d6978;
   display: flex; }
   .messages__inbox {
+    position: relative;
+    margin: auto;
+    height: 100vh;
     width: 100vw;
     max-width: 700px;
-    height: 100vh;
     max-height: 700px;
     background-color: white; }
+  .messages__preview {
+    height: 100px;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px #0d6978 solid;
+    text-transform: uppercase;
+    font-size: 2rem; }
+    .messages__preview .wrapper {
+      height: 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center; }
+
+.fullScreenMessage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  background-color: white;
+  display: flex;
+  flex-direction: column; }
+  .fullScreenMessage__messageBody {
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+    flex-grow: 1;
+    flex-direction: column;
+    margin: 0 auto; }
+  .fullScreenMessage__message {
+    display: flex;
+    width: 100%; }
+    .fullScreenMessage__message--sent {
+      justify-content: flex-end; }
+    .fullScreenMessage__message--received {
+      justify-content: flex-start; }
+  .fullScreenMessage__messageContent .fullScreenMessage--sent {
+    background-color: #0d6978;
+    color: white; }
+  .fullScreenMessage--received {
+    background-color: #b6d2cf; }

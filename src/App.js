@@ -618,7 +618,7 @@ class App extends Component {
       from: this.state.userName,
       sendingUID: this.state.user.uid,
       message: [
-        [this.state.newMessageContent, new Date().toDateString()]
+        [this.state.newMessageContent, new Date().toDateString(), this.state.userName]
       ],
       restaurantSuggestion: this.state.dateSuggestion,
       displayDate: new Date().toDateString(),
@@ -823,6 +823,7 @@ class App extends Component {
           userMOT={this.state.userMOT}
           selectMessageForReply={this.selectMessageForReply}
           logOut={this.logOut}
+          userName={this.state.userName}
           />
           
         )}/>
