@@ -1,9 +1,6 @@
-// import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
-// import firebase from './firebase'
 import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
-// import MapComponent from './MapComponent';
 import Messages from './messages'
 
 
@@ -44,8 +41,6 @@ class FindInvite extends Component {
     getCoordinates(addressInput, callback) {
         const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
         const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
-        console.log("address input", addressInput)
-        console.log("callback", callback)
 
         axios({
             method: "GET",
@@ -58,7 +53,6 @@ class FindInvite extends Component {
         }).then(
             (response) => {
                 const coordinates = response.data.results[0].geometry.location;
-                console.log("Geocode response", coordinates)
                 callback(coordinates);
             })
     }
@@ -70,31 +64,24 @@ class FindInvite extends Component {
         this.setState({
             userCoordinates: newObject
         }, () => {
-            console.log(this.state.userCoordinates)
             this.setTheCoordinates(this.state.userCoordinates.lat, this.state.userCoordinates.lng)
         });
     }
 
     run = () => {
-        console.log("markers", this.state.markers)
-        console.log("markerMidPoint", this.state.markerMidPoint)
-        console.log("location of USER", this.props.userLocation)
         this.getCoordinates(this.props.userLocation, this.setUserCoordinates)
     }
     
     setTheCoordinates=(userlat , userlng)=>{
-        console.log("coordinates of USER", this.props.userCoordinatesLat)
         this.setState({
             userCoordinates: {
                 lat: userlat,
                 lng: userlng
             }
         })
-        console.log("state set", this.state.userCoordinates)
         this.getMarkerMidPoint(this.state.markerMidPoint)
 
     }
-    // function that sets markerMidPoint
     getMarkerMidPoint = (marker) => {
 
         const midLatLng = {};
@@ -102,11 +89,9 @@ class FindInvite extends Component {
         const lngString = Math.floor(marker.Y.toFixed(5) * 10000);
         midLatLng.lat = parseFloat(latString);
         midLatLng.lng = parseFloat(lngString);
-        console.log("this is the latLng from the clicked event", latString, lngString)
         this.setState({
             markerMidPoint: midLatLng,
         }, () => {
-            console.log("new mmp", this.state.markerMidPoint)
             this.getSelectedInfo()
         })
 
@@ -114,25 +99,15 @@ class FindInvite extends Component {
     
     getSelectedInfo=()=>{
         const array=this.state.markers;
-        console.log("this is the array which LatLng coordinates will be filtering through",array);
             const resultArray = array.filter(latLng => {
                 const long= Math.floor(latLng.coordinates.longitude.toFixed(5) * 10000);
                 const lat = Math.floor(latLng.coordinates.latitude.toFixed(5) * 10000);
-                console.log(long, lat)
-                //const minusedLat = lat - lat
-                //if(minusedLat <= 0.009)reutnr array. 
                     return (lat == this.state.markerMidPoint.lat && long == this.state.markerMidPoint.lng)
         }) 
-            console.log("the resulting array", resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-                <p></p>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
-                {/* <button
-                onClick= {
-                    this.getDirections
-                } > Need Directions ? </button> */}
             </div>
         )
     }
@@ -141,7 +116,7 @@ class FindInvite extends Component {
         
         return (
             <div className="main" key="main">
-                <button onClick={this.props.handleClickDisplayMessages}>Display Messages</button>
+                <button className="app__button" onClick={this.props.handleClickDisplayMessages}>Display Messages</button>
                     {this.props.messagesdisplayed 
                     ? (
                     <Messages 
