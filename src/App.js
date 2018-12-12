@@ -82,7 +82,7 @@ class App extends Component {
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
                   userName: (snapshot.val().userName),
-                  toMain: !this.state.showFindInvite ? true : false
+                  // toMain: !this.state.showFindInvite ? true : false
                 }, () => {
                   this.fetchMessages(); 
                 })
@@ -179,7 +179,7 @@ class App extends Component {
     //API CALL FOR YELP DATA
     axios({
       method: "GET",
-      url: "http://proxy.hackeryou.com",
+      url: "https://proxy.hackeryou.com",
       dataResponse: "json",
       paramsSerializer: function (params) {
         return Qs.stringify(params, { arrayFormat: "brackets" });
@@ -666,29 +666,6 @@ class App extends Component {
 
       dbRefUserConversation.set(newObject);
     });
-    // dbRefSecondUser.once('value').then((snapshot) => {
-    //   const newArray = Object.entries(snapshot.val());
-    //      ('newest Array', newArray);
-    //     const n=0
-    //     newArray.forEach((openConversation) => {
-    //        (openConversation);
-    //        ('length' ,newArray.length)
-    //       n++
-    //        ('n', n)
-    //       if (openConversation[1][savedID] === currentconvo){
-    //         return
-    //       } 
-    //       if (n === newArray.length){
-    //         this.createOpenConversationInSecondUserAccount(savedID);
-    //       }
-    //       // openConversation[1][savedID] === currentconvo
-    //     })
-    //     //  ('newest array2', newArray);
-        
-        
-    //   })
-      
-      // this.createOpenConversationInSecondUserAccount(savedID);
   }
 
   createOpenConversationInSecondUserAccount = (savedID) => {

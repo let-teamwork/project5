@@ -6,13 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar, faEnvelope   } from '@fortawesome/free-solid-svg-icons';
 
 
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> 3c45a39841344621978a7a17ad59fcc05c9bba2c
 class Main extends Component {
     constructor() {
         super();
@@ -122,10 +115,6 @@ class Main extends Component {
                 <header className="header">
 
                     <h2 className="header__subTitle">Middl.</h2> 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3c45a39841344621978a7a17ad59fcc05c9bba2c
                 </header>
 
                 <div className="main">
@@ -164,14 +153,7 @@ class Main extends Component {
                             <p className="mainForm__address">Enter your date's address or username</p>
                             <input type="text" className="app__input" placeholder="ex.123 Queen St. West" val={this.props.secondLocation}  onChange={this.props.handleAddressChange} id="search" />
                         </label>
-<<<<<<< HEAD
                         <p className="createAccount__label">Mode of Transportation</p>
-=======
-
-
-
-                        <p className="createAccount__label">Date's Mode of Transportation</p>
->>>>>>> 3c45a39841344621978a7a17ad59fcc05c9bba2c
                         <div className="mainForm__inputLabel--displayFlex">
                             <div className="mainForm__inputLabel--column">
                                 

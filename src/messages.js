@@ -33,17 +33,12 @@ class Messages extends Component {
             this.setState({
                 viewSingleMessage: true 
             })
-               ("yo", this.state.selectedMessageObject)
         });
     }
     
     
 
     render(){
-<<<<<<< HEAD
-        //    ("key", this.props.messages[0].key)
-=======
->>>>>>> bd7731c86468e8c7f830b7f621998a7bd4abf7e8
         return (
             <div className="messages">
                 <div className="messages__inbox">

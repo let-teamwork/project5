@@ -22,7 +22,7 @@ class Login extends Component{
             : (
               <div>
                 <button onClick={this.props.logIn} className="login__signIn app__button">Sign In</button>
-                  <Link to = "/Main" className="app__button" > Sign In as Guest </Link>
+                  <Link onClick={this.props.signInAsGuest}to = "/Main" className="app__button" > Sign In as Guest </Link>
               </div>
             )}
               </div>
