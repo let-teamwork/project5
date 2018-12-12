@@ -37,7 +37,7 @@ class Messages extends Component {
             return (message.key === this.state.selectedMessageKey)
         });
         console.log("sma", selectedMessageArray);
-        this.props.setSecondUserNameOnMessageOpen(selectedMessageArray[0].from)
+        // this.props.setSecondUserNameOnMessageOpen(selectedMessageArray[0].from)
         this.setState({
             selectedMessageObject: selectedMessageArray[0]
         }, () => {
