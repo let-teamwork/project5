@@ -1,0 +1,19 @@
+// ======================Messages=========================
+
+.messages{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+    background-color: white;
+    display: flex;
+    &__inbox{
+        width: 100vw;
+        max-width: 700px
+        height: 100vh;
+        max-height: 700px;
+        background-color: white;
+    }
+}

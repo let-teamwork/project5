@@ -66,6 +66,8 @@ class App extends Component {
 
   componentDidMount() {
 
+    
+
     auth.onAuthStateChanged((user) => {
       // console.log('firing');
       if (user) {
@@ -79,6 +81,7 @@ class App extends Component {
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
                   userName: (snapshot.val().userName)
+                  // toMain:true
                 }, () => {
                   this.fetchMessages(); 
                 })
@@ -168,6 +171,16 @@ class App extends Component {
         dbRefUserList.set(this.state.user.uid);
       })
     });
+  }
+
+  handleClickCreateAccount = () => {
+     this.setState({
+      toMain:true
+    }, () => {
+      this.setState({
+        toMain: false
+      })
+    })
   }
 
   restaurantResults = (lat, lng) => {
@@ -772,6 +785,10 @@ class App extends Component {
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           userName={this.state.userName}
+          userMOT={this.state.userMOT}
+          handleMOTChange={this.handleMOTChange}
+          toMain={this.state.toMain}
+          handleClickCreateAccount={this.handleClickCreateAccount}
           />
         )}/>
         <Route 
