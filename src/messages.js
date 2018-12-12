@@ -11,8 +11,6 @@ class Messages extends Component {
             selectedMessageObject: {}
         }
     }
-    
-
     viewMessage = (e) => {
         e.preventDefault();
         this.setState({
@@ -36,8 +34,6 @@ class Messages extends Component {
         });
     }
     
-    
-
     render(){
         return (
             <div className="messages">
