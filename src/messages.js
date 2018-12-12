@@ -46,15 +46,17 @@ class Messages extends Component {
         return (
             <div className="messages">
                 <div className="messages__inbox">
-                    <div>
+                    {/* <div>
                         <button className="app__button">Home</button>
-                    </div>
+                    </div> */}
                     {this.props.messages.map((message) => {
                         return (
-                            <div id={message.key} className="message-preview" onClick={this.viewMessage} >
-                                <p id={message.key} >{message.from}</p>
-                                <p id={message.key} >{message.displayDate}</p>
-                            </div>
+                            <button id={message.key} className="messages__preview" onClick={this.viewMessage} >
+                                <div className="wrapper">
+                                    <p className="messages__previewFrom" id={message.key} >{message.from}</p>
+                                    <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>                     
+                                </div>
+                            </button>
                         )
                     })}
                     {(this.state.viewSingleMessage) 
@@ -63,6 +65,7 @@ class Messages extends Component {
                         message={this.state.selectedMessageObject}
                         replyToMessage={this.props.replyToMessage}
                         recieveRestaurantResult={this.props.recieveRestaurantResult}
+                        userName={this.props.userName}
                         />
                     ) : (
                         ""
