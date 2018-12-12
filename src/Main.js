@@ -8,6 +8,7 @@ import { faCoffee, faBicycle, faBus, faWalking, faWineGlassAlt, faCar, faEnvelop
 
 
 
+
 class Main extends Component {
     constructor() {
         super();
@@ -70,6 +71,12 @@ class Main extends Component {
         }) 
             console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
+
+
+                <div className={this.state.travelMode !== ""? null: "visuallyhidden"}>
+                    <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
+                </div>
+
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                  <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
@@ -126,7 +133,14 @@ class Main extends Component {
                     }
             
                 <header className="header">
+
                     <h2 className="header__subTitle">Middl.</h2> 
+
+                 
+             
+                   
+                     
+
                 </header>
 
                 <div className="main">
@@ -149,8 +163,13 @@ class Main extends Component {
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
+
                                 <label className={`app__radioLabel ${(this.props.userMOT === "driving") ? "activeLabel" : ""}`} htmlFor="carUser"><FontAwesomeIcon className="app__font-awesome" icon={faCar} /></label>
                                 <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
+
+                                <label htmlFor="carUser">By Car</label>
+                                <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
+
                             </div>
                             
                             <div className="mainForm__inputLabel--column">
@@ -189,7 +208,14 @@ class Main extends Component {
                             </div>
                         </div>
                     </form>
+
                      
+
+                     <div className={this.state.markerMidPoint.lat ? " visuallyhidden main__button--displayFlex" : "main__button--displayFlex"}>
+                        <button className="main__button" key="main-button1" onClick={this.props.toggleCoffee} value={this.props.showingCoffee}>{this.props.showingCoffee ? <p>Hide Coffee</p> : <p>Show Coffee</p>}</button>
+                        <button key="main-button2" className="main__button" onClick={this.props.toggleBar}>{this.props.showingBar ? <p>Hide Bar</p> : <p>Show Bar</p>}</button>
+                    </div>
+
 
                         {this.props.inputsFilled ? null : <p>Please fill in all fields</p>}
                         
@@ -245,8 +271,10 @@ class Main extends Component {
                         : 
                         null
                     }
+
                     </div>
                         
+
                 </div>
 
             </div>
