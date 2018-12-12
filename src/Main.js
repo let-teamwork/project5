@@ -68,12 +68,6 @@ class Main extends Component {
         }) 
             console.log("this is the filtered result",resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
-
-
-                <div className={this.state.travelMode !== ""? null: "visuallyhidden"}>
-                    <p>{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
-                </div>
-
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
@@ -125,6 +119,7 @@ class Main extends Component {
                     replyToMessage={this.props.replyToMessage}
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
                     selectMessageForReply={this.props.selectMessageForReply}
+                    userName={this.props.userName}
                     />   
                     ) : ""
                     }
@@ -161,7 +156,6 @@ class Main extends Component {
                                 <input name="userMOT" type="radio" value="driving" id="carUser" onChange={this.props.handleMOTChange}/>
 
                             </div>
-                            
                             <div className="mainForm__inputLabel--column">
                                 <label className={`app__radioLabel ${(this.props.userMOT === "transit") ? "activeLabel" : ""}`} htmlFor="publicUser"><FontAwesomeIcon className="app__font-awesome" icon={faBus} /></label>
                                 <input className="activeInput visuallyhidden" name="userMOT" type="radio" value="transit" id="publicUser" onChange={this.props.handleMOTChange}/>

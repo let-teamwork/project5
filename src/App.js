@@ -66,8 +66,6 @@ class App extends Component {
 
   componentDidMount() {
 
-    
-
     auth.onAuthStateChanged((user) => {
       // console.log('firing');
       if (user) {
@@ -80,8 +78,8 @@ class App extends Component {
               if (snapshot.val() !== null){
                 this.setState({
                   userLocation: (snapshot.val().userAddress),
-                  userName: (snapshot.val().userName)
-                  // toMain:true
+                  userName: (snapshot.val().userName),
+                  toMain: true
                 }, () => {
                   this.fetchMessages(); 
                 })
@@ -100,7 +98,7 @@ class App extends Component {
       this.dbRef.off();
     }
   }
-
+  
   logIn = () => {
     auth.signInWithPopup(provider).then((result) => {
       
@@ -166,21 +164,12 @@ class App extends Component {
     dbRef.once('value').then((snapshot) => {
       this.setState ({
         userLocation: (snapshot.val().userAddress),
-        userName: (snapshot.val().userName)
+        userName: (snapshot.val().userName),
+        toMain:true
       }, () => {
         dbRefUserList.set(this.state.user.uid);
       })
     });
-  }
-
-  handleClickCreateAccount = () => {
-     this.setState({
-      toMain:true
-    }, () => {
-      this.setState({
-        toMain: false
-      })
-    })
   }
 
   restaurantResults = (lat, lng) => {
@@ -361,7 +350,8 @@ class App extends Component {
     // this.recieveRestaurantResult();
     if (this.state.userLocation !== "" && this.state.search !== "" && this.state.userMOT && this.state.secondMOT){
       this.setState({
-        inputsFilled: true
+        inputsFilled: true,
+
       })
       this.searchFirebase(this.state.search, "users", this.getCoordinatesRelatedToSearch);
     } else {
@@ -373,7 +363,7 @@ class App extends Component {
   showDirections=()=>{
     setTimeout(()=>{
         this.setState({
-        showDirections: true
+        showDirections: true,
       })}, 3000)
 
   }
@@ -630,7 +620,7 @@ class App extends Component {
       from: this.state.userName,
       sendingUID: this.state.user.uid,
       message: [
-        [this.state.newMessageContent, new Date().toDateString()]
+        [this.state.newMessageContent, new Date().toDateString(), this.state.userName]
       ],
       restaurantSuggestion: this.state.dateSuggestion,
       displayDate: new Date().toDateString(),
@@ -791,10 +781,6 @@ class App extends Component {
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
           userName={this.state.userName}
-          userMOT={this.state.userMOT}
-          handleMOTChange={this.handleMOTChange}
-          toMain={this.state.toMain}
-          handleClickCreateAccount={this.handleClickCreateAccount}
           />
         )}/>
         <Route 
@@ -847,6 +833,7 @@ class App extends Component {
           logOut={this.logOut}
           secondMOT={this.state.secondMOT}
           fillTheInputs={this.fillTheInputs}
+          userName={this.state.userName}
           />
           
         )}/>
