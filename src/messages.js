@@ -44,26 +44,31 @@ class Messages extends Component {
     render(){
         // console.log("key", this.props.messages[0].key)
         return (
-            <div>
-                {this.props.messages.map((message) => {
-                    return (
-                        <div id={message.key} className="message-preview" onClick={this.viewMessage} >
-                            <p id={message.key} >{message.from}</p>
-                            <p id={message.key} >{message.displayDate}</p>
-                        </div>
-                    )
-                })}
-                {(this.state.viewSingleMessage) 
-                ? (
-                    <FullScreenMessage 
-                    message={this.state.selectedMessageObject}
-                    replyToMessage={this.props.replyToMessage}
-                    recieveRestaurantResult={this.props.recieveRestaurantResult}
-                    />
-                ) : (
-                    ""
-                )   
-                }
+            <div className="messages">
+                <div className="messages__inbox">
+                    <div>
+                        <button>Home</button>
+                    </div>
+                    {this.props.messages.map((message) => {
+                        return (
+                            <div id={message.key} className="message-preview" onClick={this.viewMessage} >
+                                <p id={message.key} >{message.from}</p>
+                                <p id={message.key} >{message.displayDate}</p>
+                            </div>
+                        )
+                    })}
+                    {(this.state.viewSingleMessage) 
+                    ? (
+                        <FullScreenMessage 
+                        message={this.state.selectedMessageObject}
+                        replyToMessage={this.props.replyToMessage}
+                        recieveRestaurantResult={this.props.recieveRestaurantResult}
+                        />
+                    ) : (
+                        ""
+                    )   
+                    }
+                    </div>
             </div>
             )
             
