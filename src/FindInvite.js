@@ -1,7 +1,7 @@
 // import { Route, Link } from 'react-router-dom';
 import React, { Component } from 'react';
 // import firebase from './firebase'
-// import axios from 'axios';
+import axios from 'axios';
 import MapWithMarkerClusterer from './MyMapComponent'
 // import MapComponent from './MapComponent';
 import Messages from './messages'
@@ -36,17 +36,50 @@ class FindInvite extends Component {
                 rating: 4,
                 review_count: 127,
                 url: "https://www.yelp.com/biz/icha-tea-toronto-3?adjust_creative=fT5P9TcxpP0FwFnSf6Ue6g&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=fT5P9TcxpP0FwFnSf6Ue6g"
-            }]
+            }],
+            userCoordinates: {}
         }
     }
-    
-    run=()=>{
+
+    getCoordinates(addressInput, callback) {
+        const geocodeKey = "AIzaSyC7aX88PBTGc5vWZS5P6QTENMfde_Qz194";
+        const urlGeoCode = "https://maps.googleapis.com/maps/api/geocode/json?";
+        console.log("address input", addressInput)
+        console.log("callback", callback)
+
+        axios({
+            method: "GET",
+            url: urlGeoCode,
+            dataResponse: "json",
+            params: {
+                key: geocodeKey,
+                address: addressInput
+            }
+        }).then(
+            (response) => {
+                const coordinates = response.data.results[0].geometry.location;
+                console.log("Geocode response", coordinates)
+                callback(coordinates);
+            })
+    }
+
+    setUserCoordinates = (coordinates) => {
+        const newObject = {};
+        newObject.lat = coordinates.lat;
+        newObject.lng = coordinates.lng;
+        this.setState({
+            userCoordinates: newObject
+        }, () => {
+            console.log(this.state.userCoordinates)
+            this.setTheCoordinates(this.state.userCoordinates.lat, this.state.userCoordinates.lng)
+        });
+    }
+
+    run = () => {
         console.log("markers", this.state.markers)
         console.log("markerMidPoint", this.state.markerMidPoint)
         console.log("location of USER", this.props.userLocation)
-        this.props.getCoordinates(this.props.userLocation, this.props.setUserCoordinates)
-        this.setTheCoordinates(this.props.userCoordinatesLat, this.props.userCoordinatesLng)
-    
+        this.getCoordinates(this.props.userLocation, this.setUserCoordinates)
     }
     
     setTheCoordinates=(userlat , userlng)=>{
@@ -90,38 +123,19 @@ class FindInvite extends Component {
                 //if(minusedLat <= 0.009)reutnr array. 
                     return (lat == this.state.markerMidPoint.lat && long == this.state.markerMidPoint.lng)
         }) 
-            console.log(resultArray)
+            console.log("the resulting array", resultArray)
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p></p>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
-                <button
+                {/* <button
                 onClick= {
                     this.getDirections
-                } > Need Directions ? </button>
+                } > Need Directions ? </button> */}
             </div>
         )
     }
-
-    // getInfoFromDirections = (results) => {
-    //     console.log("results", results)
-    //     const travelMode = "walking";
-    //     const distance = results.routes[0].legs[0].distance.text;
-    //     const duration = results.routes[0].legs[0].duration.text;
-    //     console.log(travelMode, distance, duration)
-    //     this.setState({
-    //         travelMode,
-    //         distance,
-    //         duration
-    //     })
-    // }
-    // getDirections = (e) => {
-    //     e.preventDefault();
-    //     this.setState({
-    //         runDirections: true
-    //     })
-    // }
 
     render() {
         
@@ -144,6 +158,7 @@ class FindInvite extends Component {
                 <button onClick={this.run}>Show Your Invite</button>
                 <div className="main wrapper">
                     <h3 key="main-h2" className="main__h3">Your date is located here</h3>
+                    
                     <MapWithMarkerClusterer
                         getInfoFromDirections = {this.getInfoFromDirections}
                         getMarkerMidPoint = {this.getMarkerMidPoint}
