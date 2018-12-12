@@ -70,7 +70,7 @@ class Main extends Component {
             return(<div className="main__displayResults wrapper" key={`div-${resultArray[0].alias}`}>
                 <p className="main__displayResults--title">{resultArray[0].name}</p>
                 <p className="main__displayResults--number">{resultArray[0].display_phone}</p>
-                <div className={this.state.travelMode !== "main__results"? null: "visuallyhidden"}>
+                <div className={this.state.travelMode ? null: "visuallyhidden"}>
                     <p className="main__resultDirections">{`From your location, your destination is ${this.state.distance} away. Based on your mode of transportation: ${this.state.travelMode} it will take you ${this.state.duration} to arrive.`}</p>
                 </div>
                 <img className="main__displayResults--picture" src={resultArray[0].image_url} alt=""/>
@@ -87,10 +87,8 @@ class Main extends Component {
                     className="app__button"
                     onClick={() =>{this.props.showMessageBar(
                         resultArray[0].name,
-                        resultArray[0].location.address1,
-                        resultArray[0].location.city,
-                        resultArray[0].location.state,
-                        resultArray[0].location.country,
+                        resultArray[0].display_phone,
+                        resultArray[0].image_url,
                         resultArray[0].id,
                         resultArray[0].coordinates
                     )}}>Share with your date</button>

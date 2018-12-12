@@ -60,7 +60,8 @@ class App extends Component {
       inputsFilled: true,
       bothAreUsers: false,
       showMessage: false,
-      dateSuggestion: {}
+      dateSuggestion: {},
+      inviteMarker: []
     }
   }
 
@@ -218,53 +219,30 @@ class App extends Component {
     });
   };
 
-  // recieveRestaurantResult = (restaurantName, restaurantAddress, restaurantCity, restaurantState, restaurantCountry, restaurantID) => {
-  //   const urlYelp = "https://api.yelp.com/v3/businesses/matches";
-  //   const yelpKey =
-  //     "Bearer xH8QyqRzL7E-yuvI5Cq167iWbxZB7jLOCCHukA-TNZoUtALNKXcmYF-0pgqwwUuDiqibPZ_bfIgpYLz0WWrG6SHARQnLEeudmtJ0pZo-PxRvqIaA5aq14eL-n74FXHYx";
-  //   //API CALL FOR YELP DATA
-  //   axios({
-  //     method: "GET",
-  //     url: "http://proxy.hackeryou.com",
-  //     dataResponse: "json",
-  //     paramsSerializer: function (params) {
-  //       return Qs.stringify(params, { arrayFormat: "brackets" });
-  //     },
-  //     params: {
-  //       reqUrl: urlYelp,
-  //       params: {
-  //         name: restaurantName,
-  //         address1: restaurantAddress,
-  //         city: restaurantCity,
-  //         state: restaurantState,
-  //         country: restaurantCountry,
-  //         yelp_business_id: restaurantID
-  //       },
-  //       proxyHeaders: {
-  //         Authorization: yelpKey
-  //       },
-  //       xmlToJSON: false
-  //     }
-  //   }).then(res => {
-  //     // console.log("calling Yelp API & retrieving all restaurants:", res)
-  //     console.log("match restaurant", res.data.businesses[0])
-  //     const restaurant = res.data.businesses[0]
-  //     return(
-  //       <div>
-  //         <p>{restaurant.name}</p>
-          
-  //       </div>
-  //     )
-  //   });
-  // };
 
-  showMessageBar = (name, address, city, state, country, id, coordinates) => {
+  receiveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
+    const marker = {
+      coordinates: restaurantCoordinates,
+      phone: restaurantPhone,
+      id: restaurantID,
+      image_url: restaurantImage,
+      name: restaurantName
+    };
+
+    const invite = []
+    invite.push(marker)
+    
+    this.setState({
+      inviteMarker: invite
+    })
+
+  }  
+
+  showMessageBar = (name, phone, image, id, coordinates) => {
     const restaurant = {
       restaurantName: name,
-      restaurantAddress: address,
-      restaurantCity: city,
-      restaurantState: state,
-      restaurantCountry: country,
+      restaurantPhone: phone,
+      restaurantImage: image,
       restaurantID: id,
       restaurantCoordinates: coordinates
     }
@@ -649,6 +627,8 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
+        
+        // this.createOpenConversationInSecondUserAccount(savedID);
       })
     })
   }
@@ -715,7 +695,7 @@ class App extends Component {
         
     //   })
       
-      this.createOpenConversationInSecondUserAccount(savedID);
+      // this.createOpenConversationInSecondUserAccount(savedID);
   }
 
   createOpenConversationInSecondUserAccount = (savedID) => {

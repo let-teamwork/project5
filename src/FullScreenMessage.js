@@ -41,10 +41,9 @@ class FullScreenMessage extends Component {
                 <div>
                     <button onClick={()=>{this.props.recieveRestaurantResult(
                         this.props.message.restaurantSuggestion.restaurantName,
-                        this.props.message.restaurantSuggestion.restaurantAddress,
-                        this.props.message.restaurantSuggestion.restaurantCity,
-                        this.props.message.restaurantSuggestion.restaurantState,
-                        this.props.message.restaurantSuggestion.restaurantCountry,
+                        this.props.message.restaurantSuggestion.restaurantCoordinates,
+                        this.props.message.restaurantSuggestion.restaurantPhone,
+                        this.props.message.restaurantSuggestion.restaurantImage,
                         this.props.message.restaurantSuggestion.restaurantID
                     )}}>See your date invite!</button>
                 </div>: ""}

@@ -464,12 +464,8 @@ label {
   top: 19px;
   color: white;
   background: none;
-<<<<<<< HEAD
-  border: none; }
-=======
   border: none;
   z-index: 100; }
->>>>>>> 9fcd0fa7258311b1b454a8f524a7648c4b606ff8
 
 .messages {
   position: absolute;
@@ -478,16 +474,6 @@ label {
   left: 0;
   right: 0;
   z-index: 9;
-<<<<<<< HEAD
-  background-color: white;
-  display: flex; }
-  .messages__inbox {
-    width: 100vw;
-    max-width: 700px;
-    height: 100vh;
-    max-height: 700px;
-    background-color: white; }
-=======
   background-color: #0d6978;
   display: flex; }
   .messages__inbox {
@@ -544,4 +530,3 @@ label {
       color: white; }
     .fullScreenMessage__messageContent--received {
       background-color: #b6d2cf; }
->>>>>>> 9fcd0fa7258311b1b454a8f524a7648c4b606ff8
