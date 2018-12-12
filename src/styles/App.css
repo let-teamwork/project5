@@ -410,6 +410,33 @@ span.login__span--secondaryColor {
     background: #b6d2cf; }
   .mainForm__address {
     margin: 0; }
+  .mainForm__errorMessage {
+    position: absolute;
+    width: 400px;
+    height: 100px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    margin-left: -200px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5); }
+    .mainForm__errorMessage p {
+      margin-top: 20px;
+      font-weight: bold;
+      line-height: 1.8rem;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 1.6rem;
+      color: #e898e9;
+      font-size: 2rem; }
+    .mainForm__errorMessage p:last-child {
+      text-transform: uppercase;
+      margin: 0;
+      font-size: 1.2rem;
+      color: #adaeae; }
 
 label {
   margin-bottom: 10px; }

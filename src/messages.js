@@ -53,7 +53,7 @@ class Messages extends Component {
                     {this.props.messages.map((message) => {
                         return (
                             <button id={message.key} className="messages__preview" onClick={this.viewMessage} >
-                                <div className="wrapper">
+                                <div id={message.key} className="wrapper">
                                     <p className="messages__previewFrom" id={message.key} >{message.from}</p>
                                     <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>                     
                                 </div>
