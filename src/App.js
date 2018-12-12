@@ -663,6 +663,14 @@ class App extends Component {
       this.addConversationToUserInbox();
     })
   }
+
+  setSecondUserNameOnMessageOpen = (messagedUserName) => {
+    console.log('setname');
+    this.setState({
+      secondUserName: messagedUserName
+    })
+  }
+  
   toggleCoffee = () => {
     this.setState({
       showingCoffee: !this.state.showingCoffee
@@ -682,6 +690,8 @@ class App extends Component {
   addConversationToUserInbox = () => {
     const savedID = this.state.searchedUID;
     const savedName = this.state.secondUserName;
+    console.log(this.state.secondUserName)
+    console.log('name', savedName)
     const currentconvo = this.state.currentOpenConversation;
     const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/`);
     const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`);
@@ -788,6 +798,7 @@ class App extends Component {
           exact path="/Main" 
           render={(props) => (
           <Main {...props} 
+          setSecondUserNameOnMessageOpen={this.setSecondUserNameOnMessageOpen}
           user={this.state.user}
           userLocation={this.state.userLocation}
           onSubmit={this.handleSubmit}

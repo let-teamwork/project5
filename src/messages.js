@@ -15,6 +15,7 @@ class Messages extends Component {
         if (this.props.messages !== prevProps.messages) {
             console.log('forcing an update in message');
             this.selectSingleMessage();
+            // this.props.selectMessageForReply(this.state.selectedMessageKey);
         }
     }
 
@@ -36,6 +37,7 @@ class Messages extends Component {
             return (message.key === this.state.selectedMessageKey)
         });
         console.log("sma", selectedMessageArray);
+        this.props.setSecondUserNameOnMessageOpen(selectedMessageArray[0].from)
         this.setState({
             selectedMessageObject: selectedMessageArray[0]
         }, () => {
@@ -61,7 +63,7 @@ class Messages extends Component {
                             <button id={message.key} className="messages__preview" onClick={this.viewMessage} >
                                 <div id={message.key} className="wrapper">
                                     <p className="messages__previewFrom" id={message.key} >{message.from}</p>
-                                    <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>                     
+                                    <p className="messages__previewDate" id={message.key} >{message.displayDate}</p>          
                                 </div>
                             </button>
                         )
