@@ -98,7 +98,7 @@ class App extends Component {
       this.dbRef.off();
     }
   }
-
+  
   logIn = () => {
     auth.signInWithPopup(provider).then((result) => {
       

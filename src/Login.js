@@ -1,6 +1,5 @@
 import { Link, Redirect } from 'react-router-dom';
 import React, { Component } from 'react';
-// import firebase from './firebase'
 
 class Login extends Component{
   render(){
@@ -24,7 +23,7 @@ class Login extends Component{
             : (
               <div>
                 <button onClick={this.props.logIn} className="login__signIn app__button">Sign In</button>
-                  <Link to = "/Main" > Sign In as Guest </Link>
+                  <Link to = "/Main" className="app__button" > Sign In as Guest </Link>
               </div>
             )}
               </div>

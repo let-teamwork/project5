@@ -152,7 +152,7 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   overflow: hidden; }
 
 .wrapper {
-  max-width: 320px;
+  width: 90%;
   margin: 0 auto; }
 
 .app__button {
@@ -170,7 +170,9 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   margin-bottom: 10px;
   border-radius: 50px;
   margin: 20px auto;
-  font-weight: bold; }
+  font-weight: bold;
+  text-decoration: none;
+  background: white; }
   .app__button:active {
     outline: none;
     -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
@@ -182,6 +184,24 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   padding: 10px 10px;
   margin: 10px auto;
   cursor: pointer; }
+
+input[type="radio"] {
+  position: absolute;
+  z-index: -1; }
+
+.app__font-awesome:hover,
+.app__radioLabel:hover {
+  color: #e898e9; }
+
+.app__font-awesome {
+  font-size: 3rem;
+  margin-top: 20px; }
+
+.app__radioLabel {
+  color: #0d6978; }
+
+.activeLabel {
+  color: #e898e9; }
 
 .login {
   background: #b6d2cf;
@@ -206,14 +226,20 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
     margin-bottom: 10rem; }
 
 .createAccount {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #b6d2cf;
-  height: 100vh; }
+  justify-content: center;
+  text-align: center; }
   .createAccount__subtitle {
-    font-size: 6rem;
+    font-size: 4rem;
     font-family: 'Ubuntu', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    color: #0d6978;
+    color: white;
+    margin: 0;
+    padding: 10px 0;
     text-align: center; }
   .createAccount__text {
     line-height: 1.8rem;
@@ -222,12 +248,24 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
     color: black; }
   .createAccount__text--address {
     text-align: center; }
+  .createAccount__span {
+    text-transform: capitalize;
+    font-weight: bold; }
+  .createAccount__background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 700px; }
 
 .createAccount__header {
-  text-align: center; }
+  text-align: center;
+  height: 70px;
+  background: #0d6978; }
 
 .header__background {
-  background: #0d6978; }
+  display: flex;
+  height: calc(100vh - 70px);
+  justify-content: center; }
 
 .header__userName {
   font-size: 3rem;
@@ -243,23 +281,26 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   font-size: 5rem; }
 
 .header__userName {
-  padding-left: 50px;
   text-transform: capitalize;
   text-align: center; }
 
 .createAccount__form {
   display: flex;
   flex-direction: column;
-  margin-top: 50px; }
+  margin-top: 20px; }
 
 .createAccount__label {
   line-height: 1.8rem;
   font-family: 'Work Sans', sans-serif;
   font-size: 1.6rem;
   color: black;
-  margin-top: 10px;
   text-align: center;
-  font-weight: bold; }
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 0; }
+
+.app__radioLabel {
+  background: #b6d2cf; }
 
 .main {
   background: #b6d2cf;
@@ -270,6 +311,8 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
     font-weight: 700;
     text-transform: uppercase;
     margin: 50px 0; }
+  .main__mapPadding {
+    padding: 10px 0; }
   .main__divider {
     border: 1px solid black;
     width: 10%;
@@ -289,8 +332,11 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
     margin-bottom: 10px;
     border-radius: 50px;
     margin: 20px auto;
-    width: 35%;
-    border-radius: 10%; }
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 10px auto;
+    padding: 0; }
     .main__button:active {
       outline: none;
       -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
@@ -302,13 +348,27 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
     line-height: 1.8rem;
     font-family: 'Work Sans', sans-serif;
     font-size: 1.6rem;
-    color: white;
-    text-align: left;
+    color: #0d6978;
     border: 1px solid #0d6978;
     margin-bottom: 10px;
     padding: 10px;
     text-transform: capitalize;
     background: #0d6978; }
+  .main__fontAwesome {
+    font-size: 3rem; }
+  .main__map {
+    background: #0d6978;
+    padding: 0px 0 50px 0;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; }
+    .main__map--filterButtons {
+      display: flex;
+      flex-direction: row;
+      margin: auto;
+      width: 250px;
+      padding: 20px 0; }
 
 .header {
   background: #0d6978; }
@@ -329,14 +389,56 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
   color: black;
   font-size: 1.2rem; }
   .mainForm__inputLabel--displayFlex {
-    display: flex; }
+    display: flex;
+    justify-content: space-around; }
   .mainForm__inputLabel--column {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 10px; }
+    padding: 0 10px;
+    font-size: 2rem;
+    position: relative;
+    background: #b6d2cf; }
   .mainForm__address {
     margin: 0; }
 
 label {
   margin-bottom: 10px; }
+
+.main__displayResults--title {
+  text-align: center;
+  font-size: 2.8rem;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0d6978; }
+
+.main__displayResults {
+  background: #b6d2cf; }
+  .main__displayResults__display--title, .main__displayResults__display--number {
+    color: #0d6978;
+    text-align: center; }
+
+.main__messagesButton {
+  position: absolute;
+  right: 20px;
+  top: 19px;
+  color: white;
+  background: none;
+  border: none; }
+
+.messages {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  background-color: white;
+  display: flex; }
+  .messages__inbox {
+    width: 100vw;
+    max-width: 700px;
+    height: 100vh;
+    max-height: 700px;
+    background-color: white; }
