@@ -60,7 +60,8 @@ class App extends Component {
       inputsFilled: true,
       bothAreUsers: false,
       showMessage: false,
-      dateSuggestion: {}
+      dateSuggestion: {},
+      inviteMarker: []
     }
   }
 
@@ -255,13 +256,29 @@ class App extends Component {
   //   });
   // };
 
-  showMessageBar = (name, address, city, state, country, id, coordinates) => {
+  receiveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
+    const marker = {
+      coordinates: restaurantCoordinates,
+      phone: restaurantPhone,
+      id: restaurantID,
+      image_url: restaurantImage,
+      name: restaurantName
+    };
+
+    const invite = []
+    invite.push(marker)
+    
+    this.setState({
+      inviteMarker: invite
+    })
+
+  }  
+
+  showMessageBar = (name, phone, image, id, coordinates) => {
     const restaurant = {
       restaurantName: name,
-      restaurantAddress: address,
-      restaurantCity: city,
-      restaurantState: state,
-      restaurantCountry: country,
+      restaurantPhone: phone,
+      restaurantImage: image,
       restaurantID: id,
       restaurantCoordinates: coordinates
     }
@@ -635,6 +652,8 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
+        
+        // this.createOpenConversationInSecondUserAccount(savedID);
       })
     })
   }
@@ -701,7 +720,7 @@ class App extends Component {
         
     //   })
       
-      this.createOpenConversationInSecondUserAccount(savedID);
+      // this.createOpenConversationInSecondUserAccount(savedID);
   }
 
   createOpenConversationInSecondUserAccount = (savedID) => {
@@ -728,6 +747,12 @@ class App extends Component {
   selectMessageForReply = (currentOpenConversation) => {
     this.setState({
       currentOpenConversation: currentOpenConversation
+    })
+  }
+
+  fillTheInputs = () => {
+    this.setState({
+      inputsFilled: true
     })
   }
 
@@ -812,6 +837,7 @@ class App extends Component {
           selectMessageForReply={this.selectMessageForReply}
           logOut={this.logOut}
           secondMOT={this.state.secondMOT}
+          fillTheInputs={this.fillTheInputs}
           userName={this.state.userName}
           />
           

@@ -77,9 +77,6 @@ $grey:#adaeae;
 input[type="radio"]{
     position:absolute;
     z-index: -1;
-    // visibility: hidden;
-   
-  
 }
 .app__font-awesome:hover,
 .app__radioLabel:hover{
@@ -88,7 +85,6 @@ input[type="radio"]{
 .app__font-awesome{
     font-size:3rem;
     margin-top: 20px;
-   
 }
 .app__radioLabel{
     color:$primaryColor;
