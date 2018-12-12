@@ -90,7 +90,7 @@ class App extends Component {
         )
       }
     })
-    this.fetchMessages();
+    // this.fetchMessages();
     // console.log(this.state.messages);
   }
 
@@ -220,7 +220,7 @@ class App extends Component {
   };
 
 
-  receiveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
+  recieveRestaurantResult = (restaurantName, restaurantCoordinates, restaurantPhone, restaurantImage, restaurantID) => {
     const marker = {
       coordinates: restaurantCoordinates,
       phone: restaurantPhone,
@@ -482,7 +482,7 @@ class App extends Component {
       if (this.state.secondLocationBelongsToUser){
         this.searchForCoordinates(this.state.search, this.state.item)
       } else {
-        this.searchForCoordinates(this.state.search)
+        this.searchForCoordinates(this.state.search);
       }
     })  
     this.setState({
@@ -491,10 +491,11 @@ class App extends Component {
   }
 
   fetchMessages = () => {
-    // console.log('fetching');
+    console.log('fetching');
     const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-    dbRef.once('value').then((snapshot) => {
-      if (snapshot.val() === null){
+    dbRef.on('value', (snapshot) => {
+      console.log('were doon it');
+      if (snapshot.val() === null) {
         return
       }
       // console.log('snapshot', snapshot.val());
@@ -504,15 +505,36 @@ class App extends Component {
         const newObject = entry[1];
         newObject.key = entry[0];
         newArray.push(newObject);
-        
+
         // console.log('not in state', newArray)
       });
       this.setState({
         messages: newArray
       }, () => {
+        console.log('this all works')
         this.sortMessages();
       });
     });
+    // dbRef.once('value').then((snapshot) => {
+    //   if (snapshot.val() === null){
+    //     return
+    //   }
+    //   // console.log('snapshot', snapshot.val());
+    //   const newArray = [];
+    //   Object.entries(snapshot.val()).forEach((entry) => {
+    //     // console.log(entry);
+    //     const newObject = entry[1];
+    //     newObject.key = entry[0];
+    //     newArray.push(newObject);
+        
+    //     // console.log('not in state', newArray)
+    //   });
+    //   this.setState({
+    //     messages: newArray
+    //   }, () => {
+    //     this.sortMessages();
+    //   });
+    // });
   }
 
   sortMessages = () => {

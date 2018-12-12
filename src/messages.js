@@ -11,7 +11,13 @@ class Messages extends Component {
             selectedMessageObject: {}
         }
     }
-    
+    componentDidUpdate(prevProps) {
+        if (this.props.messages !== prevProps.messages) {
+            console.log('forcing an update in message');
+            this.selectSingleMessage();
+        }
+    }
+
 
     viewMessage = (e) => {
         e.preventDefault();

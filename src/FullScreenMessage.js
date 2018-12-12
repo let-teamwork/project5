@@ -8,7 +8,15 @@ class FullScreenMessage extends Component {
             messageReply: "",
         }
     }
+    componentDidUpdate(prevProps){
+        if(this.props.message !== prevProps.message) {
+            console.log('forcing an update');
+            this.forceUpdate();
+        }
 
+
+
+    }
 
 
     handleReplySubmit = (e) => {
@@ -23,7 +31,7 @@ class FullScreenMessage extends Component {
     }
 
     render(){
-        console.log("message", this.props.message)
+        // console.log("message", this.props.message)
         return(
             <div className="fullScreenMessage">
                 <div className="fullScreenMessage__messageBody">
