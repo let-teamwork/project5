@@ -18,6 +18,12 @@ class Main extends Component {
             duration:"",
         }
     }
+    componentDidUpdate(prevProps) {
+        if (this.props.messages !== prevProps.messages) {
+            console.log('forcing an update in main');
+            this.forceUpdate();
+        }
+    }
     //function that sets markerMidPoint
     getMarkerMidPoint = (marker)=>{
         const midLatLng = {};
@@ -107,7 +113,7 @@ class Main extends Component {
                     recieveRestaurantResult={this.props.recieveRestaurantResult}
                     selectMessageForReply={this.props.selectMessageForReply}
                     userName={this.props.userName}
-                    showFindInvite={this.props.showFindInvite}
+                    setSecondUserNameOnMessageOpen={this.props.setSecondUserNameOnMessageOpen}
                     />   
                     ) : ""
                     }

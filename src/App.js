@@ -91,9 +91,8 @@ class App extends Component {
           }
         )
       }
-    })
-    this.fetchMessages();
-    //  (this.state.messages);
+    });
+    // console.log(this.state.messages);
   }
 
   componentWillUnmount() {
@@ -477,7 +476,7 @@ class App extends Component {
       if (this.state.secondLocationBelongsToUser){
         this.searchForCoordinates(this.state.search, this.state.item)
       } else {
-        this.searchForCoordinates(this.state.search)
+        this.searchForCoordinates(this.state.search);
       }
     })  
     this.setState({
@@ -488,8 +487,9 @@ class App extends Component {
   fetchMessages = () => {
     //  ('fetching');
     const dbRef = firebase.database().ref(`/messages/${this.state.user.uid}/`);
-    dbRef.once('value').then((snapshot) => {
-      if (snapshot.val() === null){
+    dbRef.on('value', (snapshot) => {
+      console.log('were doon it');
+      if (snapshot.val() === null) {
         return
       }
       //  ('snapshot', snapshot.val());
@@ -505,9 +505,30 @@ class App extends Component {
       this.setState({
         messages: newArray
       }, () => {
+        console.log('this all works')
         this.sortMessages();
       });
     });
+    // dbRef.once('value').then((snapshot) => {
+    //   if (snapshot.val() === null){
+    //     return
+    //   }
+    //   // console.log('snapshot', snapshot.val());
+    //   const newArray = [];
+    //   Object.entries(snapshot.val()).forEach((entry) => {
+    //     // console.log(entry);
+    //     const newObject = entry[1];
+    //     newObject.key = entry[0];
+    //     newArray.push(newObject);
+        
+    //     // console.log('not in state', newArray)
+    //   });
+    //   this.setState({
+    //     messages: newArray
+    //   }, () => {
+    //     this.sortMessages();
+    //   });
+    // });
   }
 
   sortMessages = () => {
@@ -620,8 +641,7 @@ class App extends Component {
         currentOpenConversation: newArray[0]
       }, () => {
         this.addConversationToUserInbox();
-        
-        // this.createOpenConversationInSecondUserAccount(savedID);
+        this.createOpenConversationInSecondUserAccount(this.state.searchedUID);
       })
     })
   }
@@ -635,6 +655,14 @@ class App extends Component {
       this.addConversationToUserInbox();
     })
   }
+
+  setSecondUserNameOnMessageOpen = (messagedUserName) => {
+    console.log('setname');
+    this.setState({
+      secondUserName: messagedUserName
+    })
+  }
+  
   toggleCoffee = () => {
     this.setState({
       showingCoffee: !this.state.showingCoffee
@@ -654,6 +682,8 @@ class App extends Component {
   addConversationToUserInbox = () => {
     const savedID = this.state.searchedUID;
     const savedName = this.state.secondUserName;
+    console.log(this.state.secondUserName)
+    console.log('name', savedName)
     const currentconvo = this.state.currentOpenConversation;
     const dbRefOpenConversation = firebase.database().ref(`/messages/${this.state.searchedUID}/${this.state.currentOpenConversation}/`);
     const dbRefUserConversation = firebase.database().ref(`/messages/${this.state.user.uid}/${this.state.currentOpenConversation}/`);
@@ -736,6 +766,7 @@ class App extends Component {
           exact path="/Main" 
           render={(props) => (
           <Main {...props} 
+          setSecondUserNameOnMessageOpen={this.setSecondUserNameOnMessageOpen}
           user={this.state.user}
           userLocation={this.state.userLocation}
           onSubmit={this.handleSubmit}

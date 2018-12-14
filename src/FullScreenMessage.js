@@ -9,7 +9,15 @@ class FullScreenMessage extends Component {
             messageReply: "",
         }
     }
+    componentDidUpdate(prevProps){
+        if(this.props.message !== prevProps.message) {
+            console.log('forcing an update');
+            this.forceUpdate();
+        }
 
+
+
+    }
 
 
     handleReplySubmit = (e) => {
@@ -24,10 +32,10 @@ class FullScreenMessage extends Component {
     }
 
     render(){
-        console.log("my resto", this.props.message.restaurantSuggestion.restaurantName)
-        if(this.props.showFindInvite === true){
-            return ( < Redirect to = '/FindInvite' / > )
-        }else{
+        // console.log("my resto", this.props.message.restaurantSuggestion.restaurantName)
+        // if(this.props.showFindInvite === true){
+        //     return ( < Redirect to = '/FindInvite' / > )
+        // } else {
         return (
             <div className="fullScreenMessage">
                 <div className="fullScreenMessage__messageBody">
@@ -62,7 +70,7 @@ class FullScreenMessage extends Component {
         )
         }
 
-    }
+    // }
 }
 
 export default FullScreenMessage
